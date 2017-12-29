@@ -35,6 +35,14 @@ export class ProjectListComponent implements OnInit {
     this.router.navigate([$event.currentTarget.value]);
   }
 
+  addProject() {
+    
+  }
+
+  addDrawing(drawingType: string) {
+
+  }
+
   ngOnInit() {
     this.projectList = this.projectService.getProjects();
 

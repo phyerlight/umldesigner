@@ -4,23 +4,23 @@
       <option></option>
       <option *ngFor="let p of getProjects()" value="{{p}}" [attr.selected]="selectedProject==p ? '' : null">{{p}}</option>
     </select>
-    <button>+</button>
+    <button (click)="addProject();">+</button>
   </div>
   <div class="files">
-    <div class="content">
+    <div class="content" *ngIf="selectedProject">
       <ul>
         <li *ngFor="let f of getFiles()" (click)="selectFile(f)">
           {{f}}
         </li>
       </ul>
-      <p *ngIf="!selectedProject">Select a project from the list above</p>
+      <div class="actions">
+        <select #drawingType>
+          <option value="class">Class Drawing</option>
+          <option value="mock">Mock Up</option>
+        </select>
+        <button (click)="addDrawing(drawingType.value)">+</button>
+      </div>
     </div>
-    <div class="actions">
-      <select #drawingType>
-        <option value="class">Class Drawing</option>
-        <option value="mock">Mock Up</option>
-      </select>
-      <button (click)="addDrawing(drawingType.value)">+</button>
-    </div>
+    <p *ngIf="!selectedProject">Select a project from the list above</p>
   </div>
 </div>
