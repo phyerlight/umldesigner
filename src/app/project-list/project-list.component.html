@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="projects">
+    <select (change)="setProject($event)">
+      <option></option>
+      <option *ngFor="let p of getProjects()" value="{{p}}" [attr.selected]="selectedProject==p ? '' : null">{{p}}</option>
+    </select>
+    <button>+</button>
+  </div>
+  <div class="files">
+    <div class="content">
+      <ul>
+        <li *ngFor="let f of getFiles()" (click)="selectFile(f)">
+          {{f}}
+        </li>
+      </ul>
+      <p *ngIf="!selectedProject">Select a project from the list above</p>
+    </div>
+    <div class="actions">
+      <select #drawingType>
+        <option value="class">Class Drawing</option>
+        <option value="mock">Mock Up</option>
+      </select>
+      <button (click)="addDrawing(drawingType.value)">+</button>
+    </div>
+  </div>
+</div>
