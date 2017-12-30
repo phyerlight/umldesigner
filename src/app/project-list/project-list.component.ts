@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ProjectService} from "../project.service";
+import {Project, ProjectService} from "../project.service";
 import {ActivatedRoute, Router, UrlSegment} from "@angular/router";
 
 @Component({
@@ -9,48 +9,51 @@ import {ActivatedRoute, Router, UrlSegment} from "@angular/router";
 })
 export class ProjectListComponent implements OnInit {
 
-  protected projectList: object;
   public selectedProject: string;
+  public projectList: Array<string>;
+  public fileList: string[];
 
   constructor(private projectService: ProjectService,
               private route: ActivatedRoute,
               private router: Router) { }
-
-  public getProjects(): Array<string> {
-    return Object.keys(this.projectList);
-  }
-
-  public selectFile(file) {
-    this.router.navigate([this.selectedProject, file]);
-  }
-
-  public getFiles(): Array<string> {
-    if (this.selectedProject != null && this.selectedProject != "" &&
-        this.projectList.hasOwnProperty(this.selectedProject)) {
-      return this.projectList[this.selectedProject];
-    }
-  }
 
   setProject($event) {
     this.router.navigate([$event.currentTarget.value]);
   }
 
   addProject() {
-    
+    let name = window.prompt("What is the new projects name?");
+    if (name != null && name != "") {
+      this.projectService.addProject(name);
+      this.router.navigate([name]);
+    }
   }
 
   addDrawing(drawingType: string) {
+    let name = window.prompt("What is the new drawing name?");
+    if (name != null && name != "") {
+      this.projectService.addDrawing(this.selectedProject, name, drawingType);
+      this.router.navigate([this.selectedProject, name]);
+    }
+  }
 
+  selectFile(file: string) {
+    this.router.navigate([this.selectedProject, file]);
   }
 
   ngOnInit() {
-    this.projectList = this.projectService.getProjects();
-
     this.route.url.subscribe((value: UrlSegment[]) => {
+      let pid = null;
+      this.projectList = this.projectService.getProjectNames();
       if (value.length > 0) {
         this.selectedProject = value[0].path;
+        let p = this.projectService.getProjectByName(value[0].path);
+        if (p != null) {
+          this.fileList = p.files.map(v=>v.name);
+        } else {
+          this.router.navigateByUrl("");
+        }
       }
     });
   }
-
 }
