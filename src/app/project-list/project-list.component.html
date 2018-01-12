@@ -1,24 +1,24 @@
 <div class="container">
   <div class="projects">
-    <select (change)="setProject($event)">
-      <option></option>
-      <option *ngFor="let p of projectList" value="{{p}}" [attr.selected]="selectedProject==p ? '' : null">{{p}}</option>
+    Project:&nbsp;<select #projectId (change)="handleSelectProject(projectId.value)">
+      <option value="">Select a project...</option>
+      <option *ngFor="let p of projects"
+              value="{{p.id}}" [attr.selected]="selectedProject.id==p.id ? '' : null">{{p.name}}</option>
     </select>
-    <button (click)="addProject();">+</button>
+    <button (click)="handleAddProject();">+</button>
   </div>
   <div class="files">
     <div class="content" *ngIf="selectedProject">
       <ul>
-        <li *ngFor="let f of fileList" (click)="selectFile(f)">
-          {{f}}
+        <li *ngFor="let f of selectedProject.files" (click)="handleSelectFile(selectedProject.id, f)">
+          {{f.name}}
         </li>
       </ul>
       <div class="actions">
         <select #drawingType>
-          <option value="class">Class Drawing</option>
-          <option value="mock">Mock Up</option>
+          <option *ngFor="let t of fileTypes" value="{{t.id}}">{{t.name }}</option>
         </select>
-        <button (click)="addDrawing(drawingType.value)">+</button>
+        <button (click)="handleAddDrawing(selectedProject.id, drawingType.value)">+</button>
       </div>
     </div>
     <p *ngIf="!selectedProject">Select a project from the list above</p>

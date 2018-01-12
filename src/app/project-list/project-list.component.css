@@ -3,11 +3,31 @@ div.container {
   flex-direction: column;
 }
 div.projects {
-  flex-shrink: 1;
+  flex-grow: 0;
   display: flex;
   flex-direction: row;
 }
 
+div.projects select {
+  flex-grow: 1;
+}
+
+div.projects button {
+  flex-grow: 0;
+}
+
 div.files {
   flex-grow: 1;
+}
+
+div.actions {
+  display: flex;
+}
+
+div.actions select {
+  flex-grow: 1;
+}
+
+div.projects button {
+  flex-grow: 0;
 }

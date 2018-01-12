@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
-import {RouterModule, Routes} from "@angular/router";
+import {Params, RouterModule, Routes} from "@angular/router";
 import {AppComponent} from "./app.component";
+
+export interface RouteParams extends Params {
+  project: string,
+  file: string
+}
 
 const routes: Routes = [
   { path: '', component: AppComponent},

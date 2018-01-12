@@ -1,4 +1,16 @@
 import { Component, OnInit } from '@angular/core';
+import {ActivatedRoute, Params} from "@angular/router";
+import {ProjectService, File} from "../project.service";
+import {RouteParams} from "../app-routing.module";
+
+export class DrawingTool {
+  constructor(
+    public name: string,
+    public icon: string,
+    public toolTip: string,
+    public action: ()=>{}
+  ) {}
+}
 
 @Component({
   selector: 'app-editor',
@@ -7,9 +19,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EditorComponent implements OnInit {
 
-  constructor() { }
+  public file: File;
+  public tools: DrawingTool;
+
+  constructor(private projectService: ProjectService,
+              private route: ActivatedRoute, ) { }
 
   ngOnInit() {
-  }
+    this.route.params.subscribe((params: RouteParams) => {
+      if (params.project && params.file) {
+        this.file = this.projectService.getDrawing(params.project, params.file)
+      }
 
+    });
+  }
 }

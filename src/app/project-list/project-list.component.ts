@@ -1,59 +1,74 @@
-import { Component, OnInit } from '@angular/core';
-import {Project, ProjectService} from "../project.service";
-import {ActivatedRoute, Router, UrlSegment} from "@angular/router";
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FileType, NameError, Project, ProjectService} from "../project.service";
+import {ActivatedRoute, Params, Router} from "@angular/router";
+import {Input} from "@angular/core";
+import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.css']
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent {
 
-  public selectedProject: string;
-  public projectList: Array<string>;
-  public fileList: string[];
+  @Input() selectedProject: Project;
+  @Input() projects: Project[];
+
+  @Output() onProjectSelected = new EventEmitter<Project>();
+  @Output() onFileSelected = new EventEmitter<File>();
+  @Output() onProjectAdded = new EventEmitter<Observable<Project>>();
+
+  // public selectedProject: string;
+  public fileTypes: FileType[] = FileType.getTypes();
 
   constructor(private projectService: ProjectService,
               private route: ActivatedRoute,
               private router: Router) { }
 
-  setProject($event) {
-    this.router.navigate([$event.currentTarget.value]);
+  handleSelectProject(projectId) {
+    this.onProjectSelected.emit(this.projects.find(v=>v.id == projectId));
   }
 
-  addProject() {
-    let name = window.prompt("What is the new projects name?");
-    if (name != null && name != "") {
-      this.projectService.addProject(name);
-      this.router.navigate([name]);
+  /**
+   * Handle adding a project to the system. If msg is not given or empty string, default starting the process of adding
+   * a new project. Otherwise this can be used to handle errors as well.
+   * @param {string} msg Initial message to display in the input box.
+   */
+  handleAddProject(msg: string = "") {
+    if (msg == null || msg == "") msg = "What is the new projects name?";
+    let name = window.prompt(msg);
+    //do not allow some characters that would be bad for URLs
+    while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
+      name = window.prompt("The projects name cannot be empty or contain the characters ' \" \\ / &");
     }
-  }
 
-  addDrawing(drawingType: string) {
-    let name = window.prompt("What is the new drawing name?");
     if (name != null && name != "") {
-      this.projectService.addDrawing(this.selectedProject, name, drawingType);
-      this.router.navigate([this.selectedProject, name]);
-    }
-  }
-
-  selectFile(file: string) {
-    this.router.navigate([this.selectedProject, file]);
-  }
-
-  ngOnInit() {
-    this.route.url.subscribe((value: UrlSegment[]) => {
-      let pid = null;
-      this.projectList = this.projectService.getProjectNames();
-      if (value.length > 0) {
-        this.selectedProject = value[0].path;
-        let p = this.projectService.getProjectByName(value[0].path);
-        if (p != null) {
-          this.fileList = p.files.map(v=>v.name);
+      this.projectService.addProjectByName(name).subscribe(p=>{
+        this.onProjectAdded.emit(p);
+      }, e=>{
+        if (e instanceof NameError) {
+          this.handleAddProject(e.message);
         } else {
-          this.router.navigateByUrl("");
+          throw e;
         }
-      }
-    });
+      });
+
+    }
+  }
+
+  handleAddDrawing(projectName: string, drawingTypeId: string) {
+    let fileType = FileType.getTypeById(drawingTypeId);
+    let name = window.prompt("What is the new "+fileType.name+" drawing name?");
+    while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
+      name = window.prompt("The "+fileType.name+" drawing name cannot be empty or contain the characters ' \" \\ / &");
+    }
+    if (name != null && name != "") {
+      this.projectService.addDrawing(projectName, name, fileType);
+      this.router.navigate([projectName, name]);
+    }
+  }
+
+  handleSelectFile(projectName: string, file: string) {
+    this.router.navigate([projectName, file]);
   }
 }

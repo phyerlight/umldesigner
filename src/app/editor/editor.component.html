@@ -1,3 +1,12 @@
-<p>
-  editor works!
-</p>
+<div class="container">
+  <div class="tools">
+    <ul>
+      <li *ngFor="let tool of tools">
+        <button><img src="{{tool.icon}}" alt="{{tool.toolTip}}" onclick="tool.action"/></button>
+      </li>
+    </ul>
+  </div>
+  <div class="drawing">
+    <canvas id="drawing" resize="true"></canvas>
+  </div>
+</div>
