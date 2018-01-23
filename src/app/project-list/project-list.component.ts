@@ -1,5 +1,5 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FileType, NameError, Project, ProjectService} from "../project.service";
+import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {FileType, NameError, Project, ProjectService, File} from "../project.service";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {Input} from "@angular/core";
 import {Observable} from "rxjs/Observable";
@@ -7,7 +7,8 @@ import {Observable} from "rxjs/Observable";
 @Component({
   selector: 'app-project-list',
   templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.css']
+  styleUrls: ['./project-list.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProjectListComponent {
 
@@ -15,11 +16,7 @@ export class ProjectListComponent {
   @Input() projects: Project[];
 
   @Output() onProjectSelected = new EventEmitter<Project>();
-  @Output() onFileSelected = new EventEmitter<File>();
-  @Output() onProjectAdded = new EventEmitter<Observable<Project>>();
-
-  // public selectedProject: string;
-  public fileTypes: FileType[] = FileType.getTypes();
+  @Output() onProjectAdded = new EventEmitter<Project>();
 
   constructor(private projectService: ProjectService,
               private route: ActivatedRoute,
@@ -35,11 +32,12 @@ export class ProjectListComponent {
    * @param {string} msg Initial message to display in the input box.
    */
   handleAddProject(msg: string = "") {
-    if (msg == null || msg == "") msg = "What is the new projects name?";
+    if (msg == null || msg == "") msg = "What is the new projects$ name?";
     let name = window.prompt(msg);
     //do not allow some characters that would be bad for URLs
+    //if name is null, it means it was cancelled.
     while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-      name = window.prompt("The projects name cannot be empty or contain the characters ' \" \\ / &");
+      name = window.prompt("The projects$ name cannot be empty or contain the characters ' \" \\ / &");
     }
 
     if (name != null && name != "") {
@@ -56,19 +54,4 @@ export class ProjectListComponent {
     }
   }
 
-  handleAddDrawing(projectName: string, drawingTypeId: string) {
-    let fileType = FileType.getTypeById(drawingTypeId);
-    let name = window.prompt("What is the new "+fileType.name+" drawing name?");
-    while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-      name = window.prompt("The "+fileType.name+" drawing name cannot be empty or contain the characters ' \" \\ / &");
-    }
-    if (name != null && name != "") {
-      this.projectService.addDrawing(projectName, name, fileType);
-      this.router.navigate([projectName, name]);
-    }
-  }
-
-  handleSelectFile(projectName: string, file: string) {
-    this.router.navigate([projectName, file]);
-  }
 }

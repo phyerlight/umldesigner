@@ -28,9 +28,10 @@ export class EditorComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe((params: RouteParams) => {
       if (params.project && params.file) {
-        this.file = this.projectService.getDrawing(params.project, params.file)
+        this.projectService.getFile(params.project, params.file).subscribe(f=>{
+          this.file = f;
+        })
       }
-
     });
   }
 }

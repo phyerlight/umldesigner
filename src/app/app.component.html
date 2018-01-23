@@ -3,9 +3,16 @@
   <nav>
     <app-project-list
       [selectedProject]="selectedProject"
-      [projects]="projects | async"
+      [projects]="projectService.projects$ | async"
       (onProjectSelected)="handleProjectSelected($event)"
-      (onProjectAdded)="handleProjectAdded($event)"></app-project-list>
+      (onProjectAdded)="handleProjectAdded($event)"
+    ></app-project-list>
+    <app-file-list
+      [selectedProject]="selectedProject"
+      [selectedFile]="selectedFile"
+      (onFileSelected)="handleFileSelected($event)"
+      (onFileAdded)="handleFileAdded($event)"
+    ></app-file-list>
   </nav>
   <div>
     <app-editor></app-editor>

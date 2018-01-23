@@ -8,6 +8,8 @@ import { EditorComponent } from './editor/editor.component';
 import { ProjectService } from "./project.service";
 import { AppRoutingModule } from './app-routing.module';
 import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.component';
+import {NgxModelModule} from "ngx-model";
+import { FileListComponent } from './file-list/file-list.component';
 
 @NgModule({
   declarations: [
@@ -15,11 +17,13 @@ import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.componen
     ProjectListComponent,
     EditorComponent,
     OutletWrapperComponent,
+    FileListComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    NgxModelModule
   ],
   providers: [ProjectService],
   bootstrap: [OutletWrapperComponent]

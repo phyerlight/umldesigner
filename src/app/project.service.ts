@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
+import {ModelFactory, Model} from "ngx-model";
 
 export class FileType {
 
@@ -26,106 +26,115 @@ export class FileType {
   }
 }
 
-export class File {
-  constructor(
-    public name: string,
-    public type: FileType,
-    public data: object
-  ) {}
+export interface File {
+    name: string;
+    type: FileType;
+    data: object;
 }
 
-type ProjectFields = {
-  id?: string,
-  name?: string,
-  files?: Array<File>
-}
-
-export class Project {
-  constructor(
-    public id: string|ProjectFields,
-    public name: string,
-    public files: Array<File>
-  ) {
-    if (typeof id !== 'string') {
-      let projectObj = id;
-      this.id = projectObj.id;
-      this.name = projectObj.name;
-      this.files = projectObj.files;
-    }
-  }
+export interface Project {
+    id: string;
+    name: string;
+    files: Array<File>;
 }
 
 export class NameError extends Error {}
+export class NotFoundError extends Error {}
 
 
 @Injectable()
 export class ProjectService {
 
-  private _projects: BehaviorSubject<Project[]> = new BehaviorSubject([
-    {id: "1", name: 'Test', files:[
+  // private _projects: BehaviorSubject<Project[]> = new BehaviorSubject([
+  //   new Project("1", 'Test', [
+  //       {name: 'test model', type: FileType.Class, data:{}},
+  //       {name: 'test drawing', type: FileType.Mock, data:{}}
+  //     ]),
+  //   new Project("2", 'Food', [
+  //       {name: 'Fruit model', type: FileType.Class, data:{}},
+  //       {name: 'Grain Model', type: FileType.Class, data:{}},
+  //       {name: 'front end', type: FileType.Mock, data:{}}
+  //     ])
+  // ]);
+
+  private model: Model<Project[]>;
+
+  public projects$: Observable<Project[]>;
+
+  constructor(private modelFactory: ModelFactory<Project[]>) {
+    this.model = this.modelFactory.create([
+      {id: "1", name: 'Test', files: [
         {name: 'test model', type: FileType.Class, data:{}},
         {name: 'test drawing', type: FileType.Mock, data:{}}
       ]},
-    {id: "2", name: 'Food', files:[
+      {id: "2", name: 'Food', files: [
         {name: 'Fruit model', type: FileType.Class, data:{}},
         {name: 'Grain Model', type: FileType.Class, data:{}},
         {name: 'front end', type: FileType.Mock, data:{}}
       ]}
-  ]);
-
-  public readonly projects: Observable<Project[]> = this._projects.asObservable();
-
-  constructor() {
+    ]);
+    this.projects$ = this.model.data$;
     window.projectService = this;
   }
 
-  public getProjects(): Observable<Project[]> {
-    return this.projects;
+  // public getProjects(): Observable<Project[]> {
+  //   return this.projects$;
+  // }
+
+  // public getProjectNames(): Observable<string[]> {
+  //   return this.projects$.map((ps: Project[])=>{return ps.map((val: Project)=>val.name)});
+  // }
+
+  private  _getProjectByName(name: string): Project {
+    return this.model.get().find(value=>value.name == name);
   }
 
-  public getProjectNames(): Observable<string[]> {
-    return this.projects.map((ps: Project[])=>{return ps.map((val: Project)=>val.name)});
+  public getProjectByName(name: string): Observable<Project> {
+    return Observable.of(this._getProjectByName(name));
   }
-
-  public getProjectByName(name: string): Project {
-    return this._projects.getValue().find(value=>value.name == name);
-  }
-  public getProjectById(id: string): Project {
-    return this._projects.getValue().find(value=>value.id == id);
-  }
+  // public getProjectById(id: string): Observable<Project> {
+  //   return Observable.of(this.model.get().find(value=>value.id == id));
+  // }
 
   public addProject(p: Project): Observable<Project> {
-    let ps = this._projects.getValue();
+    const ps = this.model.get();
     if (ps.find(v=>v.name == p.name) != null) {
-      return Observable.throw(new NameError("Name '${p.name}' is already used"));
+      return Observable.throw(new NameError(`Name '${p.name}' is already used`));
     }
     p.id = (ps.length+1).toString();
     ps.push(p);
-    this._projects.next(ps);
+    this.model.set(ps);
     return Observable.of(p);
   }
 
   public addProjectByName(name: string): Observable<Project> {
-    let ps = this._projects.getValue();
-    return this.addProject(new Project((ps.length+1).toString(), name, []));
+    let ps = this.model.get();
+    return this.addProject({id: (ps.length+1).toString(), name: name, files: []});
   }
 
-  public getFileNames(pName: string): string[] {
-    let p = this.getProjectByName(pName);
-    if (p) {
-      return p.files.map(val=>val.name);
-    } else {
-      return [];
-    }
-
+  // public getFileNames(pName: string): Observable<string[]> {
+  //   let p = this.getProjectByName(pName);
+  //   if (p) {
+  //     return p.files.map(val=>val.name);
+  //   } else {
+  //     return [];
+  //   }
+  //
+  // }
+  //
+  public getFile(projectName: string, fileName: string): Observable<File> {
+    return this.getProjectByName(projectName).map(p=> {
+      return p.files.find(f => f.name == fileName);
+    });
   }
 
-  public getDrawing(projectName: string, fileName: string) {
-    return this.getProjectByName(projectName).files.find(f=>f.name == fileName);
+  public addFile(project: Project, file: File): Observable<File> {
+    project.files.push(file);
+    this.model.set(this.model.get());
+    return Observable.of(file);
   }
 
-  public addDrawing(projectName, name, type: FileType) {
-    this.getProjectByName(projectName).files.push(new File(name, type, {}));
-    this._projects.next(this._projects.getValue());
+  public addFileByName(projectName, name, type: FileType): Observable<File> {
+    return this.addFile(projectName, {name: name, type: type, data: {}});
   }
 }
