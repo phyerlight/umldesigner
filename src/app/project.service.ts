@@ -77,24 +77,9 @@ export class ProjectService {
     window.projectService = this;
   }
 
-  // public getProjects(): Observable<Project[]> {
-  //   return this.projects$;
-  // }
-
-  // public getProjectNames(): Observable<string[]> {
-  //   return this.projects$.map((ps: Project[])=>{return ps.map((val: Project)=>val.name)});
-  // }
-
-  private  _getProjectByName(name: string): Project {
-    return this.model.get().find(value=>value.name == name);
-  }
-
   public getProjectByName(name: string): Observable<Project> {
-    return Observable.of(this._getProjectByName(name));
+    return this.projects$.map((ps:Project[]) => ps.find( value => value.name == name));
   }
-  // public getProjectById(id: string): Observable<Project> {
-  //   return Observable.of(this.model.get().find(value=>value.id == id));
-  // }
 
   public addProject(p: Project): Observable<Project> {
     const ps = this.model.get();
@@ -112,16 +97,6 @@ export class ProjectService {
     return this.addProject({id: (ps.length+1).toString(), name: name, files: []});
   }
 
-  // public getFileNames(pName: string): Observable<string[]> {
-  //   let p = this.getProjectByName(pName);
-  //   if (p) {
-  //     return p.files.map(val=>val.name);
-  //   } else {
-  //     return [];
-  //   }
-  //
-  // }
-  //
   public getFile(projectName: string, fileName: string): Observable<File> {
     return this.getProjectByName(projectName).map(p=> {
       return p.files.find(f => f.name == fileName);
@@ -129,12 +104,18 @@ export class ProjectService {
   }
 
   public addFile(project: Project, file: File): Observable<File> {
-    project.files.push(file);
-    this.model.set(this.model.get());
-    return Observable.of(file);
+    const ps = this.model.get();
+    let p = ps.find(v=> v.id == project.id);
+    if (p) {
+      p.files.push(file);
+      this.model.set(ps);
+      return Observable.of(file);
+    } else {
+      throw new NotFoundError(`Could not find project ${project.name}`);
+    }
   }
 
-  public addFileByName(projectName, name, type: FileType): Observable<File> {
-    return this.addFile(projectName, {name: name, type: type, data: {}});
+  public addFileByName(project: Project, name: string, type: FileType): Observable<File> {
+    return this.addFile(project, {name: name, type: type, data: {}});
   }
 }

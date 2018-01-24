@@ -1,8 +1,6 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {FileType, NameError, Project, ProjectService, File} from "../project.service";
-import {ActivatedRoute, Params, Router} from "@angular/router";
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
+import {NameError, Project, ProjectService} from "../project.service";
 import {Input} from "@angular/core";
-import {Observable} from "rxjs/Observable";
 
 @Component({
   selector: 'app-project-list',
@@ -18,9 +16,7 @@ export class ProjectListComponent {
   @Output() onProjectSelected = new EventEmitter<Project>();
   @Output() onProjectAdded = new EventEmitter<Project>();
 
-  constructor(private projectService: ProjectService,
-              private route: ActivatedRoute,
-              private router: Router) { }
+  constructor(private projectService: ProjectService) { }
 
   handleSelectProject(projectId) {
     this.onProjectSelected.emit(this.projects.find(v=>v.id == projectId));
