@@ -74,7 +74,8 @@ export class ProjectService {
       ]}
     ]);
     this.projects$ = this.model.data$;
-    window.projectService = this;
+    //TODO: Remove this for production
+    window['projectService'] = this;
   }
 
   public getProjectByName(name: string): Observable<Project> {
