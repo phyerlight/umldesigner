@@ -28,14 +28,16 @@ export class AppComponent implements OnInit {
             this.selectedProject = p;
             if (params.file) {
               let file: File = p.files.find(v=> v.name == params.file);
-              if (file) {
-                this.selectedFile = file;
-              } else {
+              // if (file) {
+              this.selectedFile = file;
+              // } else {
+              if (!file) {
                 this.router.navigate([this.selectedProject.name]);
               }
             }
           } else {
             this.router.navigateByUrl("");
+            this.selectedProject = null;
           }
         });
       }
@@ -43,7 +45,11 @@ export class AppComponent implements OnInit {
   }
 
   handleProjectSelected(project: Project) {
-    this.router.navigate([project.name]);
+    if (project == null) {
+      this.router.navigateByUrl("");
+    } else {
+      this.router.navigate([project.name]);
+    }
   }
 
   handleProjectAdded(p: Project) {
@@ -55,7 +61,11 @@ export class AppComponent implements OnInit {
   }
 
   handleFileSelected(file: File) {
-    this.router.navigate([this.selectedProject.name, file.name]);
+    if (file != null) {
+      this.router.navigate([this.selectedProject.name, file.name]);
+    } else {
+      this.selectedFile = null;
+    }
   }
 
 }

@@ -1,17 +1,16 @@
 <div class="files">
-  <div class="content" *ngIf="selectedProject">
-    <ul>
-      <li *ngIf="selectedProject.files.length < 1">Add a file using the + button below</li>
-      <li *ngFor="let f of selectedProject.files" (click)="handleSelectFile(f)" [class.selected]="selectedFile==f">
-        {{f.name}}
-      </li>
-    </ul>
-    <div class="actions">
-      <select #fileType>
-        <option *ngFor="let t of fileTypes" value="{{t.id}}">{{t.name }}</option>
-      </select>
-      <button (click)="handleAddFile(fileType.value)">+</button>
-    </div>
-  </div>
-  <p *ngIf="!selectedProject">Select a project from the list above</p>
+  <p-listbox [options]="selectedProject.files"
+             optionLabel="name"
+             [(ngModel)]="selectedFile"
+
+             (onChange)="handleSelectFile($event.value)">
+    <p-footer>
+      <div class="actions ui-inputgroup">
+        <p-dropdown #fileType
+                    [options]="fileTypes"
+                    optionLabel="name"></p-dropdown>
+        <p-button (onClick)="handleAddFile(fileType.selectedOption.value)" label="+"></p-button>
+      </div>
+    </p-footer>
+  </p-listbox>
 </div>

@@ -71,7 +71,34 @@ export class ProjectService {
         {name: 'Fruit model', type: FileType.Class, data:{}},
         {name: 'Grain Model', type: FileType.Class, data:{}},
         {name: 'front end', type: FileType.Mock, data:{}}
-      ]}
+      ]},
+      {id: "3", name: 'Test2', files: [
+          {name: 'test model', type: FileType.Class, data:{}},
+          {name: 'test drawing', type: FileType.Mock, data:{}}
+        ]},
+      {id: "4", name: 'Food2', files: [
+          {name: 'Fruit model', type: FileType.Class, data:{}},
+          {name: 'Grain Model', type: FileType.Class, data:{}},
+          {name: 'front end', type: FileType.Mock, data:{}}
+        ]},
+      {id: "5", name: 'Test3', files: [
+          {name: 'test model', type: FileType.Class, data:{}},
+          {name: 'test drawing', type: FileType.Mock, data:{}}
+        ]},
+      {id: "6", name: 'Food3', files: [
+          {name: 'Fruit model', type: FileType.Class, data:{}},
+          {name: 'Grain Model', type: FileType.Class, data:{}},
+          {name: 'front end', type: FileType.Mock, data:{}}
+        ]},
+      {id: "7", name: 'Test4', files: [
+          {name: 'test model', type: FileType.Class, data:{}},
+          {name: 'test drawing', type: FileType.Mock, data:{}}
+        ]},
+      {id: "8", name: 'Food4', files: [
+          {name: 'Fruit model', type: FileType.Class, data:{}},
+          {name: 'Grain Model', type: FileType.Class, data:{}},
+          {name: 'front end', type: FileType.Mock, data:{}}
+        ]}
     ]);
     this.projects$ = this.model.data$;
     //TODO: Remove this for production

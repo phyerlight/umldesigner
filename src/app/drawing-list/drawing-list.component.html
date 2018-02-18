@@ -1,0 +1,30 @@
+<p-card [style]="{height: '100%'}">
+  <!--<p-scrollPanel [style]="{height: '100%'}">-->
+    <p-accordion (onOpen)="handleSelectProject($event, true)"
+                 (onClose)="handleSelectProject($event, false)">
+      <p-accordionTab *ngFor="let project of projects"
+             [selected]="isSelectedProject(project)">
+        <p-header>
+          {{project.name}}
+        </p-header>
+        <p-listbox [options]="project.files"
+                   optionLabel="name"
+                   (onChange)="handleSelectFile($event.value)"
+                   [(ngModel)]="selectedFile"></p-listbox>
+      </p-accordionTab>
+    </p-accordion>
+  <!--</p-scrollPanel>-->
+  <p-footer>
+    <p-toolbar>
+      <div class="ui-toolbar-group-right">
+        <p-button label="Add Project"
+                  icon="fa fa-plus"
+                  (onClick)="handleAddProject()"></p-button>
+        <p-button label="Add File"
+                  icon="fa fa-plus"
+                  [disabled]="selectedProject==null"
+                  (onClick)="handleAddFile()"></p-button>
+      </div>
+    </p-toolbar>
+  </p-footer>
+</p-card>

@@ -22,8 +22,8 @@ export class FileListComponent implements OnInit {
   ngOnInit() {
   }
 
-  handleAddFile(drawingTypeId: string, msg?: string) {
-    let fileType = FileType.getTypeById(drawingTypeId);
+  handleAddFile(fileType: FileType, msg?: string) {
+    // let fileType = FileType.getTypeById(drawingTypeId);
     if (msg == null || msg == "") msg = "What is the new "+fileType.name+" drawing name?";
     let name = window.prompt(msg);
     while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
@@ -35,7 +35,7 @@ export class FileListComponent implements OnInit {
         this.onFileAdded.emit(f);
       }, e=> {
         if (e instanceof NameError) {
-          this.handleAddFile(drawingTypeId, e.message);
+          this.handleAddFile(fileType, e.message);
         } else {
           throw e;
         }

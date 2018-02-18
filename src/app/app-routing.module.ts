@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
-import {Params, RouterModule, Routes} from "@angular/router";
+import {Params, RouteReuseStrategy, RouterModule, Routes, ActivatedRouteSnapshot} from "@angular/router";
 import {AppComponent} from "./app.component";
+import {DetachedRouteHandle} from '@angular/router/src/route_reuse_strategy';
 
 export interface RouteParams extends Params {
   project: string,
@@ -13,8 +14,19 @@ const routes: Routes = [
   { path: ':project/:file', component: AppComponent}
 ];
 
+export class CustomRouteReuseStrategy extends RouteReuseStrategy {
+  shouldDetach(route: ActivatedRouteSnapshot): boolean { return false; }
+  store(route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {}
+  shouldAttach(route: ActivatedRouteSnapshot): boolean { return false; }
+  retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle|null { return null; }
+  shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean { return true; }
+}
+
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [
+    {provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy}
+  ]
 })
 export class AppRoutingModule { }

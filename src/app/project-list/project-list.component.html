@@ -1,8 +1,9 @@
-<div class="projects">
-  Project:&nbsp;<select #projectId (change)="handleSelectProject(projectId.value)">
-    <option value="">Select a project...</option>
-    <option *ngFor="let p of projects"
-            value="{{p.id}}" [attr.selected]="selectedProject?.id==p.id ? '' : null">{{p.name}}</option>
-  </select>
-  <button (click)="handleAddProject();">+</button>
+<div class="projects ui-inputgroup">
+  <!--<span class="ui-inputgroup-addon">Project</span>-->
+  <p-dropdown [options]="projects"
+              optionLabel="name"
+              [(ngModel)]="selectedProject"
+              placeholder="Select a project..."
+              (onChange)="handleSelectProject($event.value)"></p-dropdown>
+  <p-button (onClick)="handleAddProject();" label="+"></p-button>
 </div>

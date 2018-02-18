@@ -18,8 +18,9 @@ export class ProjectListComponent {
 
   constructor(private projectService: ProjectService) { }
 
-  handleSelectProject(projectId) {
-    this.onProjectSelected.emit(this.projects.find(v=>v.id == projectId));
+  handleSelectProject(project) {
+    // this.onProjectSelected.emit(this.projects.find(v=>v.id == projectId));
+    this.onProjectSelected.emit(project);
   }
 
   /**
@@ -28,12 +29,12 @@ export class ProjectListComponent {
    * @param {string} msg Initial message to display in the input box.
    */
   handleAddProject(msg: string = "") {
-    if (msg == null || msg == "") msg = "What is the new projects$ name?";
+    if (msg == null || msg == "") msg = "What is the new project name?";
     let name = window.prompt(msg);
     //do not allow some characters that would be bad for URLs
     //if name is null, it means it was cancelled.
     while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-      name = window.prompt("The projects$ name cannot be empty or contain the characters ' \" \\ / &");
+      name = window.prompt("The project name cannot be empty or contain the characters ' \" \\ / &");
     }
 
     if (name != null && name != "") {
