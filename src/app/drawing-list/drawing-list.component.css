@@ -23,6 +23,7 @@ app-drawing-list .ui-accordion .ui-accordion-content {
   padding: 8px;
   /*padding-right: 2px;*/
   width: 100%;
+  text-align: center;
 }
 
 app-drawing-list .ui-accordion .ui-accordion-header.ui-state-active {
@@ -40,8 +41,35 @@ app-drawing-list .ui-listbox {
 
 app-drawing-list .ui-listbox .ui-listbox-item {
   border-bottom: 1px solid #D5D5D5;
+  text-align: left;
+  /*display: flex !important;*/
+}
+
+app-drawing-list .ui-listbox .ui-listbox-item span {
+  flex-grow: 1;
+  align-self: center;
+}
+
+app-drawing-list .ui-listbox .ui-listbox-item p-button {
+  flex-shrink: 1;
+  align-self: center;
 }
 
 app-drawing-list .ui-listbox .ui-listbox-item:last-child {
   border-bottom: 0 none;
+}
+
+app-drawing-list .ui-accordion p-header, app-drawing-list .ui-accordion .ui-accordion-header a {
+  display: flex;
+  flex-direction: row;
+}
+
+app-drawing-list .ui-accordion p-header span, app-drawing-list .ui-accordion-header p-header {
+  flex-grow: 1;
+  align-self: center;
+}
+
+app-drawing-list .ui-accordion p-header p-button, app-drawing-list .ui-accordion-header a span {
+  flex-shrink: 1;
+  align-self: center;
 }

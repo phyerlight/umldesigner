@@ -30,6 +30,8 @@ export class EditorComponent implements OnInit {
       if (params.project && params.file) {
         this.projectService.getFile(params.project, params.file).subscribe(f=>{
           this.file = f;
+        }, e => {
+
         })
       }
     });

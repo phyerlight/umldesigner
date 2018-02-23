@@ -1,28 +1,41 @@
 <p-card [style]="{height: '100%'}">
-  <!--<p-scrollPanel [style]="{height: '100%'}">-->
-    <p-accordion (onOpen)="handleSelectProject($event, true)"
-                 (onClose)="handleSelectProject($event, false)">
-      <p-accordionTab *ngFor="let project of projects"
-             [selected]="isSelectedProject(project)">
-        <p-header>
-          {{project.name}}
-        </p-header>
-        <p-listbox [options]="project.files"
-                   optionLabel="name"
-                   (onChange)="handleSelectFile($event.value)"
-                   [(ngModel)]="selectedFile"></p-listbox>
-      </p-accordionTab>
-    </p-accordion>
-  <!--</p-scrollPanel>-->
+  <p-accordion (onOpen)="selectActiveProject($event, true)" (onClose)="selectActiveProject($event, false)">
+    <p-accordionTab *ngFor="let project of projects"
+           [selected]="isSelectedProject(project)">
+      <p-header>
+        <span>{{project.name}}</span>
+        <p-button icon="fa fa-fw fa-trash"
+                  (onClick)="handleRemoveProject($event, project)"></p-button>
+      </p-header>
+
+      <p-listbox *ngIf="project.files.length > 0"
+                 [options]="genFileList(project)"
+                 optionLabel="file.name"
+                 (onChange)="handleSelection($event.value)"
+                 [(ngModel)]="selection">
+        <ng-template let-option let-i="index" pTemplate="item">
+          <div class="flex-row">
+            <span class="flex-grow">{{option.value.file.name}}</span>
+            <button class="flex-shrink" pButton icon="fa fa-fw fa-trash"
+                    (click)="handleRemoveFile($event, option.value)"></button>
+          </div>
+        </ng-template>
+      </p-listbox>
+      <span *ngIf="project.files.length < 1" [style]="{'text-align':'center'}">Add a <p-button label="File"
+                            icon="fa fa-fw fa-plus"
+                            [disabled]="activeProject==null"
+                            (onClick)="handleAddFile()"></p-button></span>
+    </p-accordionTab>
+  </p-accordion>
   <p-footer>
     <p-toolbar>
       <div class="ui-toolbar-group-right">
-        <p-button label="Add Project"
-                  icon="fa fa-plus"
+        <p-button label="Project"
+                  icon="fa fa-fw fa-plus"
                   (onClick)="handleAddProject()"></p-button>
-        <p-button label="Add File"
-                  icon="fa fa-plus"
-                  [disabled]="selectedProject==null"
+        <p-button label="File"
+                  icon="fa fa-fw fa-plus"
+                  [disabled]="activeProject==null"
                   (onClick)="handleAddFile()"></p-button>
       </div>
     </p-toolbar>

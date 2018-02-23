@@ -2,33 +2,13 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw'
 import {ModelFactory, Model} from "ngx-model";
-
-export class FileType {
-
-  public static Class = new FileType('class', 'Class', 'Class Diagram');
-  public static Mock = new FileType('mock', 'Mock Up', 'Webpage Mockup');
-
-  private static typeList: FileType[] = [FileType.Class, FileType.Mock];
-
-  constructor(
-    public id: string,
-    public name: string,
-    public desc: string
-  ) {}
-
-  public static getTypes(): FileType[] {
-    return FileType.typeList;
-  }
-
-  public static getTypeById(typeId: string): FileType {
-    return FileType.typeList.find(t=>t.id == typeId);
-  }
-}
+import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 export interface File {
     name: string;
-    type: FileType;
+    // type: FileType;
     data: object;
 }
 
@@ -64,40 +44,40 @@ export class ProjectService {
   constructor(private modelFactory: ModelFactory<Project[]>) {
     this.model = this.modelFactory.create([
       {id: "1", name: 'Test', files: [
-        {name: 'test model', type: FileType.Class, data:{}},
-        {name: 'test drawing', type: FileType.Mock, data:{}}
+        {name: 'test model', data:{}},
+        {name: 'test drawing', data:{}}
       ]},
       {id: "2", name: 'Food', files: [
-        {name: 'Fruit model', type: FileType.Class, data:{}},
-        {name: 'Grain Model', type: FileType.Class, data:{}},
-        {name: 'front end', type: FileType.Mock, data:{}}
+        {name: 'Fruit model', data:{}},
+        {name: 'Grain Model', data:{}},
+        {name: 'front end', data:{}}
       ]},
       {id: "3", name: 'Test2', files: [
-          {name: 'test model', type: FileType.Class, data:{}},
-          {name: 'test drawing', type: FileType.Mock, data:{}}
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
         ]},
       {id: "4", name: 'Food2', files: [
-          {name: 'Fruit model', type: FileType.Class, data:{}},
-          {name: 'Grain Model', type: FileType.Class, data:{}},
-          {name: 'front end', type: FileType.Mock, data:{}}
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
         ]},
       {id: "5", name: 'Test3', files: [
-          {name: 'test model', type: FileType.Class, data:{}},
-          {name: 'test drawing', type: FileType.Mock, data:{}}
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
         ]},
       {id: "6", name: 'Food3', files: [
-          {name: 'Fruit model', type: FileType.Class, data:{}},
-          {name: 'Grain Model', type: FileType.Class, data:{}},
-          {name: 'front end', type: FileType.Mock, data:{}}
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
         ]},
       {id: "7", name: 'Test4', files: [
-          {name: 'test model', type: FileType.Class, data:{}},
-          {name: 'test drawing', type: FileType.Mock, data:{}}
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
         ]},
       {id: "8", name: 'Food4', files: [
-          {name: 'Fruit model', type: FileType.Class, data:{}},
-          {name: 'Grain Model', type: FileType.Class, data:{}},
-          {name: 'front end', type: FileType.Mock, data:{}}
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
         ]}
     ]);
     this.projects$ = this.model.data$;
@@ -125,9 +105,22 @@ export class ProjectService {
     return this.addProject({id: (ps.length+1).toString(), name: name, files: []});
   }
 
+  public removeProject(p: Project) {
+    const ps: Project[] = this.model.get();
+    let i = ps.findIndex(v => v.id == p.id);
+    if (i > -1) {
+      ps.splice(i, 1);
+      this.model.set(ps);
+    }
+  }
+
   public getFile(projectName: string, fileName: string): Observable<File> {
     return this.getProjectByName(projectName).map(p=> {
-      return p.files.find(f => f.name == fileName);
+      if (p) {
+        return p.files.find(f => f.name == fileName);
+      } else {
+        throw new NotFoundError("Could not find project with name "+projectName);
+      }
     });
   }
 
@@ -143,7 +136,19 @@ export class ProjectService {
     }
   }
 
-  public addFileByName(project: Project, name: string, type: FileType): Observable<File> {
-    return this.addFile(project, {name: name, type: type, data: {}});
+  public addFileByName(project: Project, name: string): Observable<File> {
+    return this.addFile(project, {name: name, data: {}});
+  }
+
+  public removeFile(project: Project, file: File) {
+    const ps: Project[] = this.model.get();
+    let p = ps.find(v => v.id == project.id);
+    if (p) {
+      let i = p.files.findIndex(v => v.name == file.name);
+      if (i > -1) {
+        p.files.splice(i, 1);
+        this.model.set(ps);
+      }
+    }
   }
 }

@@ -1,15 +1,16 @@
 <div class="ui-g">
   <nav class="ui-g-3">
     <app-drawing-list [projects]="projectService.projects$ | async"
-      [selectedProject]="selectedProject"
-      [selectedFile]="selectedFile"
-      (onProjectSelected)="handleProjectSelected($event)"
-      (onFileSelected)="handleFileSelected($event)"
-      (onProjectAdded)="handleProjectAdded($event)"
-      (onFileAdded)="handleFileAdded($event)"
+      [selection]="selection"
+      (onSelection)="handleSelection($event)"
+      (onProjectAdded)="handleAddProject($event)"
+      (onProjectRemoved)="handleRemoveProject($event)"
+      (onFileAdded)="handleAddFile($event)"
+      (onFileRemoved)="handleRemoveFile($event)"
     ></app-drawing-list>
   </nav>
   <div class="ui-g-9">
     <app-editor></app-editor>
   </div>
 </div>
+<p-confirmDialog header="Confirm" icon="fa fa-question-circle"></p-confirmDialog>

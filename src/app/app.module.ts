@@ -18,6 +18,8 @@ import { ListboxModule } from "primeng/listbox";
 import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import {PanelModule} from "primeng/panel";
 import {CardModule} from "primeng/card";
+import {ConfirmDialogModule} from "primeng/confirmdialog";
+import {ConfirmationService} from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -42,10 +44,12 @@ import {CardModule} from "primeng/card";
     PanelModule,
     AccordionModule,
     ToolbarModule,
-    CardModule
+    CardModule,
+    ConfirmDialogModule
   ],
   providers: [
-    ProjectService
+    ProjectService,
+    ConfirmationService
   ],
   bootstrap: [OutletWrapperComponent]
 })
