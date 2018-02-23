@@ -2,7 +2,8 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {File, NameError, Project, ProjectService} from "./project.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RouteParams} from "./app-routing.module";
-import {ConfirmationService} from "primeng/api";
+import {MatDialog} from "@angular/material";
+import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
 
 export type Selection = {
   project: Project,
@@ -26,7 +27,7 @@ export class AppComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private projectService: ProjectService,
-    private confirmationService: ConfirmationService) { }
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.subscribe((params: RouteParams) => {
@@ -84,9 +85,14 @@ export class AppComponent implements OnInit {
   }
 
   handleRemoveProject(project: Project) {
-    this.confirmationService.confirm({
-      message: "Are you sure you want to remove the project "+project.name+"?",
-      accept: () => {
+    let dialogRef = this.dialog.open(ConfirmDialogComponent , {
+      data:{
+        message: "Are you sure you want to remove the project "+project.name+"?"
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((accept: boolean) => {
+      if (accept) {
         if (this.selection.project.id == project.id) {
           this.router.navigateByUrl("");
         }
@@ -116,11 +122,15 @@ export class AppComponent implements OnInit {
   }
 
   handleRemoveFile(sel: Selection) {
-    this.confirmationService.confirm({
-      message: "Are you sure you want to remove the file "+sel.file.name+"?",
-      accept: () => {
-        this.projectService.removeFile(sel.project, sel.file);
+    let dialogRef = this.dialog.open(ConfirmDialogComponent , {
+      data:{
+        message: "Are you sure you want to remove the file "+sel.file.name+"?"
       }
+    });
+
+    dialogRef.afterClosed().subscribe((accept: boolean) => {
+      if (accept) {
+        this.projectService.removeFile(sel.project, sel.file);      }
     });
   }
 
