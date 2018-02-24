@@ -1,43 +1,40 @@
-<p-card [style]="{height: '100%'}">
-  <p-accordion (onOpen)="selectActiveProject($event, true)" (onClose)="selectActiveProject($event, false)">
-    <p-accordionTab *ngFor="let project of projects"
-           [selected]="isSelectedProject(project)">
-      <p-header>
+<div class="nav-card">
+  <mat-accordion [displayMode]="flat">
+    <mat-expansion-panel *ngFor="let project of projects"
+                         (opened)="selectActiveProject(project, true)"
+                         (closed)="selectActiveProject(project, false)"
+           [expanded]="isSelectedProject(project)">
+      <mat-expansion-panel-header>
         <span>{{project.name}}</span>
-        <p-button icon="fa fa-fw fa-trash"
-                  (onClick)="handleRemoveProject($event, project)"></p-button>
-      </p-header>
+      </mat-expansion-panel-header>
 
-      <p-listbox *ngIf="project.files.length > 0"
-                 [options]="genFileList(project)"
-                 optionLabel="file.name"
-                 (onChange)="handleSelection($event.value)"
-                 [(ngModel)]="selection">
-        <ng-template let-option let-i="index" pTemplate="item">
-          <div class="flex-row">
-            <span class="flex-grow">{{option.value.file.name}}</span>
-            <button class="flex-shrink" pButton icon="fa fa-fw fa-trash"
-                    (click)="handleRemoveFile($event, option.value)"></button>
-          </div>
-        </ng-template>
-      </p-listbox>
-      <span *ngIf="project.files.length < 1" [style]="{'text-align':'center'}">Add a <p-button label="File"
-                            icon="fa fa-fw fa-plus"
-                            [disabled]="activeProject==null"
-                            (onClick)="handleAddFile()"></p-button></span>
-    </p-accordionTab>
-  </p-accordion>
-  <p-footer>
-    <p-toolbar>
-      <div class="ui-toolbar-group-right">
-        <p-button label="Project"
-                  icon="fa fa-fw fa-plus"
-                  (onClick)="handleAddProject()"></p-button>
-        <p-button label="File"
-                  icon="fa fa-fw fa-plus"
-                  [disabled]="activeProject==null"
-                  (onClick)="handleAddFile()"></p-button>
-      </div>
-    </p-toolbar>
-  </p-footer>
-</p-card>
+      <mat-nav-list *ngIf="project.files.length > 0">
+        <mat-list-item *ngFor="let item of genFileList(project)">
+            <div class="flex-row">
+              <a class="flex-grow" [routerLink]="['/', item.project.name, item.file.name]">{{item.file.name}}</a>
+              <button class="flex-shrink" mat-icon-button
+                      (click)="handleRemoveFile($event, item)">
+                <mat-icon matListIcon>delete</mat-icon>
+              </button>
+            </div>
+        </mat-list-item>
+      </mat-nav-list>
+      <span *ngIf="project.files.length < 1" [style]="{'text-align':'center'}">
+        <button mat-button
+                [disabled]="activeProject==null"
+                (click)="handleAddFile()">Add a File</button>
+      </span>
+      <mat-action-row>
+        <button label="File"
+                mat-raised-button
+                [disabled]="activeProject==null"
+                (onClick)="handleAddFile()">Add a File</button>
+        <button mat-raised-button
+                (click)="handleRemoveProject($event, project)">Delete Project</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<button mat-fab
+        class="bottom-right"
+        (onClick)="handleAddProject()"><mat-icon>add</mat-icon></button>

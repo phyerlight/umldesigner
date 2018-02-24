@@ -2,7 +2,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from '@angular/core';
 import { FormsModule } from "@angular/forms";
-import { MatDialogModule } from "@angular/material";
+import {
+  MatButtonModule, MatCardModule,
+  MatDialogModule, MatDividerModule, MatExpansionModule, MatIconModule, MatListModule, MatSidenavModule,
+  MatToolbarModule
+} from "@angular/material";
 
 import { NgxModelModule } from "ngx-model";
 
@@ -19,10 +23,10 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 @NgModule({
   declarations: [
     AppComponent,
-    ProjectListComponent,
+    // ProjectListComponent,
     EditorComponent,
     OutletWrapperComponent,
-    FileListComponent,
+    // FileListComponent,
     DrawingListComponent,
     ConfirmDialogComponent,
   ],
@@ -35,7 +39,16 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     FormsModule,
     AppRoutingModule,
     NgxModelModule,
-    MatDialogModule
+    //Angular Material
+    MatDialogModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatExpansionModule,
+    MatListModule,
+    MatButtonModule,
+    MatDividerModule,
+    MatCardModule
   ],
   providers: [
     ProjectService,

@@ -1,5 +1,5 @@
-<div class="ui-g">
-  <nav class="ui-g-3">
+<mat-drawer-container>
+  <mat-drawer mode="side" [opened]="true" [ngStyle]="{'overflow-y': 'unset'}">
     <app-drawing-list [projects]="projectService.projects$ | async"
       [selection]="selection"
       (onSelection)="handleSelection($event)"
@@ -8,9 +8,8 @@
       (onFileAdded)="handleAddFile($event)"
       (onFileRemoved)="handleRemoveFile($event)"
     ></app-drawing-list>
-  </nav>
-  <div class="ui-g-9">
+  </mat-drawer>
+  <mat-drawer-content>
     <app-editor></app-editor>
-  </div>
-</div>
-<p-confirmDialog header="Confirm" icon="fa fa-question-circle"></p-confirmDialog>
+  </mat-drawer-content>
+</mat-drawer-container>

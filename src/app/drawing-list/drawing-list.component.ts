@@ -83,9 +83,9 @@ export class DrawingListComponent implements OnInit {
     this.onFileRemoved.emit(sel);
   }
 
-  selectActiveProject($event, isOpened: boolean) {
+  selectActiveProject(project: Project, isOpened: boolean) {
     if (isOpened) {
-      this.activeProject = this.projects[$event.index];
+      this.activeProject = project;
     } else {
       this.activeProject = null;
     }

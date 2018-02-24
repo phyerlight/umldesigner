@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
-body, html, app-root {
+body, html, app-root, mat-sidenav-container, mat-drawer-container {
   margin: 0;
   padding: 0;
   height: 100%;
@@ -18,11 +18,14 @@ body, html, app-root {
 .flex-row {
   display: flex;
   flex-direction: row;
+  width: 100%;
+  align-items: center;
 }
 
 .flex-col {
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .flex-grow {
@@ -31,4 +34,17 @@ body, html, app-root {
 
 .flex-shrink {
   flex-shrink: 1;
+}
+
+.nav-card {
+  position: absolute !important;
+  top: 0px;
+  bottom: 0px;
+  overflow-y: auto;
+}
+
+.bottom-right.mat-fab  {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
 }
