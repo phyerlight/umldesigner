@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
             if (params.file) {
               let file: File = p.files.find(v=> v.name == params.file);
               if (file) {
-                this.selection = {project: p, file: file}
+                this.selection = {project: p, file: file};
                 return;
               }
             }
@@ -93,9 +93,7 @@ export class AppComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((accept: boolean) => {
       if (accept) {
-        if (this.selection.project.id == project.id) {
-          this.router.navigateByUrl("");
-        }
+        this.router.navigateByUrl("");
         this.projectService.removeProject(project);
       }
     });

@@ -1,5 +1,9 @@
-<mat-drawer-container>
-  <mat-drawer mode="side" [opened]="true" [ngStyle]="{'overflow-y': 'unset'}">
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+  UML Designer
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #snav mode="side" [opened]="true" [fixedInViewport]="true" [fixedTopGap]="64">
     <app-drawing-list [projects]="projectService.projects$ | async"
       [selection]="selection"
       (onSelection)="handleSelection($event)"
@@ -8,8 +12,8 @@
       (onFileAdded)="handleAddFile($event)"
       (onFileRemoved)="handleRemoveFile($event)"
     ></app-drawing-list>
-  </mat-drawer>
-  <mat-drawer-content>
+  </mat-sidenav>
+  <mat-sidenav-content>
     <app-editor></app-editor>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </mat-sidenav-content>
+</mat-sidenav-container>

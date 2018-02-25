@@ -87,7 +87,9 @@ export class DrawingListComponent implements OnInit {
     if (isOpened) {
       this.activeProject = project;
     } else {
-      this.activeProject = null;
+      if (this.activeProject == project) {
+        this.activeProject = null;
+      }
     }
   }
 

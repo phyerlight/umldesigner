@@ -1,25 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+//@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body, html, app-root, mat-sidenav-container, mat-drawer-container {
   margin: 0;
   padding: 0;
-  height: 100%;
-}
-
-.ui-g {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
 }
 
 .flex-row {
   display: flex;
   flex-direction: row;
   width: 100%;
-  align-items: center;
+  align-items: stretch;
 }
 
 .flex-col {
@@ -37,10 +28,7 @@ body, html, app-root, mat-sidenav-container, mat-drawer-container {
 }
 
 .nav-card {
-  position: absolute !important;
-  top: 0px;
-  bottom: 0px;
-  overflow-y: auto;
+  height: 100%;
 }
 
 .bottom-right.mat-fab  {
@@ -48,3 +36,24 @@ body, html, app-root, mat-sidenav-container, mat-drawer-container {
   right: 20px;
   bottom: 20px;
 }
+
+mat-sidenav {
+  overflow-y: hidden !important;
+}
+
+.mat-nav-list a {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.bottom-toolbar {
+  min-height: 64px;
+}
+
+.mat-accordion {
+  overflow-y: auto;
+}
+
+//.selectedFile {
+//  background-color: purple;
+//}

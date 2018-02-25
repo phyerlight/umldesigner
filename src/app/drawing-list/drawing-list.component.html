@@ -1,5 +1,5 @@
-<div class="nav-card">
-  <mat-accordion [displayMode]="flat">
+<div class="nav-card flex-col">
+  <mat-accordion class="flex-grow" displayMode="default">
     <mat-expansion-panel *ngFor="let project of projects"
                          (opened)="selectActiveProject(project, true)"
                          (closed)="selectActiveProject(project, false)"
@@ -9,9 +9,11 @@
       </mat-expansion-panel-header>
 
       <mat-nav-list *ngIf="project.files.length > 0">
-        <mat-list-item *ngFor="let item of genFileList(project)">
+        <mat-list-item [class.selectedFile]="selection?.file==item.file"
+                       *ngFor="let item of genFileList(project)">
             <div class="flex-row">
-              <a class="flex-grow" [routerLink]="['/', item.project.name, item.file.name]">{{item.file.name}}</a>
+              <a class="flex-grow"
+                 [routerLink]="['/', item.project.name, item.file.name]">{{item.file.name}}</a>
               <button class="flex-shrink" mat-icon-button
                       (click)="handleRemoveFile($event, item)">
                 <mat-icon matListIcon>delete</mat-icon>
@@ -28,13 +30,13 @@
         <button label="File"
                 mat-raised-button
                 [disabled]="activeProject==null"
-                (onClick)="handleAddFile()">Add a File</button>
+                (click)="handleAddFile()">Add a File</button>
         <button mat-raised-button
                 (click)="handleRemoveProject($event, project)">Delete Project</button>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
+  <!--<mat-toolbar color="primary" class="bottom-toolbar flex-shrink">-->
+    <button mat-fab class="bottom-right" (click)="handleAddProject()"><mat-icon>add</mat-icon></button>
+  <!--</mat-toolbar>-->
 </div>
-<button mat-fab
-        class="bottom-right"
-        (onClick)="handleAddProject()"><mat-icon>add</mat-icon></button>
