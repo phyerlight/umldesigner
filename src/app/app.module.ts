@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
+  ErrorStateMatcher,
   MatButtonModule, MatCardModule,
-  MatDialogModule, MatDividerModule, MatExpansionModule, MatIconModule, MatListModule, MatSidenavModule,
-  MatToolbarModule
+  MatDialogModule, MatDividerModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule,
+  MatToolbarModule, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 
 import { NgxModelModule } from "ngx-model";
@@ -19,6 +20,7 @@ import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.componen
 import { FileListComponent } from './file-list/file-list.component';
 import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { NewDialogComponent } from './new-dialog/new-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,15 +31,18 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     // FileListComponent,
     DrawingListComponent,
     ConfirmDialogComponent,
+    NewDialogComponent,
   ],
   entryComponents: [
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    NewDialogComponent
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     NgxModelModule,
     //Angular Material
     MatDialogModule,
@@ -48,10 +53,12 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatListModule,
     MatButtonModule,
     MatDividerModule,
-    MatCardModule
+    MatCardModule,
+    MatInputModule
   ],
   providers: [
     ProjectService,
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
   ],
   bootstrap: [OutletWrapperComponent]
 })

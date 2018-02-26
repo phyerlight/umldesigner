@@ -1,9 +1,10 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {File, NameError, Project, ProjectService} from "./project.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RouteParams} from "./app-routing.module";
 import {MatDialog} from "@angular/material";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
+import {NewDialogComponent} from "./new-dialog/new-dialog.component";
 
 export type Selection = {
   project: Project,
@@ -19,8 +20,6 @@ export type Selection = {
 export class AppComponent implements OnInit {
   title = 'UML Designer 4';
 
-  // private selectedProject: Project;
-  // private selectedFile: File;
   private selection: Selection;
 
   constructor(
@@ -62,26 +61,24 @@ export class AppComponent implements OnInit {
    * @param {string} msg Initial message to display in the input box.
    */
   handleAddProject(msg: string = "") {
-    if (msg == null || msg == "") msg = "What is the new project name?";
-    let name = window.prompt(msg);
-    //do not allow some characters that would be bad for URLs
-    //if name is null, it means it was cancelled.
-    while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-      name = window.prompt("The project name cannot be empty or contain the characters ' \" \\ / &");
-    }
+    let dialogRef = this.dialog.open(NewDialogComponent, {
+      data: {type: 'project'},
+      width: '400px'
+    });
 
-    if (name != null && name != "") {
-      this.projectService.addProjectByName(name).subscribe(p=>{
-        this.router.navigate([p.name]);
-      }, e=>{
-        if (e instanceof NameError) {
-          this.handleAddProject(e.message);
-        } else {
-          throw e;
-        }
-      });
-
-    }
+    dialogRef.afterClosed().subscribe(name => {
+      if (name != null && name != "") {
+        this.projectService.addProjectByName(name).subscribe(p=>{
+          this.router.navigate([p.name]);
+        }, e=>{
+          if (e instanceof NameError) {
+            this.handleAddProject(e.message);
+          } else {
+            throw e;
+          }
+        });
+      }
+    });
   }
 
   handleRemoveProject(project: Project) {
@@ -100,23 +97,24 @@ export class AppComponent implements OnInit {
   }
 
   handleAddFile(project: Project, msg?: string) {
-    if (msg == null || msg == "") msg = "What is the new drawing name?";
-    let name = window.prompt(msg);
-    while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-      name = window.prompt("The drawing name cannot be empty or contain the characters ' \" \\ / &");
-    }
+    let dialogRef = this.dialog.open(NewDialogComponent, {
+      data: {type: 'file'},
+      width: '400px'
+    });
 
-    if (name != null && name != "") {
-      this.projectService.addFileByName(project, name).subscribe(f=> {
-        this.router.navigate([project.name, f.name]);
-      }, e=> {
-        if (e instanceof NameError) {
-          this.handleAddFile(project, e.message);
-        } else {
-          throw e;
-        }
-      });
-    }
+    dialogRef.afterClosed().subscribe(name => {
+      if (name != null && name != "") {
+        this.projectService.addFileByName(project, name).subscribe(f=> {
+          this.router.navigate([project.name, f.name]);
+        }, e=> {
+          if (e instanceof NameError) {
+            this.handleAddFile(project, e.message);
+          } else {
+            throw e;
+          }
+        });
+      }
+    });
   }
 
   handleRemoveFile(sel: Selection) {

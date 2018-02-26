@@ -22,9 +22,7 @@
         </mat-list-item>
       </mat-nav-list>
       <span *ngIf="project.files.length < 1" [style]="{'text-align':'center'}">
-        <button mat-button
-                [disabled]="activeProject==null"
-                (click)="handleAddFile()">Add a File</button>
+        No files have been added yet.
       </span>
       <mat-action-row>
         <button label="File"
