@@ -65,7 +65,6 @@ export class DrawingListComponent implements OnInit {
 
   handleAddProject() {
     this.onProjectAdded.emit();
-
   }
 
   handleRemoveProject($event, project: Project) {
@@ -92,53 +91,4 @@ export class DrawingListComponent implements OnInit {
       }
     }
   }
-
-  // /**
-  //  * Handle adding a project to the system. If msg is not given or empty string, default starting the process of adding
-  //  * a new project. Otherwise this can be used to handle errors as well.
-  //  * @param {string} msg Initial message to display in the input box.
-  //  */
-  // handleAddProject(msg: string = "") {
-  //   if (msg == null || msg == "") msg = "What is the new project name?";
-  //   let name = window.prompt(msg);
-  //   //do not allow some characters that would be bad for URLs
-  //   //if name is null, it means it was cancelled.
-  //   while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-  //     name = window.prompt("The project name cannot be empty or contain the characters ' \" \\ / &");
-  //   }
-  //
-  //   if (name != null && name != "") {
-  //     this.projectService.addProjectByName(name).subscribe(p=>{
-  //       this.onProjectAdded.emit(p);
-  //     }, e=>{
-  //       if (e instanceof NameError) {
-  //         this.handleAddProject(e.message);
-  //       } else {
-  //         throw e;
-  //       }
-  //     });
-  //
-  //   }
-  // }
-
-  // handleAddFile(msg?: string) {
-  //   if (msg == null || msg == "") msg = "What is the new drawing name?";
-  //   let name = window.prompt(msg);
-  //   while((name != null && !!name.match(/['"\\/&]/g)) || name == "") {
-  //     name = window.prompt("The drawing name cannot be empty or contain the characters ' \" \\ / &");
-  //   }
-  //
-  //   if (name != null && name != "") {
-  //     this.projectService.addFileByName(this.activeProject, name).subscribe(f=> {
-  //       this.onFileAdded.emit(f);
-  //     }, e=> {
-  //       if (e instanceof NameError) {
-  //         this.handleAddFile(e.message);
-  //       } else {
-  //         throw e;
-  //       }
-  //     });
-  //   }
-  // }
-
 }

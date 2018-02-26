@@ -12,12 +12,10 @@ import {
 import { NgxModelModule } from "ngx-model";
 
 import { AppComponent } from './app.component';
-import { ProjectListComponent } from './project-list/project-list.component';
 import { EditorComponent } from './editor/editor.component';
 import { ProjectService } from "./project.service";
 import { AppRoutingModule } from './app-routing.module';
 import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.component';
-import { FileListComponent } from './file-list/file-list.component';
 import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
@@ -25,10 +23,8 @@ import { NewDialogComponent } from './new-dialog/new-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
-    // ProjectListComponent,
     EditorComponent,
     OutletWrapperComponent,
-    // FileListComponent,
     DrawingListComponent,
     ConfirmDialogComponent,
     NewDialogComponent,

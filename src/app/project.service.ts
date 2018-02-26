@@ -8,7 +8,6 @@ import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 export interface File {
     name: string;
-    // type: FileType;
     data: object;
 }
 
@@ -18,8 +17,12 @@ export interface Project {
     files: Array<File>;
 }
 
-export class NameError extends Error {}
-export class NotFoundError extends Error {}
+export class NameError extends Error {
+  name = 'NameError';
+}
+export class NotFoundError extends Error {
+  name = "NotFoundError";
+}
 
 
 @Injectable()
@@ -92,7 +95,7 @@ export class ProjectService {
   public addProject(p: Project): Observable<Project> {
     const ps = this.model.get();
     if (ps.find(v=>v.name == p.name) != null) {
-      return Observable.throw(new NameError(`Name '${p.name}' is already used`));
+      return Observable.throw(new NameError(`Name '${p.name}' is already in use`));
     }
     p.id = (ps.length+1).toString();
     ps.push(p);
@@ -128,6 +131,9 @@ export class ProjectService {
     const ps = this.model.get();
     let p = ps.find(v=> v.id == project.id);
     if (p) {
+      if (p.files.find(v => v.name == file.name) != null) {
+        return Observable.throw(new NameError(`Name '${file.name}' is already in use`));
+      }
       p.files.push(file);
       this.model.set(ps);
       return Observable.of(file);

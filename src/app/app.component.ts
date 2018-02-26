@@ -5,6 +5,7 @@ import {RouteParams} from "./app-routing.module";
 import {MatDialog} from "@angular/material";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "./new-dialog/new-dialog.component";
+import 'rxjs/add/operator/catch';
 
 export type Selection = {
   project: Project,
@@ -60,23 +61,28 @@ export class AppComponent implements OnInit {
    * a new project. Otherwise this can be used to handle errors as well.
    * @param {string} msg Initial message to display in the input box.
    */
-  handleAddProject(msg: string = "") {
+  handleAddProject(msg: string = null) {
     let dialogRef = this.dialog.open(NewDialogComponent, {
-      data: {type: 'project'},
+      data: {
+        type: 'project',
+        message: msg
+      },
       width: '400px'
     });
 
     dialogRef.afterClosed().subscribe(name => {
       if (name != null && name != "") {
-        this.projectService.addProjectByName(name).subscribe(p=>{
-          this.router.navigate([p.name]);
-        }, e=>{
-          if (e instanceof NameError) {
-            this.handleAddProject(e.message);
-          } else {
-            throw e;
+        this.projectService.addProjectByName(name)
+          .subscribe(p=>{
+            this.router.navigate([p.name]);
+          }, (e)=>{
+            if (e.name == 'NameError') {
+              this.handleAddProject(e.message);
+            } else {
+              throw e;
+            }
           }
-        });
+        );
       }
     });
   }
@@ -96,9 +102,12 @@ export class AppComponent implements OnInit {
     });
   }
 
-  handleAddFile(project: Project, msg?: string) {
+  handleAddFile(project: Project, msg: string=null) {
     let dialogRef = this.dialog.open(NewDialogComponent, {
-      data: {type: 'file'},
+      data: {
+        type: 'file',
+        message: msg
+      },
       width: '400px'
     });
 
@@ -107,7 +116,7 @@ export class AppComponent implements OnInit {
         this.projectService.addFileByName(project, name).subscribe(f=> {
           this.router.navigate([project.name, f.name]);
         }, e=> {
-          if (e instanceof NameError) {
+          if (e.name == 'NameError') {
             this.handleAddFile(project, e.message);
           } else {
             throw e;
@@ -129,14 +138,4 @@ export class AppComponent implements OnInit {
         this.projectService.removeFile(sel.project, sel.file);      }
     });
   }
-
-  handleProjectAdded(p: Project) {
-
-    this.router.navigate([p.name]);
-  }
-
-  handleFileAdded(p: Project, f: File) {
-    this.router.navigate([p.name, f.name]);
-  }
-
 }
