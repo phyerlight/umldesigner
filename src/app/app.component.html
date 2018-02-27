@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+  <button mat-icon-button (click)="toggleSideNav(snav)"><mat-icon>menu</mat-icon></button>
   UML Designer
 </mat-toolbar>
 <mat-sidenav-container>
@@ -7,11 +7,14 @@
     <app-drawing-list [projects]="projectService.projects$ | async"
       [selection]="selection"
       (onSelection)="handleSelection($event)"
-      (onProjectAdded)="handleAddProject($event)"
+      (onProjectAdded)="handleAddProject()"
       (onProjectRemoved)="handleRemoveProject($event)"
       (onFileAdded)="handleAddFile($event)"
       (onFileRemoved)="handleRemoveFile($event)"
     ></app-drawing-list>
+    <button mat-fab class="bottom-right" (click)="handleAddProject()"
+            (@fabState.done)="fabAnimationDone($event, snav)"
+            [@fabState]="fabState"><mat-icon>add</mat-icon></button>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-editor></app-editor>

@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {trigger, state, style, animate, transition} from '@angular/animations';
 import {File, NameError, Project, ProjectService} from "./project.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RouteParams} from "./app-routing.module";
-import {MatDialog} from "@angular/material";
+import {MatButton, MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "./new-dialog/new-dialog.component";
 import 'rxjs/add/operator/catch';
@@ -16,12 +17,28 @@ export type Selection = {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('fabState', [
+      state('in', style({
+        transform: 'scale(1)'
+      })),
+      state('out', style({
+        transform: 'scale(0)'
+      })),
+      transition('out => in', animate('100ms ease-in')),
+      transition('in => out', animate('100ms ease-out'))
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'UML Designer 4';
 
   private selection: Selection;
+
+  @ViewChild(MatButton) fab: MatButton;
+
+  protected fabState = 'out';
 
   constructor(
     private route: ActivatedRoute,
@@ -48,6 +65,9 @@ export class AppComponent implements OnInit {
         });
       }
     });
+    window.setTimeout(()=>{
+      this.fabState = 'in';
+    }, 200);
   }
 
   handleSelection(selection: Selection) {
@@ -137,5 +157,23 @@ export class AppComponent implements OnInit {
       if (accept) {
         this.projectService.removeFile(sel.project, sel.file);      }
     });
+  }
+
+  toggleSideNav(sideNav: MatSidenav) {
+    if (sideNav.opened) {
+      this.fabState = 'out';
+    } else {
+      sideNav.open().then(value => {
+        this.fabState = 'in';
+      });
+    }
+  }
+
+  fabAnimationDone($event, sideNav: MatSidenav) {
+    if ($event.fromState == 'void') return;
+
+    if ($event.toState == 'out') {
+      sideNav.close();
+    }
   }
 }
