@@ -28,20 +28,7 @@ export class NotFoundError extends Error {
 @Injectable()
 export class ProjectService {
 
-  // private _projects: BehaviorSubject<Project[]> = new BehaviorSubject([
-  //   new Project("1", 'Test', [
-  //       {name: 'test model', type: FileType.Class, data:{}},
-  //       {name: 'test drawing', type: FileType.Mock, data:{}}
-  //     ]),
-  //   new Project("2", 'Food', [
-  //       {name: 'Fruit model', type: FileType.Class, data:{}},
-  //       {name: 'Grain Model', type: FileType.Class, data:{}},
-  //       {name: 'front end', type: FileType.Mock, data:{}}
-  //     ])
-  // ]);
-
   private model: Model<Project[]>;
-
   public projects$: Observable<Project[]>;
 
   constructor(private modelFactory: ModelFactory<Project[]>) {
