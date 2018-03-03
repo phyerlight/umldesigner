@@ -1,9 +1,0 @@
-<div class="projects ui-inputgroup">
-  <!--<span class="ui-inputgroup-addon">Project</span>-->
-  <p-dropdown [options]="projects"
-              optionLabel="name"
-              [(ngModel)]="selectedProject"
-              placeholder="Select a project..."
-              (onChange)="handleSelectProject($event.value)"></p-dropdown>
-  <p-button (onClick)="handleAddProject();" label="+"></p-button>
-</div>
