@@ -14,7 +14,7 @@
     ></app-drawing-list>
     <button mat-fab class="bottom-right" (click)="handleAddProject()"
             (@fabState.done)="fabAnimationDone($event, snav)"
-            [@fabState]="fabState"><mat-icon>add</mat-icon></button>
+            [@fabState]="fabState$ | async"><mat-icon>add</mat-icon></button>
   </mat-sidenav>
   <mat-sidenav-content>
     <app-editor></app-editor>

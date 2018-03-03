@@ -1,12 +1,15 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {trigger, state, style, animate, transition} from '@angular/animations';
 import {File, NameError, Project, ProjectService} from "./project.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RouteParams} from "./app-routing.module";
-import {MatButton, MatDialog, MatSidenav} from "@angular/material";
+import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "./new-dialog/new-dialog.component";
 import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/take';
+import 'rxjs/add/operator/delay';
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
 
 export type Selection = {
   project: Project,
@@ -17,7 +20,7 @@ export type Selection = {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('fabState', [
       state('in', style({
@@ -36,9 +39,7 @@ export class AppComponent implements OnInit {
 
   private selection: Selection;
 
-  @ViewChild(MatButton) fab: MatButton;
-
-  protected fabState = 'out';
+  protected fabState$ = new BehaviorSubject('out');
 
   constructor(
     private route: ActivatedRoute,
@@ -65,9 +66,10 @@ export class AppComponent implements OnInit {
         });
       }
     });
-    window.setTimeout(()=>{
-      this.fabState = 'in';
-    }, 200);
+
+    this.fabState$.delay(200).take(1).subscribe((v)=> {
+      this.fabState$.next('in');
+    });
   }
 
   handleSelection(selection: Selection) {
@@ -161,10 +163,10 @@ export class AppComponent implements OnInit {
 
   toggleSideNav(sideNav: MatSidenav) {
     if (sideNav.opened) {
-      this.fabState = 'out';
+      this.fabState$.next('out');
     } else {
       sideNav.open().then(value => {
-        this.fabState = 'in';
+        this.fabState$.next('in');
       });
     }
   }
