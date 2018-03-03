@@ -4,7 +4,6 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw'
 import {ModelFactory, Model} from "ngx-model";
-import {ErrorObservable} from "rxjs/observable/ErrorObservable";
 
 export interface File {
     name: string;
@@ -76,7 +75,7 @@ export class ProjectService {
   }
 
   public getProjectByName(name: string): Observable<Project> {
-    return this.projects$.map((ps:Project[]) => ps.find( value => value.name == name));
+    return this.projects$.map((ps:Project[]) => ps.find( value => value.name == name)).take(1);
   }
 
   public addProject(p: Project): Observable<Project> {
@@ -95,25 +94,45 @@ export class ProjectService {
     return this.addProject({id: (ps.length+1).toString(), name: name, files: []});
   }
 
-  public removeProject(p: Project) {
+  public removeProject(p: Project): Observable<boolean> {
     const ps: Project[] = this.model.get();
     let i = ps.findIndex(v => v.id == p.id);
     if (i > -1) {
       ps.splice(i, 1);
       this.model.set(ps);
+      return Observable.of(true);
+    } else {
+      return Observable.throw(new NotFoundError("Could not find project "+p.name+" to remove"));
     }
   }
 
+  /**
+   * Gets a file from the store using a project name and file name
+   * @param {string} projectName Name of the project
+   * @param {string} fileName Name of the file in the project
+   * @return {Observable<File>} The file or an error wrapped in an observable.
+   */
   public getFile(projectName: string, fileName: string): Observable<File> {
     return this.getProjectByName(projectName).map(p=> {
       if (p) {
-        return p.files.find(f => f.name == fileName);
+        let file =p.files.find(f => f.name == fileName);
+        if (file) {
+          return file;
+        } else {
+          throw new NotFoundError("Could not find file with name "+fileName);
+        }
       } else {
         throw new NotFoundError("Could not find project with name "+projectName);
       }
     });
   }
 
+  /**
+   * Adds a file to a project
+   * @param {Project} project
+   * @param {File} file
+   * @return {Observable<File>}
+   */
   public addFile(project: Project, file: File): Observable<File> {
     const ps = this.model.get();
     let p = ps.find(v=> v.id == project.id);
@@ -125,7 +144,7 @@ export class ProjectService {
       this.model.set(ps);
       return Observable.of(file);
     } else {
-      throw new NotFoundError(`Could not find project ${project.name}`);
+      return Observable.throw(new NotFoundError(`Could not find project ${project.name}`));
     }
   }
 
@@ -133,7 +152,7 @@ export class ProjectService {
     return this.addFile(project, {name: name, data: {}});
   }
 
-  public removeFile(project: Project, file: File) {
+  public removeFile(project: Project, file: File): Observable<boolean> {
     const ps: Project[] = this.model.get();
     let p = ps.find(v => v.id == project.id);
     if (p) {
@@ -141,7 +160,12 @@ export class ProjectService {
       if (i > -1) {
         p.files.splice(i, 1);
         this.model.set(ps);
+        return Observable.of(true);
+      } else {
+        return Observable.throw(new NotFoundError(`Could not find file ${file.name}`));
       }
+    } else {
+      return Observable.throw(new NotFoundError(`Could not find project ${project.name}`));
     }
   }
 }
