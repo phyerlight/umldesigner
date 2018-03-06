@@ -12,7 +12,7 @@ export class NewDialogComponent {
 
   protected disallowedCharacters = /^[^&'"\\/()[\]?{}]+$/;
 
-  protected form = new FormGroup({
+  form = new FormGroup({
     name: new FormControl('', [
       Validators.required,
       Validators.pattern(this.disallowedCharacters)
