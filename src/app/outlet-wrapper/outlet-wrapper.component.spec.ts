@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { OutletWrapperComponent } from './outlet-wrapper.component';
+import {RouterModule} from "@angular/router";
 
 describe('OutletWrapperComponent', () => {
   let component: OutletWrapperComponent;
@@ -8,7 +9,10 @@ describe('OutletWrapperComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OutletWrapperComponent ]
+      declarations: [ OutletWrapperComponent ],
+      imports: [
+        RouterModule
+      ]
     })
     .compileComponents();
   }));

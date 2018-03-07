@@ -1,12 +1,12 @@
-import {async, ComponentFixture, fakeAsync, inject, TestBed, tick} from '@angular/core/testing';
-
+import {async, ComponentFixture, inject, TestBed} from '@angular/core/testing';
 import { NewDialogComponent } from './new-dialog.component';
-import {MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef, MatInputModule} from "@angular/material";
+import {MatDialog, MatDialogModule, MatDialogRef, MatInputModule} from "@angular/material";
 import {ReactiveFormsModule} from "@angular/forms";
 import {Component, Directive, NgModule, ViewChild, ViewContainerRef} from "@angular/core";
 import {OverlayContainer} from "@angular/cdk/overlay";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {By} from "@angular/platform-browser";
+
+declare var spyOn: any;
 
 describe('NewDialogComponent', () => {
   let dialog: MatDialog;
@@ -85,7 +85,7 @@ describe('NewDialogComponent', () => {
 
   });
 
-  it('should not let the form be closed if invalid', () => {
+  it('should not let the item be created if invalid', () => {
     let dialogRef = dialog.open(NewDialogComponent, {
       data: {
         type: 'test',
@@ -95,7 +95,6 @@ describe('NewDialogComponent', () => {
     });
     viewContainerFixture.detectChanges();
     let input = overlayContainerElement.querySelector('input');
-    let cancelBtn: Element = overlayContainerElement.querySelector('button[type="button"]');
     let createBtn: Element = overlayContainerElement.querySelector('button[type="submit"]');
     input.value = 'bah&';
     input.dispatchEvent(new Event('input'));
@@ -112,11 +111,33 @@ describe('NewDialogComponent', () => {
 
     expect(createBtn.attributes['disabled']).toBeFalsy("button is disabled with valid form");
 
+    let spy: jasmine.Spy = spyOn(dialogRef.componentInstance, 'close').and.callThrough();
     createBtn.dispatchEvent(new Event('click'));
-    dialogRef.afterClosed().subscribe(() => {
-      expect(dialog.openDialogs.length).toBe(0);
-    });
 
+    expect(spy.calls.count()).toBe(1, "Close did not get triggered");
+  });
+
+  it('should let the form be canceled regardless', () => {
+    let dialogRef = dialog.open(NewDialogComponent, {
+      data: {
+        type: 'test',
+        message: ''
+      },
+      viewContainerRef: testViewContainerRef
+    });
+    viewContainerFixture.detectChanges();
+    let input = overlayContainerElement.querySelector('input');
+    let cancelBtn: Element = overlayContainerElement.querySelector('button[type="button"]');
+    input.value = 'bah&';
+    input.dispatchEvent(new Event('input'));
+    viewContainerFixture.detectChanges();
+
+    expect(cancelBtn.attributes['disabled']).toBeFalsy("button is disabled with invalid form");
+
+    let spy = spyOn(dialogRef.componentInstance, 'close').and.callThrough();
+    cancelBtn.dispatchEvent(new Event('click'));
+
+    expect(spy.calls.count()).toBe(1, "Close did not get triggered");
   });
 
 });
