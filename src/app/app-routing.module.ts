@@ -8,9 +8,8 @@ export interface RouteParams extends Params {
   file: string
 }
 
-const routes: Routes = [
+export const routes: Routes = [
   { path: '', component: AppComponent},
-  { path: ':project', component: AppComponent},
   { path: ':project/:file', component: AppComponent}
 ];
 
