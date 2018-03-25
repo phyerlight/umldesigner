@@ -25,8 +25,8 @@ export class DrawingListComponent implements OnInit {
       let proj: Project = this.projects.find(value => value.id == sel.project.id);
       let file: File = proj.files.find(v => v.name == sel.file.name);
       this._selection = {project: proj, file: file};
+      this.activeProject = proj;
       if (this._firstSelection) {
-        this.activeProject = proj;
         this._firstSelection = false;
       }
     } else {
@@ -39,6 +39,7 @@ export class DrawingListComponent implements OnInit {
   @Output() onProjectRemoved = new EventEmitter<Project>();
   @Output() onFileAdded = new EventEmitter<Project>();
   @Output() onFileRemoved = new EventEmitter<Selection>();
+  @Output() onActiveProjectChange = new EventEmitter();
 
   activeProject: Project;
 
@@ -85,9 +86,11 @@ export class DrawingListComponent implements OnInit {
   selectActiveProject(project: Project, isOpened: boolean) {
     if (isOpened) {
       this.activeProject = project;
+      this.onActiveProjectChange.emit();
     } else {
       if (this.activeProject == project) {
         this.activeProject = null;
+        this.onActiveProjectChange.emit();
       }
     }
   }
