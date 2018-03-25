@@ -21,29 +21,18 @@ export type Selection = {
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // animations: [
-  //   trigger('fabState', [
-  //     state('in', style({
-  //       transform: 'scale(1)'
-  //     })),
-  //     state('out', style({
-  //       transform: 'scale(0)'
-  //     })),
-  //     state('bottom', style({
-  //       left: '0',
-  //       bottom: '-10px',
-  //       height: '40px',
-  //       'border-radius': '0',
-  //       width: '100%',
-  //       position: 'relative',
-  //       'align-self': 'flex-end',
-  //     })),
-  //     transition('out => in', animate('100ms ease-in')),
-  //     transition('in => out', animate('100ms ease-out')),
-  //     transition('in => bottom', animate('100ms ease-out')),
-  //     transition('bottom => in', animate('100ms ease-out'))
-  //   ])
-  // ]
+  animations: [
+    trigger('fabState', [
+      state('in', style({
+        transform: 'scale(1)'
+      })),
+      state('out', style({
+        transform: 'scale(0)'
+      })),
+      transition('out => in', animate('100ms ease-in')),
+      transition('in => out', animate('100ms ease-out'))
+    ])
+  ]
 })
 export class AppComponent implements OnInit {
   title = 'UML Designer 4';
@@ -51,8 +40,6 @@ export class AppComponent implements OnInit {
   private selection: Selection;
   private doneBottom = false;
   protected fabState$ = new BehaviorSubject('out');
-
-  @ViewChild('scrollContainer') scrollContainer: ElementRef;
 
   constructor(
     private route: ActivatedRoute,
@@ -89,7 +76,6 @@ export class AppComponent implements OnInit {
     if (selection != null) {
       this.router.navigate([selection.project.name, selection.file.name]);
     }
-    this.checkScrollState();
   }
 
   /**
@@ -203,31 +189,5 @@ export class AppComponent implements OnInit {
     if ($event.toState == 'out') {
       sideNav.close();
     }
-  }
-
-  checkScrollState() {
-    let el = this.scrollContainer.nativeElement;
-    if (el.scrollHeight - el.scrollTop == el.clientHeight) {
-      this.fabState$.next('bottom');
-    } else {
-      this.fabState$.next('in');
-    }
-    console.log(`clientHeight: ${el.clientHeight} ; scrollHeight: ${el.scrollHeight} ; scrollTop: ${el.scrollTop}`);
-  }
-
-  private oldHeight = null;
-  watchScrollHeight() {
-    let el = this.scrollContainer.nativeElement;
-    if (this.oldHeight != el.scrollHeight) {
-      this.oldHeight = el.scrollHeight;
-      window.setTimeout(this.watchScrollHeight, 30);
-    } else {
-      this.checkScrollState();
-      this.oldHeight = null;
-    }
-  }
-
-  scrolledNav($event) {
-    this.checkScrollState();
   }
 }

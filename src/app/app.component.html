@@ -4,23 +4,22 @@
 </mat-toolbar>
 <mat-sidenav-container>
   <mat-sidenav #snav mode="side" class="" [opened]="true" [fixedInViewport]="true" [fixedTopGap]="64">
-    <div #scrollContainer class="nav-card flex-col" (scroll)="scrolledNav($event)">
+    <div class="nav-card flex-col">
       <app-drawing-list class="flex-grow" [projects]="projectService.projects$ | async"
         [selection]="selection"
         (onSelection)="handleSelection($event)"
         (onProjectAdded)="handleAddProject()"
         (onProjectRemoved)="handleRemoveProject($event)"
         (onFileAdded)="handleAddFile($event)"
-        (onActiveProjectChange)="watchScrollHeight()"
         (onFileRemoved)="handleRemoveFile($event)"
       ></app-drawing-list>
       <div class="flex-shrink" style="display: block; min-height: 50px; width: 100%; align-items: flex-end; align-content: flex-end">
         <button mat-fab class="bottom-right"
               [class.bottom-state]="(fabState$ | async) == 'bottom'"
               (click)="handleAddProject()"
+              (@fabState.done)="fabAnimationDone($event, snav)"
+              [@fabState]="fabState$ | async"
         ><mat-icon>add</mat-icon></button>
-              <!--(@fabState.done)="fabAnimationDone($event, snav)"-->
-              <!--[@fabState]="fabState$ | async"-->
       </div>
     </div>
   </mat-sidenav>
