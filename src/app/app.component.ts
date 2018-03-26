@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
   title = 'UML Designer 4';
 
   private selection: Selection;
-  private doneBottom = false;
   protected fabState$ = new BehaviorSubject('out');
 
   constructor(
@@ -163,28 +162,16 @@ export class AppComponent implements OnInit {
 
   toggleSideNav(sideNav: MatSidenav) {
     if (sideNav.opened) {
-      if (this.fabState$.getValue() != 'bottom') {
-        this.fabState$.next('out');
-      } else {
-        sideNav.close();
-      }
+      this.fabState$.next('out');
     } else {
       sideNav.open().then(value => {
-        if (this.fabState$.getValue() != 'bottom') {
-          this.fabState$.next('in');
-        }
+        this.fabState$.next('in');
       });
     }
   }
 
   fabAnimationDone($event, sideNav: MatSidenav) {
     if ($event.fromState == 'void') return;
-
-    if ($event.toState == 'bottom') {
-      this.doneBottom = true;
-    } else {
-      this.doneBottom = false;
-    }
 
     if ($event.toState == 'out') {
       sideNav.close();
