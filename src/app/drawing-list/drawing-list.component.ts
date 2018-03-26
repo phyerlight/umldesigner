@@ -39,7 +39,6 @@ export class DrawingListComponent implements OnInit {
   @Output() onProjectRemoved = new EventEmitter<Project>();
   @Output() onFileAdded = new EventEmitter<Project>();
   @Output() onFileRemoved = new EventEmitter<Selection>();
-  // @Output() onActiveProjectChange = new EventEmitter();
 
   activeProject: Project;
 
@@ -86,11 +85,9 @@ export class DrawingListComponent implements OnInit {
   selectActiveProject(project: Project, isOpened: boolean) {
     if (isOpened) {
       this.activeProject = project;
-      // this.onActiveProjectChange.emit();
     } else {
       if (this.activeProject == project) {
         this.activeProject = null;
-        // this.onActiveProjectChange.emit();
       }
     }
   }

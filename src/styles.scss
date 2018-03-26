@@ -16,7 +16,6 @@ body, html, app-root, mat-sidenav-container, mat-drawer-container {
 .flex-col {
   display: flex !important;
   flex-direction: column;
-  //height: 100%;
 }
 
 .flex-grow {
@@ -38,10 +37,6 @@ body, html, app-root, mat-sidenav-container, mat-drawer-container {
   bottom: 10px;
 }
 
-.invisible {
-  visibility: hidden;
-}
-
 mat-sidenav {
   overflow-y: hidden !important;
 }
@@ -50,35 +45,3 @@ mat-sidenav {
   padding-top: 10px;
   padding-bottom: 10px;
 }
-
-.bottom-toolbar {
-  min-height: 64px;
-}
-
-.mat-accordion {
-  //overflow-y: auto;
-}
-
-//button.bottom-state.mat-fab {
-//  left: 0;
-//  bottom: 0;
-//  height: 30px;
-//  border-radius: 0;
-//  width: 100%;
-//  text-align: center;
-//  vertical-align: middle;
-//  display: block;
-//}
-
-button.bottom-state > span.mat-button-wrapper {
-  padding: 0;
-  line-height: normal;
-}
-
-button.bottom-state > div {
-  border-radius: 0;
-}
-
-//.selectedFile {
-//  background-color: purple;
-//}
