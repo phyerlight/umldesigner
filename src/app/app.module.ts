@@ -19,6 +19,7 @@ import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.componen
 import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
+import {PaperCanvasComponent} from "./editor/paperCanvas.component";
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { NewDialogComponent } from './new-dialog/new-dialog.component';
     EditorComponent,
     OutletWrapperComponent,
     DrawingListComponent,
+    PaperCanvasComponent,
     ConfirmDialogComponent,
     NewDialogComponent,
   ],

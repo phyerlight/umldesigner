@@ -1,7 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Params} from "@angular/router";
 import {ProjectService, File} from "../project.service";
 import {RouteParams} from "../app-routing.module";
+import {PaperCanvasComponent} from "./paperCanvas.component";
+import Path = paper.Path;
+import Point = paper.Point;
+import Color = paper.Color;
 
 export class DrawingTool {
   constructor(
@@ -17,23 +21,27 @@ export class DrawingTool {
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.css']
 })
-export class EditorComponent implements OnInit {
+export class EditorComponent implements OnInit, AfterViewInit {
 
-  public file: File;
+  @Input() public file: File;
+
+  @ViewChild(PaperCanvasComponent) canvas: PaperCanvasComponent;
+
   public tools: DrawingTool;
 
   constructor(private projectService: ProjectService,
               private route: ActivatedRoute, ) { }
 
   ngOnInit() {
-    this.route.params.subscribe((params: RouteParams) => {
-      if (params.project && params.file) {
-        this.projectService.getFile(params.project, params.file).subscribe(f=>{
-          this.file = f;
-        }, e => {
+  }
 
-        })
-      }
+  ngAfterViewInit() {
+    this.canvas.scope.install(window['paper']);
+    let circle = new Path.Circle({
+      center: [100, 100],
+      radius: 30,
+      strokeColor: 'red'
     });
+    this.canvas.project.activeLayer.addChild(circle);
   }
 }
