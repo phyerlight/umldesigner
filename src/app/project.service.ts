@@ -5,9 +5,27 @@ import 'rxjs/add/observable/of';
 import 'rxjs/add/observable/throw'
 import {ModelFactory, Model} from "ngx-model";
 
+export interface Class {
+  id: number
+  position: {x: number, y: number},
+  name: string,
+  attrs: [string]
+}
+
+export interface Relation {
+  type: string,
+  fromId: number,
+  toId: number
+}
+
+interface FileData {
+  classes?: [Class],
+  relations?: [Relation]
+}
+
 export interface File {
     name: string;
-    data: object;
+    data: FileData;
 }
 
 export interface Project {
@@ -33,7 +51,14 @@ export class ProjectService {
   constructor(private modelFactory: ModelFactory<Project[]>) {
     this.model = this.modelFactory.create([
       {id: "1", name: 'Test', files: [
-        {name: 'test model', data:{}},
+        {name: 'test model', data:{
+          classes: [{
+            id: 1,
+            name: 'my class',
+            position: {x: 60, y: 60},
+            attrs: ['public foo(objs)', 'public var: eggs', '--', 'public bar(baz): blue']
+          }]
+        }},
         {name: 'test drawing', data:{}}
       ]},
       {id: "2", name: 'Food', files: [

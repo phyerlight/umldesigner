@@ -1,12 +1,12 @@
-<div class="container">
-  <div class="tools">
-    <ul>
-      <li *ngFor="let tool of tools">
-        <button><img src="{{tool.icon}}" alt="{{tool.toolTip}}" onclick="tool.action"/></button>
-      </li>
-    </ul>
+<div class="container flex-row">
+  <div class="tools flex-shrink">
+    <mat-toolbar>
+        <button *ngFor="let tool of tools"
+                (onclick)="tool.activate()"
+                [attr.alt]="tool.toolTip"><mat-icon>{{tool.icon}}</mat-icon></button>
+    </mat-toolbar>
   </div>
-  <div class="drawing">
-    <paper-canvas [resize]="true"></paper-canvas>
+  <div class="drawing flex-grow">
+    <paper-canvas [name]="canvasName"></paper-canvas>
   </div>
 </div>

@@ -1,47 +1,67 @@
-import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params} from "@angular/router";
+import {Component, Input, OnInit} from '@angular/core';
 import {ProjectService, File} from "../project.service";
-import {RouteParams} from "../app-routing.module";
 import {PaperCanvasComponent} from "./paperCanvas.component";
 import Path = paper.Path;
 import Point = paper.Point;
 import Color = paper.Color;
-
-export class DrawingTool {
-  constructor(
-    public name: string,
-    public icon: string,
-    public toolTip: string,
-    public action: ()=>{}
-  ) {}
-}
+import {PaperScope, Project} from "paper";
+import {DrawingTool, ToolService} from "./tools.service";
+import {CanvasService} from "./canvas.service";
+import {Observable} from "rxjs/Observable";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import 'rxjs/add/operator/combineLatest';
 
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.css']
 })
-export class EditorComponent implements OnInit, AfterViewInit {
+export class EditorComponent implements OnInit {
 
-  @Input() public file: File;
-
-  @ViewChild(PaperCanvasComponent) canvas: PaperCanvasComponent;
-
-  public tools: DrawingTool;
-
-  constructor(private projectService: ProjectService,
-              private route: ActivatedRoute, ) { }
-
-  ngOnInit() {
+  private file$: BehaviorSubject<File>;
+  @Input()
+  set file(file: File) {
+    if (!this.file$) {
+      this.file$ = new BehaviorSubject<File>(file);
+    } else {
+      this.file$.next(file);
+    }
   }
 
-  ngAfterViewInit() {
-    this.canvas.scope.install(window['paper']);
-    let circle = new Path.Circle({
-      center: [100, 100],
-      radius: 30,
-      strokeColor: 'red'
+  private canvas: PaperCanvasComponent;
+
+  public tools: DrawingTool[];
+  private canvasName = 'main';
+
+  constructor(public toolService: ToolService,
+              public canvasService: CanvasService) {}
+
+  ngOnInit() {
+    this.tools = ToolService.registeredTools;
+    this.canvasService.getCanvas(this.canvasName).combineLatest(this.file$).subscribe((v) => {
+      this.canvas = v[0];
+
+      this.renderDrawing(v[1]);
     });
-    this.canvas.project.activeLayer.addChild(circle);
+
+  }
+
+  renderDrawing(file: File) {
+    this.canvas.clearCanvas();
+
+    //if we have data
+    if (file && file.data && file.data.classes) {
+      //draw the classes
+      file.data.classes.forEach((clas) => {
+        this.canvas.drawClass(clas);
+      });
+      //if we have relations, draw those too
+      if (file.data.relations) {
+        file.data.relations.forEach((rel) => {
+          this.canvas.drawRelation(rel);
+        });
+      }
+    }
+
   }
 }

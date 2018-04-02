@@ -41,6 +41,11 @@ mat-sidenav {
   overflow-y: hidden !important;
 }
 
+mat-sidenav-content.mat-drawer-content {
+  position: fixed;
+  width: 100%;
+}
+
 .mat-nav-list a {
   padding-top: 10px;
   padding-bottom: 10px;

@@ -20,6 +20,8 @@ import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
 import {PaperCanvasComponent} from "./editor/paperCanvas.component";
+import {ToolService} from "./editor/tools.service";
+import {CanvasService} from "./editor/canvas.service";
 
 @NgModule({
   declarations: [
@@ -56,7 +58,9 @@ import {PaperCanvasComponent} from "./editor/paperCanvas.component";
   ],
   providers: [
     ProjectService,
-    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+    {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
+    ToolService,
+    CanvasService,
   ],
   bootstrap: [OutletWrapperComponent]
 })
