@@ -1,13 +1,11 @@
-import {Injectable} from "@angular/core";
+import {Injectable, Injector, Provider, ReflectiveInjector, StaticProvider} from "@angular/core";
+import {CanvasService} from "./canvas.service";
+import {ConstructorProvider, StaticClassProvider} from "@angular/core/src/di/provider";
 
-export class DrawingTool extends paper.Tool {
-  constructor(
-    public name: string,
-    public icon: string,
-    public toolTip: string,
-  ) {
-    super();
-  }
+export interface DrawingTool extends paper.Tool {
+  name: string
+  icon: string
+  toolTip: string
 }
 
 export let tools = Array<DrawingTool>();
@@ -15,21 +13,56 @@ export let tools = Array<DrawingTool>();
 @Injectable()
 export class ToolService {
 
-  public static registeredTools = new Array<DrawingTool>();
+  private static registeredToolClasses: Array<any> = [];
+  private static registeredProviders: Array<StaticProvider> = [];
 
-  constructor() {
-
+  public static addToolProvider(provider: StaticProvider) {
+    ToolService.registeredToolClasses.push((<ConstructorProvider>provider).provide);
+    ToolService.registeredProviders.push(provider);
   }
 
-  public static addTool(tool: DrawingTool) {
-    ToolService.registeredTools.push(tool);
+  constructor(private injector: Injector) {}
+
+  public getTools(): Array<DrawingTool> {
+    let tools: Array<DrawingTool> = [];
+    let i = Injector.create(ToolService.registeredProviders, this.injector);
+
+    ToolService.registeredToolClasses.forEach((tc) => {
+      tools.push(i.get(tc));
+    });
+
+    return tools;
   }
 }
 
-let newClassTool = new DrawingTool('Class', 'add_to_queue', 'Adds a class to the drawing');
-ToolService.addTool(newClassTool);
-newClassTool.onMouseUp = (event) => {
+@Injectable()
+export class NewClassTool extends paper.Tool implements DrawingTool {
+  name = 'Class';
+  icon = 'add_to_queue';
+  toolTip = 'Adds a class to the drawing';
 
-};
+  constructor(private canvasService: CanvasService) {
+    super();
+  }
 
+  onMouseUp = (event) => {
 
+  }
+}
+ToolService.addToolProvider({provide: NewClassTool, deps: [CanvasService]});
+
+@Injectable()
+export class RelationTool extends paper.Tool implements DrawingTool {
+  name = 'Relation';
+  icon = 'add_to_queue';
+  toolTip = 'Adds a relation between two classes';
+
+  constructor(private canvasService: CanvasService) {
+    super();
+  }
+
+  onMouseUp = (event) => {
+
+  }
+}
+ToolService.addToolProvider({provide: RelationTool, deps: [CanvasService]});

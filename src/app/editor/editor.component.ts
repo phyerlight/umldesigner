@@ -14,7 +14,8 @@ import 'rxjs/add/operator/combineLatest';
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
-  styleUrls: ['./editor.component.css']
+  styleUrls: ['./editor.component.css'],
+  providers: [ToolService, CanvasService]
 })
 export class EditorComponent implements OnInit {
 
@@ -37,7 +38,7 @@ export class EditorComponent implements OnInit {
               public canvasService: CanvasService) {}
 
   ngOnInit() {
-    this.tools = ToolService.registeredTools;
+    this.tools = this.toolService.getTools();
     this.canvasService.getCanvas(this.canvasName).combineLatest(this.file$).subscribe((v) => {
       this.canvas = v[0];
 
