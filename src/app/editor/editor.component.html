@@ -1,10 +1,17 @@
 <div class="container flex-row">
-  <div class="tools flex-shrink">
-    <mat-toolbar>
-        <button *ngFor="let tool of tools"
-                (onclick)="tool.activate()"
-                [attr.alt]="tool.toolTip"><mat-icon>{{tool.icon}}</mat-icon></button>
-    </mat-toolbar>
+  <div class="tools flex-shrink" [ngStyle]="{'border-right':'1px solid black'}">
+    <mat-button-toggle-group [vertical]="true">
+        <mat-button-toggle *ngFor="let tool of tools"
+                           (change)="activateTool($event.value)"
+                           [checked]="canvas?.scope?.tool == tool"
+                           [value]="tool">
+          <mat-icon [svgIcon]="tool.icon"
+
+                    [matTooltip]="tool.toolTip"
+                    matTooltipPosition="right"
+                    matTooltipShowDelay="750">{{tool.icon}}</mat-icon>
+        </mat-button-toggle>
+    </mat-button-toggle-group>
   </div>
   <div class="drawing flex-grow">
     <paper-canvas [name]="canvasName"></paper-canvas>

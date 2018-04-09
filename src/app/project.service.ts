@@ -55,7 +55,7 @@ export class ProjectService {
           classes: [{
             id: 1,
             name: 'my class',
-            position: {x: 60, y: 60},
+            position: {x: 80, y: 60},
             attrs: ['public foo(objs)', 'public var: eggs', '--', 'public bar(baz): blue']
           }]
         }},

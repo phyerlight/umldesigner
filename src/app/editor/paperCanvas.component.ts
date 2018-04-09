@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, Input} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import { PaperScope, Project } from 'paper';
 import {Class, Relation} from "../project.service";
 import Path = paper.Path;
@@ -16,7 +16,7 @@ import {CanvasService} from "./canvas.service";
   template: '<canvas #canvasElement resize></canvas>',
 })
 
-export class PaperCanvasComponent implements OnInit {
+export class PaperCanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
   @Input() name: string;
@@ -27,11 +27,16 @@ export class PaperCanvasComponent implements OnInit {
   constructor(private canvasService: CanvasService) { }
 
   ngOnInit() {
-    this.scope = new PaperScope();
-    this.scope.install(window['paper']);
+    this.scope = window['paper'];
+    // this.scope.install();
     this.scope.settings['insertItems'] = false;
     this.scope.settings['applyMatrix'] = false;
-    this.project = new Project(this.canvasElement.nativeElement);
+    this.scope.settings['hitTolerance'] = 1;
+  }
+
+  ngAfterViewInit() {
+    this.scope.setup(this.canvasElement.nativeElement);
+    this.project = this.scope.project;
     this.canvasService.registerCanvas(this, this.name);
   }
 
@@ -67,6 +72,7 @@ export class PaperCanvasComponent implements OnInit {
     let name = new PointText({
       content: clas.name,
       fillColor: 'black',
+      fontWeight: 'bold'
     });
     boxHeight += name.bounds.height + linePadding*2;
     if (name.bounds.width > boxWidth) {
@@ -99,6 +105,7 @@ export class PaperCanvasComponent implements OnInit {
       }
     });
     clasObj.addChild(clasBox);
+    clasObj.data = {type: 'class'};
 
     clasObj.position = new Point(clas.position.x, clas.position.y);
 

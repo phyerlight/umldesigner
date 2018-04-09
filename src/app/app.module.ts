@@ -4,9 +4,9 @@ import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
   ErrorStateMatcher,
-  MatButtonModule, MatCardModule,
+  MatButtonModule, MatButtonToggleModule, MatCardModule,
   MatDialogModule, MatDividerModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule,
-  MatToolbarModule, ShowOnDirtyErrorStateMatcher
+  MatToolbarModule, MatTooltipModule, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 
 import { NgxModelModule } from "ngx-model";
@@ -20,6 +20,7 @@ import { DrawingListComponent } from './drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './new-dialog/new-dialog.component';
 import {PaperCanvasComponent} from "./editor/paperCanvas.component";
+import {HttpClientModule} from "@angular/common/http";
 // import {ToolService} from "./editor/tools.service";
 // import {CanvasService} from "./editor/canvas.service";
 
@@ -44,6 +45,7 @@ import {PaperCanvasComponent} from "./editor/paperCanvas.component";
     AppRoutingModule,
     ReactiveFormsModule,
     NgxModelModule,
+    HttpClientModule,
     //Angular Material
     MatDialogModule,
     MatSidenavModule,
@@ -54,7 +56,9 @@ import {PaperCanvasComponent} from "./editor/paperCanvas.component";
     MatButtonModule,
     MatDividerModule,
     MatCardModule,
-    MatInputModule
+    MatInputModule,
+    MatButtonToggleModule,
+    MatTooltipModule
   ],
   providers: [
     ProjectService,

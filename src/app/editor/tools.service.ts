@@ -1,14 +1,38 @@
-import {Injectable, Injector, Provider, ReflectiveInjector, StaticProvider} from "@angular/core";
+import {Injectable, Injector, StaticProvider} from "@angular/core";
+import {ConstructorProvider} from "@angular/core/src/di/provider";
+import {MatIcon, MatIconRegistry} from "@angular/material";
+import {DomSanitizer} from "@angular/platform-browser";
 import {CanvasService} from "./canvas.service";
-import {ConstructorProvider, StaticClassProvider} from "@angular/core/src/di/provider";
+import {PaperCanvasComponent} from "./paperCanvas.component";
 
-export interface DrawingTool extends paper.Tool {
-  name: string
-  icon: string
-  toolTip: string
+export const DRAWING_TOOL_DEPS = [CanvasService, MatIconRegistry, DomSanitizer];
+
+export abstract class DrawingTool extends paper.Tool {
+  name: string = null;
+  icon: string = null;
+  toolTip: string = null;
+
+  constructor(protected canvasService: CanvasService,
+              protected iconRegistry: MatIconRegistry,
+              protected sanitizer: DomSanitizer) {
+    super();
+    canvasService.getActiveCanvas().subscribe((canvas: PaperCanvasComponent) => {
+      canvas.scope.tools.push(this);
+    });
+  }
+
+  registerIcon() {
+    this.iconRegistry.addSvgIcon(this.icon,
+      this.sanitizer.bypassSecurityTrustResourceUrl(`assets/${this.icon}.svg`));
+  }
 }
 
-export let tools = Array<DrawingTool>();
+export function loadTools() {
+  import('./tools/selection.tool');
+  import('./tools/newClass.tool');
+  import('./tools/inheritRelation.tool');
+  import('./tools/assocRelation.tool');
+}
 
 @Injectable()
 export class ToolService {
@@ -35,34 +59,4 @@ export class ToolService {
   }
 }
 
-@Injectable()
-export class NewClassTool extends paper.Tool implements DrawingTool {
-  name = 'Class';
-  icon = 'add_to_queue';
-  toolTip = 'Adds a class to the drawing';
-
-  constructor(private canvasService: CanvasService) {
-    super();
-  }
-
-  onMouseUp = (event) => {
-
-  }
-}
-ToolService.addToolProvider({provide: NewClassTool, deps: [CanvasService]});
-
-@Injectable()
-export class RelationTool extends paper.Tool implements DrawingTool {
-  name = 'Relation';
-  icon = 'add_to_queue';
-  toolTip = 'Adds a relation between two classes';
-
-  constructor(private canvasService: CanvasService) {
-    super();
-  }
-
-  onMouseUp = (event) => {
-
-  }
-}
-ToolService.addToolProvider({provide: RelationTool, deps: [CanvasService]});
+loadTools();

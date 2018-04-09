@@ -23,6 +23,20 @@ export class CanvasService {
     this._canvases.next(cs);
   }
 
+  public getActiveCanvas(): Observable<PaperCanvasComponent> {
+    return this.canvases$.map((cs: Map<string, PaperCanvasComponent>) => {
+      let it = cs.values();
+      let iti = it.next();
+      while (!iti.done) {
+        let c = iti.value;
+        if (c.scope == window['paper']) {
+          return c;
+        }
+        iti = it.next();
+      }
+    }).filter(c => c != null && c != undefined);
+  }
+
   public getCanvas(name): Observable<PaperCanvasComponent> {
     return this.canvases$.map((cs: Map<string, PaperCanvasComponent>) => {
       if (cs.has(name)) {

@@ -10,6 +10,8 @@ import {CanvasService} from "./canvas.service";
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/combineLatest';
+import {MatIconRegistry} from "@angular/material";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
   selector: 'app-editor',
@@ -35,16 +37,24 @@ export class EditorComponent implements OnInit {
   private canvasName = 'main';
 
   constructor(public toolService: ToolService,
-              public canvasService: CanvasService) {}
+              public canvasService: CanvasService) { }
 
   ngOnInit() {
     this.tools = this.toolService.getTools();
-    this.canvasService.getCanvas(this.canvasName).combineLatest(this.file$).subscribe((v) => {
+    this.canvasService.getCanvas(this.canvasName).combineLatest(this.file$).subscribe((v: [PaperCanvasComponent, File]) => {
       this.canvas = v[0];
 
       this.renderDrawing(v[1]);
     });
 
+  }
+
+  get activeTool() {
+    return this.canvas.scope.tool;
+  }
+
+  activateTool(tool: DrawingTool) {
+    tool.activate();
   }
 
   renderDrawing(file: File) {
