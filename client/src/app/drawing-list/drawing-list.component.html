@@ -1,0 +1,37 @@
+<!--<div class="nav-card flex-col">-->
+  <mat-accordion class="flex-grow" displayMode="default">
+    <mat-expansion-panel *ngFor="let project of projects"
+                         (opened)="selectActiveProject(project, true)"
+                         (closed)="selectActiveProject(project, false)"
+           [expanded]="isSelectedProject(project)">
+      <mat-expansion-panel-header>
+        <span>{{project.name}}</span>
+      </mat-expansion-panel-header>
+
+      <mat-nav-list *ngIf="project.files?.length > 0">
+        <mat-list-item [class.selectedFile]="selection?.file==item.file"
+                       *ngFor="let item of (genFileList(project))">
+            <div class="flex-row">
+              <a class="flex-grow"
+                 [routerLink]="['/', item.project.name, item.file.name]">{{item.file.name}}</a>
+              <button class="flex-shrink" mat-icon-button
+                      (click)="handleRemoveFile($event, item)">
+                <mat-icon matListIcon>delete</mat-icon>
+              </button>
+            </div>
+        </mat-list-item>
+      </mat-nav-list>
+      <span *ngIf="project.files?.length < 1" [style]="{'text-align':'center'}">
+        No files have been added yet.
+      </span>
+      <mat-action-row>
+        <button label="File"
+                mat-raised-button
+                [disabled]="activeProject==null"
+                (click)="handleAddFile()">Add a File</button>
+        <button mat-raised-button
+                (click)="handleRemoveProject($event, project)">Delete Project</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+<!--</div>-->

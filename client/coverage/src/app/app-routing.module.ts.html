@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/app-routing.module.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/app</a> app-routing.module.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">80.95% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>17/21</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>0/0</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">28.57% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>2/7</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>12/12</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NgModule } from '@angular/core';
+import {Params, RouteReuseStrategy, RouterModule, Routes, ActivatedRouteSnapshot} from "@angular/router";
+import {AppComponent} from "./app.component";
+import {DetachedRouteHandle} from '@angular/router/src/route_reuse_strategy';
+&nbsp;
+export interface RouteParams extends Params {
+  project: string,
+  file: string
+}
+&nbsp;
+export const routes: Routes = [
+  { path: '', component: AppComponent},
+  // { path: ':project', component: AppComponent},
+  { path: ':project/:file', component: AppComponent}
+];
+&nbsp;
+export class CustomRouteReuseStrategy extends RouteReuseStrategy {
+<span class="fstat-no" title="function not covered" >  shouldDetach(</span>route: ActivatedRouteSnapshot): boolean { <span class="cstat-no" title="statement not covered" >return false; </span>}
+<span class="fstat-no" title="function not covered" >  store(</span>route: ActivatedRouteSnapshot, detachedTree: DetachedRouteHandle): void {}
+<span class="fstat-no" title="function not covered" >  shouldAttach(</span>route: ActivatedRouteSnapshot): boolean { <span class="cstat-no" title="statement not covered" >return false; </span>}
+<span class="fstat-no" title="function not covered" >  retrieve(</span>route: ActivatedRouteSnapshot): DetachedRouteHandle|null { <span class="cstat-no" title="statement not covered" >return null; </span>}
+<span class="fstat-no" title="function not covered" >  shouldReuseRoute(</span>future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean { <span class="cstat-no" title="statement not covered" >return true; </span>}
+}
+&nbsp;
+@NgModule({
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
+  providers: [
+    {provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy}
+  ]
+})
+export class AppRoutingModule { }
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Fri Mar 09 2018 00:37:21 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>

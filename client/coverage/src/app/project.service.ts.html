@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for src/app/project.service.ts</title>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../../prettify.css" />
+    <link rel="stylesheet" href="../../base.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style type='text/css'>
+        .coverage-summary .sorter {
+            background-image: url(../../sort-arrow-sprite.png);
+        }
+    </style>
+</head>
+<body>
+<div class='wrapper'>
+  <div class='pad1'>
+    <h1>
+      <a href="../../index.html">All files</a> / <a href="index.html">src/app</a> project.service.ts
+    </h1>
+    <div class='clearfix'>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Statements</span>
+        <span class='fraction'>87/87</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">90.91% </span>
+        <span class="quiet">Branches</span>
+        <span class='fraction'>20/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Functions</span>
+        <span class='fraction'>22/22</span>
+      </div>
+      <div class='fl pad1y space-right2'>
+        <span class="strong">100% </span>
+        <span class="quiet">Lines</span>
+        <span class='fraction'>70/70</span>
+      </div>
+    </div>
+  </div>
+  <div class='status-line high'></div>
+<pre><table class="coverage">
+<tr><td class="line-count quiet">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172</td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">80x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable } from '@angular/core';
+import {Observable} from "rxjs/Observable";
+import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/throw'
+import {ModelFactory, Model} from "ngx-model";
+&nbsp;
+export interface File {
+    name: string;
+    data: object;
+}
+&nbsp;
+export interface Project {
+    id: string;
+    name: string;
+    files: Array&lt;File&gt;;
+}
+&nbsp;
+<span class="branch-2 cbranch-no" title="branch not covered" >export class NameError extends Error {</span>
+  name = 'NameError';
+}
+<span class="branch-2 cbranch-no" title="branch not covered" >export class NotFoundError extends Error {</span>
+  name = "NotFoundError";
+}
+&nbsp;
+&nbsp;
+@Injectable()
+export class ProjectService {
+&nbsp;
+  private model: Model&lt;Project[]&gt;;
+  public projects$: Observable&lt;Project[]&gt;;
+&nbsp;
+  constructor(private modelFactory: ModelFactory&lt;Project[]&gt;) {
+    this.model = this.modelFactory.create([
+      {id: "1", name: 'Test', files: [
+        {name: 'test model', data:{}},
+        {name: 'test drawing', data:{}}
+      ]},
+      {id: "2", name: 'Food', files: [
+        {name: 'Fruit model', data:{}},
+        {name: 'Grain Model', data:{}},
+        {name: 'front end', data:{}}
+      ]},
+      {id: "3", name: 'Test2', files: [
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
+        ]},
+      {id: "4", name: 'Food2', files: [
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
+        ]},
+      {id: "5", name: 'Test3', files: [
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
+        ]},
+      {id: "6", name: 'Food3', files: [
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
+        ]},
+      {id: "7", name: 'Test4', files: [
+          {name: 'test model', data:{}},
+          {name: 'test drawing', data:{}}
+        ]},
+      {id: "8", name: 'Food4', files: [
+          {name: 'Fruit model', data:{}},
+          {name: 'Grain Model', data:{}},
+          {name: 'front end', data:{}}
+        ]}
+    ]);
+    this.projects$ = this.model.data$;
+    //TODO: Remove this for production
+    window['projectService'] = this;
+  }
+&nbsp;
+  public getProjectByName(name: string): Observable&lt;Project&gt; {
+    return this.projects$.map((ps:Project[]) =&gt; ps.find( value =&gt; value.name == name)).take(1);
+  }
+&nbsp;
+  public addProject(p: Project): Observable&lt;Project&gt; {
+    const ps = this.model.get();
+    if (ps.find(v=&gt;v.name == p.name) != null) {
+      return Observable.throw(new NameError(`Name '${p.name}' is already in use`));
+    }
+    p.id = (ps.length+1).toString();
+    ps.push(p);
+    this.model.set(ps);
+    return Observable.of(p);
+  }
+&nbsp;
+  public addProjectByName(name: string): Observable&lt;Project&gt; {
+    let ps = this.model.get();
+    return this.addProject({id: (ps.length+1).toString(), name: name, files: []});
+  }
+&nbsp;
+  public removeProject(p: Project): Observable&lt;boolean&gt; {
+    const ps: Project[] = this.model.get();
+    let i = ps.findIndex(v =&gt; v.id == p.id);
+    if (i &gt; -1) {
+      ps.splice(i, 1);
+      this.model.set(ps);
+      return Observable.of(true);
+    } else {
+      return Observable.throw(new NotFoundError("Could not find project "+p.name+" to remove"));
+    }
+  }
+&nbsp;
+  /**
+   * Gets a file from the store using a project name and file name
+   * @param {string} projectName Name of the project
+   * @param {string} fileName Name of the file in the project
+   * @return {Observable&lt;File&gt;} The file or an error wrapped in an observable.
+   */
+  public getFile(projectName: string, fileName: string): Observable&lt;File&gt; {
+    return this.getProjectByName(projectName).map(p=&gt; {
+      if (p) {
+        let file =p.files.find(f =&gt; f.name == fileName);
+        if (file) {
+          return file;
+        } else {
+          throw new NotFoundError("Could not find file with name "+fileName);
+        }
+      } else {
+        throw new NotFoundError("Could not find project with name "+projectName);
+      }
+    });
+  }
+&nbsp;
+  /**
+   * Adds a file to a project
+   * @param {Project} project
+   * @param {File} file
+   * @return {Observable&lt;File&gt;}
+   */
+  public addFile(project: Project, file: File): Observable&lt;File&gt; {
+    const ps = this.model.get();
+    let p = ps.find(v=&gt; v.id == project.id);
+    if (p) {
+      if (p.files.find(v =&gt; v.name == file.name) != null) {
+        return Observable.throw(new NameError(`Name '${file.name}' is already in use`));
+      }
+      p.files.push(file);
+      this.model.set(ps);
+      return Observable.of(file);
+    } else {
+      return Observable.throw(new NotFoundError(`Could not find project ${project.name}`));
+    }
+  }
+&nbsp;
+  public addFileByName(project: Project, name: string): Observable&lt;File&gt; {
+    return this.addFile(project, {name: name, data: {}});
+  }
+&nbsp;
+  public removeFile(project: Project, file: File): Observable&lt;boolean&gt; {
+    const ps: Project[] = this.model.get();
+    let p = ps.find(v =&gt; v.id == project.id);
+    if (p) {
+      let i = p.files.findIndex(v =&gt; v.name == file.name);
+      if (i &gt; -1) {
+        p.files.splice(i, 1);
+        this.model.set(ps);
+        return Observable.of(true);
+      } else {
+        return Observable.throw(new NotFoundError(`Could not find file ${file.name}`));
+      }
+    } else {
+      return Observable.throw(new NotFoundError(`Could not find project ${project.name}`));
+    }
+  }
+}
+&nbsp;</pre></td></tr>
+</table></pre>
+<div class='push'></div><!-- for sticky footer -->
+</div><!-- /wrapper -->
+<div class='footer quiet pad2 space-top1 center small'>
+  Code coverage
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Sat Mar 10 2018 14:13:49 GMT-0500 (EST)
+</div>
+</div>
+<script src="../../prettify.js"></script>
+<script>
+window.onload = function () {
+        if (typeof prettyPrint === 'function') {
+            prettyPrint();
+        }
+};
+</script>
+<script src="../../sorter.js"></script>
+</body>
+</html>
