@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
-import 'rxjs/add/operator/map';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/observable/throw'
-// import {ModelFactory, Model} from "ngx-model";
-import {File} from './file.service';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { filter, map } from 'rxjs/operators';
+import {File} from './file.service';
 import {HttpClient} from "@angular/common/http";
 import {environment} from "../environments/environment";
 
@@ -43,9 +40,8 @@ export class ProjectService {
 
   private url = environment.host+environment.database+'/projects';
 
-  // private model: Model<Project[]>;
   private _projects: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(null);
-  public projects$: Observable<Project[]> = this._projects.asObservable().filter(v => v != null);
+  public projects$: Observable<Project[]> = this._projects.asObservable().pipe(filter(v => v != null));
 
   constructor(private http: HttpClient) {
     //TODO: Remove this for production
@@ -56,22 +52,28 @@ export class ProjectService {
     return this.http.get(this.url, {
       withCredentials: true,
       responseType: 'json'
-    }).map((res: Project[]) => {
-      this._projects.next(res);
-      return res;
-    });
+    }).pipe(
+      map((res: Project[]) => {
+        this._projects.next(res);
+        return res;
+      })
+    );
   }
 
   public getProjectByKey(key: string): Observable<Project> {
-    return this.projects$.map((projects: Project[]) => {
-      return projects.find(p => p._key == key);
-    });
+    return this.projects$.pipe(
+      map((projects: Project[]) => {
+        return projects.find(p => p._key == key);
+      })
+    );
   };
 
   public getProjectByName(name: string): Observable<Project> {
-    return this.projects$.map((projects: Project[]) => {
-      return projects.find(p => p.name == name);
-    });
+    return this.projects$.pipe(
+      map((projects: Project[]) => {
+        return projects.find(p => p.name == name);
+      })
+    );
   };
 
   public save(project: Project): Observable<Project> {
@@ -95,11 +97,13 @@ export class ProjectService {
   public delete(project: Project): Observable<any> {
     return this.http.delete(this.url+'/'+project._key, {
       withCredentials: true
-    }).map((res) => {
-      let v = this._projects.getValue().filter(p => p._key != project._key);
-      this._projects.next(v);
-      return res;
-    });
+    }).pipe(
+      map((res) => {
+        let v = this._projects.getValue().filter(p => p._key != project._key);
+        this._projects.next(v);
+        return res;
+      })
+    );
   }
 
   createProject(name: string): Project {

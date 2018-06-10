@@ -9,8 +9,6 @@ import {
   MatToolbarModule, MatTooltipModule, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 
-import { NgxModelModule } from "ngx-model";
-
 import { AppComponent } from './app.component';
 import { EditorComponent } from './editor/editor.component';
 import { ProjectService } from "./project.service";
@@ -46,7 +44,6 @@ import {ProjectFileService} from "./projectFile.service";
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    NgxModelModule,
     HttpClientModule,
     //Angular Material
     MatDialogModule,

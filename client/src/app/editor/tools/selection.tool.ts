@@ -3,6 +3,7 @@ import {DRAWING_TOOL_DEPS, DrawingTool, ToolService} from "../tools.service";
 import {CanvasService} from "../canvas.service";
 import {MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
+import { take } from "rxjs/operators";
 import Rectangle = paper.Rectangle;
 import Point = paper.Point;
 import Size = paper.Size;
@@ -24,7 +25,7 @@ export class SelectionTool extends DrawingTool {
   onMouseDown = (event: paper.ToolEvent) => {
     let cls = null;
 
-    this.canvasService.getActiveCanvas().take(1).subscribe((c) => {
+    this.canvasService.getActiveCanvas().pipe(take(1)).subscribe((c) => {
       cls = c.project.getItem({match: (item) => {
           if (item.data && item.data.type && item.data.type == 'class') {
             return item.bounds.contains(event.point);
@@ -40,7 +41,7 @@ export class SelectionTool extends DrawingTool {
       this.activeItem = cls;
     } else {
       this.activeItem = null;
-      this.canvasService.getActiveCanvas().take(1).subscribe((c) => {
+      this.canvasService.getActiveCanvas().pipe(take(1)).subscribe((c) => {
         c.project.deselectAll();
       });
     }
@@ -51,7 +52,7 @@ export class SelectionTool extends DrawingTool {
   };
 
   onMouseDrag = (event) => {
-    this.canvasService.getActiveCanvas().take(1).subscribe((c) => {
+    this.canvasService.getActiveCanvas().pipe(take(1)).subscribe((c) => {
       if (this.activeItem && c.project.view.bounds.contains(event.point))
         this.activeItem.position = this.activeItem.position.add(event.delta);
     });

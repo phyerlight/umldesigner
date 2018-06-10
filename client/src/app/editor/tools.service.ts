@@ -28,10 +28,10 @@ export abstract class DrawingTool extends paper.Tool {
 }
 
 export function loadTools() {
-  import('./tools/selection.tool');
-  import('./tools/newClass.tool');
-  import('./tools/inheritRelation.tool');
-  import('./tools/assocRelation.tool');
+  // import('./tools/selection.tool');
+  // import('./tools/newClass.tool');
+  // import('./tools/inheritRelation.tool');
+  // import('./tools/assocRelation.tool');
 }
 
 @Injectable()

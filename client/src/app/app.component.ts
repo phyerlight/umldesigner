@@ -7,16 +7,12 @@ import {RouteParams} from "./app-routing.module";
 import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "./confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "./new-dialog/new-dialog.component";
-import 'rxjs/add/operator/catch';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/delay';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/observable/combineLatest';
-import 'rxjs/add/operator/share';
-import 'rxjs/add/operator/shareReplay';
+import { take, delay, filter, mergeMap, map, shareReplay, share } from "rxjs/operators";
+import { combineLatest } from "rxjs/observable/combineLatest";
+// import 'rxjs/add/observable/combineLatest';
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {ProjectFile, ProjectFileService} from "./projectFile.service";
 import {Observable} from "rxjs/Observable";
+import {ProjectFile, ProjectFileService} from "./projectFile.service";
 
 export type Selection = {
   project: Project,
@@ -58,18 +54,29 @@ export class AppComponent implements OnInit {
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.route.params.filter((p:RouteParams) => exists(p.project, p.file)).mergeMap((params: RouteParams) => {
-      this.selection = null;
-      return Observable.combineLatest(
-        this.projectService.getProjectByName(params.project).filter(p => exists(p)),
-        this.fileService.getFileByName(params.file).filter(f => exists(f)))
-    }).subscribe( v => {
+    this.route.params.pipe(
+      filter((p:RouteParams) => exists(p.project, p.file)),
+      mergeMap((params: RouteParams) => {
+        this.selection = null;
+        return combineLatest(
+          this.projectService.getProjectByName(params.project).pipe(
+            filter(p => exists(p))
+          ),
+          this.fileService.getFileByName(params.file).pipe(
+            filter(f => exists(f))
+          )
+        )
+      })
+    ).subscribe( v => {
       this.selection = {project: v[0], file: v[1]};
     });
 
     this.loadData();
 
-    this.fabState$.delay(200).take(1).subscribe((v)=> {
+    this.fabState$.pipe(
+      delay(200),
+      take(1)
+    ).subscribe((v)=> {
       this.fabState$.next('in');
     });
 
@@ -79,36 +86,43 @@ export class AppComponent implements OnInit {
   }
 
   get project$(): Observable<Project[]> {
-    return Observable.combineLatest(this.projectService.projects$, this.fileService.file$,
-        this.projectFileService.projectFile$).filter(v => exists(v[0], v[1], v[2])).map((v: Array<any>) => {
-      let projects: Project[] = v[0];
-      let files: File[] = v[1];
-      let projFiles: ProjectFile[] = v[2];
+    return combineLatest(
+      this.projectService.projects$,
+      this.fileService.file$,
+      this.projectFileService.projectFile$)
+      .pipe(
+        filter(v => exists(v[0], v[1], v[2])),
+        map((v: Array<any>) => {
+          let projects: Project[] = v[0];
+          let files: File[] = v[1];
+          let projFiles: ProjectFile[] = v[2];
 
-      let projsHash: Map<string, Project> = new Map(projects.map(p => [p._key, p] as [string, Project]) );
-      let filesHash: Map<string, File> = new Map(files.map(f => [f._key, f] as [string, File]));
+          let projsHash: Map<string, Project> = new Map(projects.map(p => [p._key, p] as [string, Project]) );
+          let filesHash: Map<string, File> = new Map(files.map(f => [f._key, f] as [string, File]));
 
-      projFiles.forEach(pf => {
-        let p: Project = projsHash.get(pf._from.replace(/^.*\//, ''));
-        let f: File = filesHash.get(pf._to.replace(/^.*\//, ''));
+          projFiles.forEach(pf => {
+            let p: Project = projsHash.get(pf._from.replace(/^.*\//, ''));
+            let f: File = filesHash.get(pf._to.replace(/^.*\//, ''));
 
-        if (p && f) {
-          if (!p.hasOwnProperty('files')) {
-            p.files = [];
-          }
+            if (p && f) {
+              if (!p.hasOwnProperty('files')) {
+                p.files = [];
+              }
 
-          p.files.push(f);
-        }
-      });
+              p.files.push(f);
+            }
+          });
 
-      return Array.from(projsHash.values());
-    }).shareReplay(1);
+          return Array.from(projsHash.values());
+        }),
+        share()
+      );
   }
 
   loadData() {
-    this.projectService.fetch().take(1).subscribe();
-    this.fileService.fetch().take(1).subscribe();
-    this.projectFileService.fetch().take(1).subscribe();
+    this.projectService.fetch().pipe(take(1)).subscribe();
+    this.fileService.fetch().pipe(take(1)).subscribe();
+    this.projectFileService.fetch().pipe(take(1)).subscribe();
   }
 
   handleSelection(selection: Selection) {
@@ -134,7 +148,7 @@ export class AppComponent implements OnInit {
     dialogRef.afterClosed().subscribe(name => {
       if (name != null && name != "") {
         let proj = this.projectService.createProject(name);
-        this.projectService.save(proj).take(1)
+        this.projectService.save(proj).pipe(take(1))
           .subscribe(p=>{
             // this.router.navigate([p.name]);
           }, (e)=>{
@@ -178,9 +192,9 @@ export class AppComponent implements OnInit {
     dialogRef.afterClosed().subscribe(name => {
       if (name != null && name != "") {
         let f = this.fileService.createFile(name);
-        this.fileService.save(f).take(1).subscribe(nf => {
+        this.fileService.save(f).pipe(take(1)).subscribe(nf => {
           let pf = this.projectFileService.createProjectFile(project, nf);
-          this.projectFileService.save(pf).take(1).subscribe();
+          this.projectFileService.save(pf).pipe(take(1)).subscribe();
         }, err => {
           if (err.code == 409) {
             this.handleAddFile(project, "A file with that name already exists");

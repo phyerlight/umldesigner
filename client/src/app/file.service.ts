@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {HttpClient} from "@angular/common/http";
+import { filter, map } from 'rxjs/operators';
 import {Project} from "./project.service";
 import { environment } from "../environments/environment";
 
@@ -35,27 +36,27 @@ export class FileService {
   private url = environment.host+environment.database+'/files';
 
   private _files: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(null);
-  public file$: Observable<File[]> = this._files.asObservable().filter(v => v != null);
+  public file$: Observable<File[]> = this._files.asObservable().pipe(filter(v => v != null));
 
   constructor(private http: HttpClient) { }
 
   public getFileByKey(key: string): Observable<File> {
-    return this.file$.map((files: File[]) => {
+    return this.file$.pipe(map((files: File[]) => {
       return files.find(f => f._key == key);
-    });
+    }));
   };
 
   public getFilesByKey(keys: string[]): Observable<File[]> {
-    return this.file$.map((files: File[]) => {
+    return this.file$.pipe(map((files: File[]) => {
       return files.filter(f => keys.includes(f._key));
-    });
+    }));
   };
 
 
   public getFileByName(name: string): Observable<File> {
-    return this.file$.map((files: File[]) => {
+    return this.file$.pipe(map((files: File[]) => {
       return files.find(f => f.name == name);
-    });
+    }));
   };
 
   public createFile(name: string): File {
@@ -72,10 +73,10 @@ export class FileService {
     return this.http.get(this.url, {
       withCredentials: true,
       responseType: 'json'
-    }).map((f: File[]) => {
+    }).pipe(map((f: File[]) => {
       this._files.next(f);
       return f;
-    });
+    }));
   }
 
   public save(file: File): Observable<File> {
@@ -99,10 +100,10 @@ export class FileService {
   public delete(file: File): Observable<any> {
     return this.http.delete(this.url+'/'+file._key, {
       withCredentials: true
-    }).map((res) => {
+    }).pipe(map((res) => {
       let v = this._files.getValue().filter(p => p._key != file._key);
       this._files.next(v);
       return res;
-    });
+    }));
   }
 }

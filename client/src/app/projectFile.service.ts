@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Observable} from "rxjs/Observable";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import { filter, map } from "rxjs/operators";
 import {HttpClient} from "@angular/common/http";
 import {Project} from "./project.service";
 import { environment } from "../environments/environment";
@@ -20,7 +21,7 @@ export class ProjectFileService {
   private filePrefix = "umldesigner_files/";
 
   private _projectFiles: BehaviorSubject<ProjectFile[]> = new BehaviorSubject<ProjectFile[]>(null);
-  public projectFile$: Observable<ProjectFile[]> = this._projectFiles.asObservable().filter(v => v != null);
+  public projectFile$: Observable<ProjectFile[]> = this._projectFiles.asObservable().pipe(filter(v => v != null));
 
   constructor(private http: HttpClient) { }
 
@@ -32,25 +33,25 @@ export class ProjectFileService {
   }
 
   public getFileByKey(fileKey: string): Observable<ProjectFile> {
-    return this.projectFile$.map((pfs: ProjectFile[]) => {
+    return this.projectFile$.pipe(map((pfs: ProjectFile[]) => {
       return pfs.find(f => f._to == this.filePrefix+fileKey);
-    });
+    }));
   };
 
   public getProjectsByKey(projectKey: string): Observable<ProjectFile[]> {
-    return this.projectFile$.map((pfs: ProjectFile[]) => {
+    return this.projectFile$.pipe(map((pfs: ProjectFile[]) => {
       return pfs.filter(f => f._from == this.projectPrefix+projectKey);
-    });
+    }));
   };
 
   public fetch(): Observable<ProjectFile[]> {
     return this.http.get(this.url, {
       withCredentials: true,
       responseType: 'json'
-    }).map((pf: ProjectFile[]) => {
+    }).pipe(map((pf: ProjectFile[]) => {
       this._projectFiles.next(pf);
       return pf;
-    });
+    }));
   }
 
   public save(projectFile: ProjectFile): Observable<ProjectFile> {
@@ -74,10 +75,10 @@ export class ProjectFileService {
   public delete(projectFile: ProjectFile): Observable<any> {
     return this.http.delete(this.url+'/'+projectFile._key, {
       withCredentials: true
-    }).map((res) => {
+    }).pipe(map((res) => {
       let v = this._projectFiles.getValue().filter(pf => pf._key != projectFile._key);
       this._projectFiles.next(v);
       return res;
-    });
+    }));
   }
 }
