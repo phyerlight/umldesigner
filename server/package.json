@@ -1,0 +1,10 @@
+{
+  "name": "umldesigner4-foxx",
+  "version": "0.0.1",
+  "scripts": {
+    "deploydev": "cp -r * /var/lib/arangodb3-apps/_db/umldesigner/umldesigner/APP/"
+  },
+  "devDependencies": {
+
+  }
+}

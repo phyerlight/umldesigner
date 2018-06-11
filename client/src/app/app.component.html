@@ -5,7 +5,7 @@
 <mat-sidenav-container>
   <mat-sidenav #snav mode="side" class="" [opened]="true" [fixedInViewport]="true" [fixedTopGap]="64">
     <div class="nav-card flex-col">
-      <app-drawing-list class="flex-grow" [projects]="project$ | async"
+      <app-drawing-list class="flex-grow" [projects]="projectService.projects$ | async"
         [selection]="selection"
         (onSelection)="handleSelection($event)"
         (onProjectAdded)="handleAddProject()"

@@ -10,8 +10,6 @@ export interface Project {
     _key?: string;
     name: string;
     files?: Array<File>;
-
-    // clone: () => Project;
 }
 
 export class ProjectI implements Project {
@@ -48,8 +46,8 @@ export class ProjectService {
     window['projectService'] = this;
   }
 
-  public fetch(): Observable<Project[]> {
-    return this.http.get(this.url, {
+  public getProjectList(): Observable<Project[]> {
+    return this.http.get(this.url+'/list', {
       withCredentials: true,
       responseType: 'json'
     }).pipe(
@@ -61,11 +59,15 @@ export class ProjectService {
   }
 
   public getProjectByKey(key: string): Observable<Project> {
-    return this.projects$.pipe(
-      map((projects: Project[]) => {
-        return projects.find(p => p._key == key);
-      })
+    return this.http.get(this.url+'/'+key).pipe(
+      map((p: Project) => p)
     );
+
+    // return this.projects$.pipe(
+    //   map((projects: Project[]) => {
+    //     return projects.find(p => p._key == key);
+    //   })
+    // );
   };
 
   public getProjectByName(name: string): Observable<Project> {
@@ -86,27 +88,29 @@ export class ProjectService {
     return this.http[method](url, JSON.stringify(project), {
       withCredentials: true,
       responseType: "json"
-    }).map((proj: Project) => {
-      let v = this._projects.getValue();
-      v.push(proj);
-      this._projects.next(v);
-      return proj;
     });
+    // .map((proj: Project) => {
+    //   // let v = this._projects.getValue();
+    //   // v.push(proj);
+    //   // this._projects.next(v);
+    //   return proj;
+    // });
   }
 
   public delete(project: Project): Observable<any> {
     return this.http.delete(this.url+'/'+project._key, {
       withCredentials: true
-    }).pipe(
-      map((res) => {
-        let v = this._projects.getValue().filter(p => p._key != project._key);
-        this._projects.next(v);
-        return res;
-      })
-    );
+    });
+    //   .pipe(
+    //   map((res) => {
+    //     let v = this._projects.getValue().filter(p => p._key != project._key);
+    //     this._projects.next(v);
+    //     return res;
+    //   })
+    // );
   }
 
-  createProject(name: string): Project {
+  static createProject(name: string): Project {
     let obj: Project = {name: name};
     // obj.name = name;
     return obj;

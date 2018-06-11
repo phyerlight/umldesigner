@@ -6,13 +6,15 @@ const status = require('statuses');
 const errors = require('@arangodb').errors;
 const createRouter = require('@arangodb/foxx/router');
 const db = require('@arangodb').db;
+const aql = require('@arangodb').aql;
+
 const Project = require('../models/project');
+const ProjectList = require('../models/projectlist');
 
 const projects = module.context.collection('projects');
 const files = module.context.collection('files');
 const projectFiles = module.context.collection('projectFiles');
-const keySchema = joi.string().required()
-.description('The key of the project');
+const keySchema = joi.string().required().description('The key of the project');
 
 const ARANGO_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
 const ARANGO_DUPLICATE = errors.ERROR_ARANGO_UNIQUE_CONSTRAINT_VIOLATED.code;
@@ -26,6 +28,24 @@ module.exports = router;
 
 router.tag('project');
 
+router.get('list', function (req, res) {
+
+  const projs = db._query(aql`
+    FOR project IN ${projects}
+      let files = (FOR f IN 1 OUTBOUND project
+        ${projectFiles}
+        RETURN {_key: f._key, name: f.name}
+      )
+    RETURN merge(project, {files: files})
+  `);
+
+  res.send(projs.toArray());
+}, 'listwfiles')
+  .response([ProjectList], 'A list of projects with files')
+  .summary('Projects with files')
+  .description(dd`
+  Retrieves a JSON object of all projects with their associated files nested into the hierarchy.
+`);
 
 router.get(function (req, res) {
   res.send(projects.all());

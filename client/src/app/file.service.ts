@@ -35,31 +35,30 @@ export class FileService {
 
   private url = environment.host+environment.database+'/files';
 
-  private _files: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(null);
-  public file$: Observable<File[]> = this._files.asObservable().pipe(filter(v => v != null));
+  // private _files: BehaviorSubject<File[]> = new BehaviorSubject<File[]>(null);
+  // public file$: Observable<File[]> = this._files.asObservable().pipe(filter(v => v != null));
 
   constructor(private http: HttpClient) { }
 
   public getFileByKey(key: string): Observable<File> {
-    return this.file$.pipe(map((files: File[]) => {
+    return this.http.get(this.url+'/'+key).pipe(map((files: File[]) => {
       return files.find(f => f._key == key);
     }));
   };
 
-  public getFilesByKey(keys: string[]): Observable<File[]> {
-    return this.file$.pipe(map((files: File[]) => {
-      return files.filter(f => keys.includes(f._key));
-    }));
-  };
+  // public getFilesByKey(keys: string[]): Observable<File[]> {
+  //   return this.file$.pipe(map((files: File[]) => {
+  //     return files.filter(f => keys.includes(f._key));
+  //   }));
+  // };
 
+  // public getFileByName(name: string): Observable<File> {
+  //   return this.file$.pipe(map((files: File[]) => {
+  //     return files.find(f => f.name == name);
+  //   }));
+  // };
 
-  public getFileByName(name: string): Observable<File> {
-    return this.file$.pipe(map((files: File[]) => {
-      return files.find(f => f.name == name);
-    }));
-  };
-
-  public createFile(name: string): File {
+  static createFile(name: string): File {
     return {
       name: name,
       data: {
@@ -69,15 +68,15 @@ export class FileService {
     }
   }
 
-  public fetch(): Observable<File[]> {
-    return this.http.get(this.url, {
-      withCredentials: true,
-      responseType: 'json'
-    }).pipe(map((f: File[]) => {
-      this._files.next(f);
-      return f;
-    }));
-  }
+  // public getProjectList(): Observable<File[]> {
+  //   return this.http.get(this.url, {
+  //     withCredentials: true,
+  //     responseType: 'json'
+  //   }).pipe(map((f: File[]) => {
+  //     this._files.next(f);
+  //     return f;
+  //   }));
+  // }
 
   public save(file: File): Observable<File> {
     let method = 'post';
@@ -89,21 +88,23 @@ export class FileService {
     return this.http[method](url, JSON.stringify(file), {
       withCredentials: true,
       responseType: "json"
-    }).map((f: File) => {
-      let v = this._files.getValue();
-      v.push(f);
-      this._files.next(v);
-      return f;
     });
+    //   .pipe(map((f: File) => {
+    //   let v = this._files.getValue();
+    //   v.push(f);
+    //   this._files.next(v);
+    //   return f;
+    // }));
   }
 
   public delete(file: File): Observable<any> {
     return this.http.delete(this.url+'/'+file._key, {
       withCredentials: true
-    }).pipe(map((res) => {
-      let v = this._files.getValue().filter(p => p._key != file._key);
-      this._files.next(v);
-      return res;
-    }));
+    });
+    //   .pipe(map((res) => {
+    //   let v = this._files.getValue().filter(p => p._key != file._key);
+    //   this._files.next(v);
+    //   return res;
+    // }));
   }
 }
