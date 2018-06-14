@@ -10,6 +10,7 @@ export interface RouteParams extends Params {
 
 export const routes: Routes = [
   { path: '', component: AppComponent},
+  { path: ':project', redirectTo: '' },
   { path: ':project/:file', component: AppComponent}
 ];
 
