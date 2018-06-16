@@ -24,6 +24,7 @@ module.exports = {
   schema: {
     // Describe the attributes with joi here
     _key: joi.string(),
+    project_key: joi.string(),
     name: joi.string().required(),
     data: joi.object().keys({
       classes: joi.array().items(Class),

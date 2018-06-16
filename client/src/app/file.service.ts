@@ -26,6 +26,7 @@ interface FileData {
 
 export interface File {
   _key?: string;
+  project_key?: string;
   name: string;
   data: FileData;
 }
@@ -58,8 +59,9 @@ export class FileService {
   //   }));
   // };
 
-  static createFile(name: string): File {
+  static createFile(name: string, project: Project): File {
     return {
+      project_key: project._key,
       name: name,
       data: {
         classes:[],

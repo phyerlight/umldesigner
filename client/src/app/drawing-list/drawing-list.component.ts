@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from 
 import {Project} from "../project.service";
 import {File, FileService} from "../file.service";
 import {Selection} from "../app.component";
-import {ProjectFile, ProjectFileService} from "../projectFile.service";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/mergeMap';
 

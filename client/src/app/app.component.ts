@@ -11,7 +11,6 @@ import { take, delay, filter, mergeMap, map, shareReplay, share } from "rxjs/ope
 import { combineLatest } from "rxjs/observable/combineLatest";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
-import {ProjectFile, ProjectFileService} from "./projectFile.service";
 
 export type Selection = {
   project: Project,
@@ -49,7 +48,6 @@ export class AppComponent implements OnInit {
     private router: Router,
     private projectService: ProjectService,
     private fileService: FileService,
-    private projectFileService: ProjectFileService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
@@ -59,18 +57,15 @@ export class AppComponent implements OnInit {
         // this.selection = null;
         return this.projectService.projects$.pipe(
           map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)),
-          map((p: Project) => [p as Project, (p.files.find((f: File) => f.name == params.file)) as File] )
+          // filter((p: Project) => exists(p)),
+          map((p: Project) => [p as Project, (p.files.find((f: File) => f.name == params.file)) as File] ),
+          // filter(v => v.length == 2 && exists(v[1]))
         );
-        // return combineLatest(
-        //   this.projectService.getProjectByName(params.project).pipe(
-        //     filter(p => exists(p))
-        //   ),
-        //   this.fileService.getFileByName(params.file).pipe(
-        //     filter(f => exists(f))
-        //   )
-        // )
       })
     ).subscribe( v => {
+      if (!exists(v[0], v[1])) {
+        this.router.navigateByUrl("");
+      }
       this.selection = {project: v[0] as Project, file: v[1] as File};
     });
 
@@ -187,17 +182,15 @@ export class AppComponent implements OnInit {
       width: '400px'
     });
 
-    let newFile: File = null;
     dialogRef.afterClosed().pipe(
+      //make sure we have a name that isn't blank
       filter(name => name != null && name != ""),
-      mergeMap(name => this.fileService.save(FileService.createFile(name))),
-      mergeMap(nf => {
-        let pf = ProjectFileService.createProjectFile(project, nf);
-        newFile = nf;
-        return this.projectFileService.save(pf);
-      })
-    ).subscribe(() => {
+      //create and save the file to the server
+      mergeMap(name => this.fileService.save(FileService.createFile(name, project))),
+    ).subscribe((newFile: File) => {
+      //On successful saving, reload the data from the server
       this.loadData();
+      //navigate to the new file
       this.router.navigate([project.name, newFile.name]);
     }, err => {
       if (err.code == 409) {

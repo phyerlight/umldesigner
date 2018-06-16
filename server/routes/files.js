@@ -8,7 +8,6 @@ const createRouter = require('@arangodb/foxx/router');
 const File = require('../models/file');
 
 const files = module.context.collection('files');
-const projectFiles = module.context.collection('projectFiles');
 const keySchema = joi.string().required()
 .description('The key of the file');
 
@@ -38,10 +37,15 @@ router.post(function (req, res) {
   const file = req.body;
   let meta;
   try {
+    //checking for duplicates is done using unique indexes applied in the DB on name and project_key
     meta = files.save(file);
   } catch (e) {
     if (e.isArangoError && e.errorNum === ARANGO_DUPLICATE) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name","project_key"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Filename '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -94,7 +98,11 @@ router.put(':key', function (req, res) {
       throw httpError(HTTP_NOT_FOUND, e.message);
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name","project_key"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Filename '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -123,7 +131,11 @@ router.patch(':key', function (req, res) {
       throw httpError(HTTP_NOT_FOUND, e.message);
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name","project_key"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Filename '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -143,9 +155,6 @@ router.delete(':key', function (req, res) {
   const key = req.pathParams.key;
   try {
     files.remove(key);
-    console.log("Files Collection Id:"+module.context.collectionName("files")+'/'+key);
-    var res = projectFiles.removeByExample({'_to': module.context.collectionName("files")+'/'+key});
-    console.log("Result: "+res);
   } catch (e) {
     if (e.isArangoError && e.errorNum === ARANGO_NOT_FOUND) {
       throw httpError(HTTP_NOT_FOUND, e.message);

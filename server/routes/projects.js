@@ -13,7 +13,7 @@ const ProjectList = require('../models/projectlist');
 
 const projects = module.context.collection('projects');
 const files = module.context.collection('files');
-const projectFiles = module.context.collection('projectFiles');
+// const projectFiles = module.context.collection('projectFiles');
 const keySchema = joi.string().required().description('The key of the project');
 
 const ARANGO_NOT_FOUND = errors.ERROR_ARANGO_DOCUMENT_NOT_FOUND.code;
@@ -32,8 +32,8 @@ router.get('list', function (req, res) {
 
   const projs = db._query(aql`
     FOR project IN ${projects}
-      let files = (FOR f IN 1 OUTBOUND project
-        ${projectFiles}
+      let files = (FOR f IN ${files}
+        FILTER f.project_key == project._key
         RETURN {_key: f._key, name: f.name}
       )
     RETURN merge(project, {files: files})
@@ -64,7 +64,11 @@ router.post(function (req, res) {
     meta = projects.save(project);
   } catch (e) {
     if (e.isArangoError && e.errorNum === ARANGO_DUPLICATE) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -117,7 +121,11 @@ router.put(':key', function (req, res) {
       throw httpError(HTTP_NOT_FOUND, e.message);
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -146,7 +154,11 @@ router.patch(':key', function (req, res) {
       throw httpError(HTTP_NOT_FOUND, e.message);
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
-      throw httpError(HTTP_CONFLICT, e.message);
+      if (e.message.match(/\["name"\]/)) {
+        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+      } else {
+        throw httpError(HTTP_CONFLICT, e.message);
+      }
     }
     throw e;
   }
@@ -165,20 +177,11 @@ router.patch(':key', function (req, res) {
 router.delete(':key', function (req, res) {
   const key = req.pathParams.key;
   db._executeTransaction({
-    collections: {write:['projects', 'files', 'projectFiles'].map(c => module.context.collectionName(c))},
+    collections: {write:['projects', 'files'].map(c => module.context.collectionName(c))},
     action: function() {
       try {
-        projects.remove(key);
-
-        var fileKeys = [];
-        var pfKeys = [];
-        projectFiles.byExample({'_from': module.context.collectionName("projects")+'/'+key}).toArray().forEach(pf => {
-          fileKeys.push(pf._to.replace(/^.*\//, ""));
-          pfKeys.push(pf._key);
-        });
-        files.removeByKeys(fileKeys);
-        projectFiles.removeByKeys(pfKeys);
-
+        projects.remove(key); // remove project
+        files.removeByExample({"project_key": key}); // remove associated files
       } catch (e) {
         if (e.isArangoError && e.errorNum === ARANGO_NOT_FOUND) {
           throw httpError(HTTP_NOT_FOUND, e.message);

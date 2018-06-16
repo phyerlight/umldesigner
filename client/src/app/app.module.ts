@@ -20,7 +20,6 @@ import { NewDialogComponent } from './new-dialog/new-dialog.component';
 import {PaperCanvasComponent} from "./editor/paperCanvas.component";
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./file.service";
-import {ProjectFileService} from "./projectFile.service";
 // import {ToolService} from "./editor/tools.service";
 // import {CanvasService} from "./editor/canvas.service";
 
@@ -62,7 +61,6 @@ import {ProjectFileService} from "./projectFile.service";
   providers: [
     ProjectService,
     FileService,
-    ProjectFileService,
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     // ToolService,
     // CanvasService,
