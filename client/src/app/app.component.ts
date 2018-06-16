@@ -149,7 +149,7 @@ export class AppComponent implements OnInit {
     ).subscribe(p=>{
       this.loadData();
     }, (e)=>{
-      if (e.code == 409) {
+      if (e.status == 409) {
         this.handleAddProject("A project with that name already exists");
       } else {
         throw e;
@@ -193,7 +193,7 @@ export class AppComponent implements OnInit {
       //navigate to the new file
       this.router.navigate([project.name, newFile.name]);
     }, err => {
-      if (err.code == 409) {
+      if (err.status == 409) {
         this.handleAddFile(project, "A file with that name already exists");
       } else {
         throw err;

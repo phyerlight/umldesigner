@@ -65,7 +65,7 @@ router.post(function (req, res) {
   } catch (e) {
     if (e.isArangoError && e.errorNum === ARANGO_DUPLICATE) {
       if (e.message.match(/\["name"\]/)) {
-        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+        throw httpError(HTTP_CONFLICT, `Project name '${project.name}' is already in use`);
       } else {
         throw httpError(HTTP_CONFLICT, e.message);
       }
@@ -122,7 +122,7 @@ router.put(':key', function (req, res) {
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
       if (e.message.match(/\["name"\]/)) {
-        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+        throw httpError(HTTP_CONFLICT, `Project name '${project.name}' is already in use`);
       } else {
         throw httpError(HTTP_CONFLICT, e.message);
       }
@@ -155,7 +155,7 @@ router.patch(':key', function (req, res) {
     }
     if (e.isArangoError && e.errorNum === ARANGO_CONFLICT) {
       if (e.message.match(/\["name"\]/)) {
-        throw httpError(HTTP_CONFLICT, `Project name '${file.name}' is already in use`);
+        throw httpError(HTTP_CONFLICT, `Project name '${project.name}' is already in use`);
       } else {
         throw httpError(HTTP_CONFLICT, e.message);
       }
