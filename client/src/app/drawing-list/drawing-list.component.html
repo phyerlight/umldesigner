@@ -21,7 +21,7 @@
             </div>
         </mat-list-item>
       </mat-nav-list>
-      <span *ngIf="project.files?.length < 1" [style]="{'text-align':'center'}">
+      <span *ngIf="project.files?.length < 1" [ngStyle]="{'text-align':'center'}">
         No files have been added yet.
       </span>
       <mat-action-row>
