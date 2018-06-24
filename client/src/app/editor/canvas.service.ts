@@ -26,8 +26,8 @@ export class CanvasService {
   public getActiveCanvas(): Observable<PaperCanvasComponent> {
     return this.canvases$.pipe(
       map((cs: Map<string, PaperCanvasComponent>) => {
-        let it = cs.values();
-        let iti = it.next();
+        let it = cs.values(); // canvas iterator
+        let iti = it.next(); // iterator item
         while (!iti.done) {
           let c = iti.value;
           if (c.project == window['paper'].project) {
