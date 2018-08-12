@@ -13,6 +13,6 @@
     </mat-button-toggle-group>
   </div>
   <div class="drawing flex-grow">
-    <paper-canvas [name]="canvasName"></paper-canvas>
+    <design-canvas [name]="file?.name" [data]="undoStack[0]" (changed)="addChange($event)"></design-canvas>
   </div>
 </div>

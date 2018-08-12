@@ -1,0 +1,12 @@
+<h1 *ngIf="data.new" matDialogTitle>New Class</h1>
+<h1 *ngIf="!data.new" matDialogTitle>Edit Class</h1>
+<mat-dialog-content>
+  <div>
+    <input matInput [(ngModel)]="name" placeholder="Name"/>
+  </div><div>
+  <textarea matInput [(ngModel)]="attributes" placeholder="Class Methods, Properties and Attributes"></textarea>
+</div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [matDialogClose]="null">Cancel</button> <button mat-raised-button (click)="save()">OK</button>
+</mat-dialog-actions>

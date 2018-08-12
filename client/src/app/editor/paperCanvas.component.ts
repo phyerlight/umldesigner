@@ -7,17 +7,18 @@ import {CanvasService} from "./canvas.service";
   styles: ['canvas {width: 100%; height: 100%}'],
   selector: 'paper-canvas',
   template: '<canvas #canvasElement resize></canvas>',
+  providers: []
 })
-
 export class PaperCanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
   @Input() name: string;
+  @Input() data: any;
 
   scope: PaperScope;
   project: Project;
 
-  constructor(private canvasService: CanvasService) { }
+  constructor(protected canvasService: CanvasService) { }
 
   ngOnInit() {
     this.scope = window['paper'];

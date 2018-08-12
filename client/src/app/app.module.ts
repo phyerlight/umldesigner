@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
@@ -20,8 +20,10 @@ import { NewDialogComponent } from './new-dialog/new-dialog.component';
 import {PaperCanvasComponent} from "./editor/paperCanvas.component";
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./file.service";
-// import {ToolService} from "./editor/tools.service";
-// import {CanvasService} from "./editor/canvas.service";
+import {ToolService} from "./editor/tools.service";
+import {CanvasService} from "./editor/canvas.service";
+import { ClassFormComponent } from './editor/forms/class-form/class-form.component';
+import {DesignCanvasComponent} from "./editor/designCanvas.component";
 
 @NgModule({
   declarations: [
@@ -30,16 +32,20 @@ import {FileService} from "./file.service";
     OutletWrapperComponent,
     DrawingListComponent,
     PaperCanvasComponent,
+    DesignCanvasComponent,
     ConfirmDialogComponent,
     NewDialogComponent,
+    ClassFormComponent,
   ],
   entryComponents: [
     ConfirmDialogComponent,
-    NewDialogComponent
+    NewDialogComponent,
+    ClassFormComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
+    // NoopAnimationsModule,
     FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,

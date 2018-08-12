@@ -1,8 +1,9 @@
 import {Injectable} from "@angular/core";
-import {DRAWING_TOOL_DEPS, DrawingTool, ToolService} from "../tools.service";
+// import {DRAWING_TOOL_DEPS, ToolService} from "../tools.service";
 import {CanvasService} from "../canvas.service";
 import {MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
+import {DrawingTool} from "./drawingTool.tool";
 
 @Injectable()
 export class AssocRelationTool extends DrawingTool {
@@ -21,4 +22,3 @@ export class AssocRelationTool extends DrawingTool {
 
   }
 }
-ToolService.addToolProvider({provide: AssocRelationTool, deps: DRAWING_TOOL_DEPS});

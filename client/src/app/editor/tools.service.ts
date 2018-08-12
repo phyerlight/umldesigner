@@ -1,58 +1,34 @@
 import {Injectable, Injector, StaticProvider} from "@angular/core";
-import {ConstructorProvider} from "@angular/core/src/di/provider";
-import {MatIcon, MatIconRegistry} from "@angular/material";
-import {DomSanitizer} from "@angular/platform-browser";
-import {CanvasService} from "./canvas.service";
-import {PaperCanvasComponent} from "./paperCanvas.component";
 
-export const DRAWING_TOOL_DEPS = [CanvasService, MatIconRegistry, DomSanitizer];
-
-export abstract class DrawingTool extends paper.Tool {
-  name: string = null;
-  icon: string = null;
-  toolTip: string = null;
-
-  constructor(protected canvasService: CanvasService,
-              protected iconRegistry: MatIconRegistry,
-              protected sanitizer: DomSanitizer) {
-    super();
-    canvasService.getActiveCanvas().subscribe((canvas: PaperCanvasComponent) => {
-      canvas.scope.tools.push(this);
-    });
-  }
-
-  registerIcon() {
-    this.iconRegistry.addSvgIcon(this.icon,
-      this.sanitizer.bypassSecurityTrustResourceUrl(`assets/${this.icon}.svg`));
-  }
-}
+import {NewClassTool} from "./tools/newClass.tool";
+import {AssocRelationTool} from "./tools/assocRelation.tool";
+import {InheritRelationTool} from "./tools/inheritRelation.tool";
+import {SelectionTool} from "./tools/selection.tool";
+import {DrawingTool} from "./tools/drawingTool.tool";
 
 export function loadTools() {
-  // import('./tools/selection.tool');
-  // import('./tools/newClass.tool');
-  // import('./tools/inheritRelation.tool');
-  // import('./tools/assocRelation.tool');
+  ToolService.registerTool(SelectionTool);
+  ToolService.registerTool(NewClassTool);
+  ToolService.registerTool(AssocRelationTool);
+  ToolService.registerTool(InheritRelationTool);
 }
 
 @Injectable()
 export class ToolService {
 
   private static registeredToolClasses: Array<any> = [];
-  private static registeredProviders: Array<StaticProvider> = [];
 
-  public static addToolProvider(provider: StaticProvider) {
-    ToolService.registeredToolClasses.push((<ConstructorProvider>provider).provide);
-    ToolService.registeredProviders.push(provider);
+  public static registerTool(tool: any) {
+    ToolService.registeredToolClasses.push(tool);
   }
 
   constructor(private injector: Injector) {}
 
   public getTools(): Array<DrawingTool> {
     let tools: Array<DrawingTool> = [];
-    let i = Injector.create(ToolService.registeredProviders, this.injector);
 
     ToolService.registeredToolClasses.forEach((tc) => {
-      tools.push(i.get(tc));
+      tools.push(this.injector.get(tc));
     });
 
     return tools;

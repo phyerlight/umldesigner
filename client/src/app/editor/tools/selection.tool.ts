@@ -1,5 +1,4 @@
 import {Injectable} from "@angular/core";
-import {DRAWING_TOOL_DEPS, DrawingTool, ToolService} from "../tools.service";
 import {CanvasService} from "../canvas.service";
 import {MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
@@ -7,6 +6,7 @@ import { take } from "rxjs/operators";
 import Rectangle = paper.Rectangle;
 import Point = paper.Point;
 import Size = paper.Size;
+import {DrawingTool} from "./drawingTool.tool";
 
 @Injectable()
 export class SelectionTool extends DrawingTool {
@@ -69,4 +69,3 @@ export class SelectionTool extends DrawingTool {
   }
 
 }
-ToolService.addToolProvider({provide: SelectionTool, deps: DRAWING_TOOL_DEPS});

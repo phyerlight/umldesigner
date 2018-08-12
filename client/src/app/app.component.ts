@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {trigger, state, style, animate, transition, query} from '@angular/animations';
 import {NameError, Project, ProjectService} from "./project.service";
 import {File, FileService} from "./file.service";
@@ -37,40 +37,47 @@ let exists = (...v) => v.every(v => v != null && v != undefined);
     ])
   ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   title = 'UML Designer 4';
 
-  private selection: Selection;
+  protected selection: Selection;
   protected fabState$ = new BehaviorSubject('out');
+  protected file: File;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private projectService: ProjectService,
+    protected projectService: ProjectService,
     private fileService: FileService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
     this.route.params.pipe(
-      filter((p:RouteParams) => exists(p.project, p.file)),
+      filter((p: RouteParams) => exists(p.project, p.file)),
       mergeMap((params: RouteParams) => {
         // this.selection = null;
         return this.projectService.projects$.pipe(
           map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)),
           // filter((p: Project) => exists(p)),
-          map((p: Project) => [p as Project, (p.files.find((f: File) => f.name == params.file)) as File] ),
+          map((p: Project) => [p as Project, (p.files.find((f: File) => f.name == params.file)) as File]),
           // filter(v => v.length == 2 && exists(v[1]))
         );
       })
-    ).subscribe( v => {
+    ).subscribe(v => {
       if (!exists(v[0], v[1])) {
         this.router.navigateByUrl("");
       }
       this.selection = {project: v[0] as Project, file: v[1] as File};
+      this.fileService.getFileByKey(v[1]._key).subscribe((f: File) => {
+        this.file = f;
+      })
     });
 
     this.loadData();
 
+  }
+
+  ngAfterViewInit() {
     this.fabState$.pipe(
       delay(200),
       take(1)
@@ -82,40 +89,6 @@ export class AppComponent implements OnInit {
     //   console.log(v);
     // });
   }
-
-  // get project$(): Observable<Project[]> {
-  //   return combineLatest(
-  //     this.projectService.projects$,
-  //     this.fileService.file$,
-  //     this.projectFileService.projectFile$)
-  //     .pipe(
-  //       filter(v => exists(v[0], v[1], v[2])),
-  //       map((v: Array<any>) => {
-  //         let projects: Project[] = v[0];
-  //         let files: File[] = v[1];
-  //         let projFiles: ProjectFile[] = v[2];
-  //
-  //         let projsHash: Map<string, Project> = new Map(projects.map(p => [p._key, p] as [string, Project]) );
-  //         let filesHash: Map<string, File> = new Map(files.map(f => [f._key, f] as [string, File]));
-  //
-  //         projFiles.forEach(pf => {
-  //           let p: Project = projsHash.get(pf._from.replace(/^.*\//, ''));
-  //           let f: File = filesHash.get(pf._to.replace(/^.*\//, ''));
-  //
-  //           if (p && f) {
-  //             if (!p.hasOwnProperty('files')) {
-  //               p.files = [];
-  //             }
-  //
-  //             p.files.push(f);
-  //           }
-  //         });
-  //
-  //         return Array.from(projsHash.values());
-  //       }),
-  //       share()
-  //     );
-  // }
 
   loadData() {
     this.projectService.getProjectList().pipe(take(1)).subscribe();
