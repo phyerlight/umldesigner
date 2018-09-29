@@ -138,6 +138,145 @@ export class DesignCanvasComponent extends PaperCanvasComponent implements OnCha
   }
 
   public drawRelation(rel: Relation) {
+    let fromItem = this.paperService.project.getItem({
+      data: {id: rel.fromId}
+    });
+    let toItem = this.paperService.project.getItem({
+      data: {id: rel.toId}
+    });
+
+    if (!fromItem || !toItem) return;
+
+    let fromBounds = fromItem.bounds;
+    let toBounds = toItem.bounds;
+    let cLine = new paper.Path.Line(fromBounds.center, toBounds.center);
+
+    enum ORIENT {
+      HOR = 'HOR',
+      VER = 'VER'
+    }
+
+    enum DIR {
+      UP = 'HOR',
+      DOWN = 'VER',
+      LEFT = 'LEFT',
+      RIGHT = 'RIGHT'
+    }
+
+    let detSideCenter = (line, bound) => {
+      let result = null;
+      let pt = new paper.Path.Rectangle(bound).getIntersections(line)[0].point;
+      [
+        [pt.x, bound.left, bound.leftCenter, ORIENT.HOR],
+        [pt.x, bound.right, bound.rightCenter, ORIENT.HOR],
+        [pt.y, bound.top, bound.topCenter, ORIENT.VER],
+        [pt.y, bound.bottom, bound.bottomCenter, ORIENT.VER]
+      ].forEach(([val, side, pt, dir]) => {
+        if (val == side)
+          result = [pt as Point, dir];
+      });
+      return result;
+    }
+
+    let fromPoint: Point, fromDir: ORIENT;
+    let toPoint: Point, toDir: ORIENT;
+    let lineDir: DIR;
+    try {
+      [fromPoint, fromDir] = detSideCenter(cLine, fromBounds);
+      [toPoint, toDir] = detSideCenter(cLine, toBounds);
+    } catch (err) {
+      return;
+    }
+
+    if (toDir == ORIENT.HOR) {
+      if (toPoint.x > fromPoint.x) {
+        lineDir = DIR.RIGHT;
+      } else {
+        lineDir = DIR.LEFT;
+      }
+    } else {
+      if (toPoint.y > fromPoint.y) {
+        lineDir = DIR.DOWN;
+      } else {
+        lineDir = DIR.UP;
+      }
+
+    }
+
+    let arrowRad = 6;
+    let path = new paper.Path([fromPoint, toPoint]);
+    let marker = new paper.Path.RegularPolygon(toPoint, 3, arrowRad);
+
+    let assoc = new paper.Group({
+      children: [path, marker],
+      data: {
+        type: FileEntityType.Relation,
+        id: rel.id
+      }
+    });
+
+    path.strokeColor = 'black';
+    if (fromDir == toDir) { //Make a zig zag
+      if (fromDir == ORIENT.HOR) {
+        let midx = (fromPoint.x + toPoint.x) / 2;
+        path.insertSegments(1, [[midx, fromPoint.y], [midx, toPoint.y]]);
+      } else {
+        let midy = (fromPoint.y + toPoint.y) / 2;
+        path.insertSegments(1, [[fromPoint.x, midy], [toPoint.x, midy]]);
+      }
+    } else { // Make a right angle
+      if (fromDir == ORIENT.HOR) {
+        path.insert(1, [toPoint.x, fromPoint.y]);
+      } else {
+        path.insert(1, [fromPoint.x, toPoint.y]);
+      }
+    }
+
+    switch (rel.reltype) {
+      case Relation.Assoc:
+        marker.strokeColor = 'black';
+        marker.fillColor = 'black';
+        break;
+      case Relation.Inherit:
+        marker.strokeColor = 'black';
+        marker.fillColor = 'white';
+        break;
+    }
+
+    if (toDir == ORIENT.HOR) {
+      if (lineDir == DIR.LEFT) {
+        marker.rotate(30);
+        marker.translate([arrowRad, 0]);
+      } else {
+        marker.rotate(-30);
+        marker.translate([-arrowRad, 0]);
+      }
+    } else {
+      if (lineDir == DIR.DOWN) {
+        marker.rotate(180);
+        marker.translate([0, -arrowRad]);
+      } else {
+        marker.translate([0, arrowRad]);
+      }
+    }
+
+    if (this.isEntitySelected(this.paperService.fileId, rel.id)) {
+      assoc.selected = true;
+    }
+
+    this.paperService.project.activeLayer.addChild(assoc);
+
+    // let assoc = new paper.CompoundPath({
+    //   children: [marker, path],
+    //   data: {
+    //     type: FileEntityType.Relation,
+    //     id: rel.id
+    //   },
+    //   strokeColor: 'black',
+    //   fillColor: 'black',
+    //   closed: false
+    // });
+    // this.paperService.project.activeLayer.addChild(assoc);
 
   }
 
