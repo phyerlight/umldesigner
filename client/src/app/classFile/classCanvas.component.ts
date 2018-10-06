@@ -1,16 +1,21 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import { PaperScope, Project } from 'paper';
 import {CanvasService} from "./canvas.service";
+import {PaperService} from "../../paper.service";
 
 @Component({
   moduleId: module.id,
   styles: ['canvas {width: 100%; height: 100%}'],
   selector: 'paper-canvas',
   template: '<canvas #canvasElement resize></canvas>',
-  providers: []
+  providers: [
+    PaperService
+  ]
 })
 export class PaperCanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasElement') canvasElement: ElementRef;
+
+  @Input() fileKey: string;
 
   @Input() name: string;
   @Input() data: any;
@@ -18,19 +23,14 @@ export class PaperCanvasComponent implements OnInit, AfterViewInit {
   scope: PaperScope;
   project: Project;
 
-  constructor(protected canvasService: CanvasService) { }
+  constructor(protected paperService: PaperService) { }
 
   ngOnInit() {
-    this.scope = window['paper'];
-    this.scope.settings['insertItems'] = false;
-    this.scope.settings['applyMatrix'] = false;
-    this.scope.settings['hitTolerance'] = 1;
+
   }
 
   ngAfterViewInit() {
-    this.scope.setup(this.canvasElement.nativeElement);
-    this.project = this.scope.project;
-    this.canvasService.registerCanvas(this, this.name);
+    this.paperService.initialize(this.canvasElement.nativeElement, this.fileKey, {hitTolerance:1});
   }
 
   public clearCanvas() {
