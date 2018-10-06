@@ -24,6 +24,8 @@ import {ToolService} from "./editor/tools.service";
 import {CanvasService} from "./editor/canvas.service";
 import { ClassFormComponent } from './editor/forms/class-form/class-form.component';
 import {DesignCanvasComponent} from "./editor/designCanvas.component";
+import {NgxsModule} from "@ngxs/store";
+import {ClassCanvasComponent} from "./classFile/classCanvas.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +38,7 @@ import {DesignCanvasComponent} from "./editor/designCanvas.component";
     ConfirmDialogComponent,
     NewDialogComponent,
     ClassFormComponent,
+    ClassCanvasComponent,
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -50,6 +53,7 @@ import {DesignCanvasComponent} from "./editor/designCanvas.component";
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxsModule.forRoot([]),
     //Angular Material
     MatDialogModule,
     MatSidenavModule,

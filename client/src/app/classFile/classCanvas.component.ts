@@ -1,24 +1,21 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
 import { PaperScope, Project } from 'paper';
-import {CanvasService} from "./canvas.service";
-import {PaperService} from "../../paper.service";
+// import {CanvasService} from "./canvas.service";
+import {PaperService} from "../paper.service";
 
 @Component({
   moduleId: module.id,
   styles: ['canvas {width: 100%; height: 100%}'],
-  selector: 'paper-canvas',
+  selector: 'class-canvas',
   template: '<canvas #canvasElement resize></canvas>',
   providers: [
     PaperService
   ]
 })
-export class PaperCanvasComponent implements OnInit, AfterViewInit {
+export class ClassCanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
   @Input() fileKey: string;
-
-  @Input() name: string;
-  @Input() data: any;
 
   scope: PaperScope;
   project: Project;

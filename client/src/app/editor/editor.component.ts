@@ -68,7 +68,7 @@ export class EditorComponent implements OnInit {
     // combineLatest (
     //   this.canvasService.getCanvas(this.canvasName),
     //   this.file$
-    // ).subscribe((v: [PaperCanvasComponent, File]) => {
+    // ).subscribe((v: [ClassCanvasComponent, File]) => {
     //   this.canvas = v[0];
     //   this.canvas.data = v[1];
     // });

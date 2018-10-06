@@ -11,13 +11,13 @@ import { File, ClassFile, FileEntityType, ClassEntity, RelationEntity, FileEntit
 import { PointText, Point, Path, Group } from 'paper';
 import paper from 'paper';
 
-import { PaperService } from './paper.service';
+import { PaperService } from '../paper/paper.service';
 
 import { map, take } from 'rxjs/operators';
 
 let brk = (fid, cid) => {
   return `${fid},${cid}`;
-}
+};
 
 @Injectable()
 export class DrawingService {
@@ -31,7 +31,7 @@ export class DrawingService {
 
     store.select(AppState.isEntitySelected).subscribe((fn) => {
       this.isEntitySelected = fn;
-    })
+    });
 
     paperService.hasInitialized.then(() => {
       paperService.scope.activate();
@@ -51,7 +51,7 @@ export class DrawingService {
           action = new SetSelection(paperService.fileId, []);
         }
         this.store.dispatch(action);
-      }
+      };
 
       this.tool.onMouseDrag = (event: paper.ToolEvent) => {
         let selEntity = this.store.selectSnapshot(FileState.selectedEntity) as ClassEntity;
@@ -221,7 +221,7 @@ export class DrawingService {
           result = [pt as Point, dir];
       });
       return result;
-    }
+    };
 
     let fromPoint: Point, fromDir: ORIENT;
     let toPoint: Point, toDir: ORIENT;
