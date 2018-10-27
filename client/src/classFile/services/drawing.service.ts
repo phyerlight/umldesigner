@@ -11,10 +11,10 @@ import { PointText, Point } from 'paper';
 // @ts-ignore
 import paper from 'paper';
 
-import { PaperService } from '../../app/paper/paper.service';
+import { PaperService } from '../../common/paper/paper.service';
 
-import {File, filterByEntityType} from "../../common/models/index";
-import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models/index";
+import {File, filterByEntityType} from "../../common/models";
+import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models";
 import {SetSelection} from "../../app/state/app.actions";
 
 let brk = (fid, cid) => {

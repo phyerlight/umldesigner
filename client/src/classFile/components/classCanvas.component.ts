@@ -1,7 +1,6 @@
 import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
-import { PaperScope, Project } from 'paper';
-import {PaperService} from "../../app/paper/paper.service";
-import {PaperCanvasComponent} from "../../app/paper/paperCanvas.component";
+import {PaperService} from "../../common/paper/paper.service";
+import {PaperCanvasComponent} from "../../common/paper/paperCanvas.component";
 
 @Component({
   styles: ['canvas {width: 100%; height: 100%}'],

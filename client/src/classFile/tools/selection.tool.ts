@@ -6,7 +6,7 @@ import Rectangle = paper.Rectangle;
 import Point = paper.Point;
 import Size = paper.Size;
 import {DrawingTool} from "../../common/paper/drawingTool.tool";
-import {PaperService} from "../../app/paper/paper.service";
+import {PaperService} from "../../common/paper/paper.service";
 
 @Injectable()
 export class SelectionTool extends DrawingTool {

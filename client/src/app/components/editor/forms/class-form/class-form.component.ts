@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {ClassEntity} from "../../../../classFile/models";
+import {ClassEntity} from "../../../../../classFile/models/index";
 
 @Component({
   selector: 'app-class-form',

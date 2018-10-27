@@ -7,10 +7,10 @@ import {
 import {RouterTestingModule} from "@angular/router/testing";
 import {Routes} from "@angular/router";
 import {Component} from "@angular/core";
-import {Project} from "../models/Project";
+import {Project} from "../../models/Project";
 import {By} from "@angular/platform-browser";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {createFile, File} from "../../common/models";
+import {createFile, File} from "../../../common/models/index";
 
 let projects: Project[] = [
   {_key: '1', name: 'test1', fileKeys:['t1f1','t1f2']},

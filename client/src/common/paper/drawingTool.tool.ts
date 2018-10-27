@@ -1,6 +1,6 @@
 import {MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
-import {PaperService} from "../../app/paper/paper.service";
+import {PaperService} from "./paper.service";
 
 export abstract class DrawingTool extends paper.Tool {
   name: string = null;

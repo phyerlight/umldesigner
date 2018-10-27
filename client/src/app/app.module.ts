@@ -10,17 +10,16 @@ import {
 } from "@angular/material";
 
 import { AppComponent } from './containers/app/app.component';
-import { EditorComponent } from './editor/editor.component';
+import { EditorComponent } from './components/editor/editor.component';
 import { ProjectService } from "./services/project.service";
 import { AppRoutingModule } from './app-routing.module';
 import { OutletWrapperComponent } from './containers/outlet-wrapper/outlet-wrapper.component';
-import { DrawingListComponent } from './drawing-list/drawing-list.component';
+import { DrawingListComponent } from './components/drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
-import { ClassFormComponent } from './editor/forms/class-form/class-form.component';
-// import {DesignCanvasComponent} from "./editor/designCanvas.component";
+import { ClassFormComponent } from './components/editor/forms/class-form/class-form.component';
 import {NgxsModule} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {AllFileStates, FileState} from "../common/state/file.state";

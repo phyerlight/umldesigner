@@ -2,11 +2,11 @@ import {Injectable, NgZone} from "@angular/core";
 import {MatDialog, MatDialogRef, MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DrawingTool} from "../../common/paper/drawingTool.tool";
-import {ClassFormComponent} from "../../app/editor/forms/class-form/class-form.component";
+import {ClassFormComponent} from "../../app/components/editor/forms/class-form/class-form.component";
 import {take, filter} from "rxjs/operators";
-import {PaperCanvasComponent} from "../../app/paper/paperCanvas.component";
+import {PaperCanvasComponent} from "../../common/paper/paperCanvas.component";
 import {List} from "immutable";
-import {PaperService} from "../../app/paper/paper.service";
+import {PaperService} from "../../common/paper/paper.service";
 
 @Injectable()
 export class NewClassTool extends DrawingTool {

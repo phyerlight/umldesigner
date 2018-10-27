@@ -1,12 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Project} from "../models/Project";
-import {FileService} from "../services/file.service";
-import {File} from "../../common/models";
-import {Selection} from "../containers/app/app.component";
+import {Project} from "../../models/Project";
+import {FileService} from "../../services/file.service";
+import {File} from "../../../common/models/index";
+import {Selection} from "../../containers/app/app.component";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/mergeMap';
 import {Store} from "@ngxs/store";
-import {ProjectState} from "../state/project.state";
+import {ProjectState} from "../../state/project.state";
 
 @Component({
   selector: 'app-drawing-list',
