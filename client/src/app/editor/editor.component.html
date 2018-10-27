@@ -3,7 +3,7 @@
     <mat-button-toggle-group [vertical]="true">
         <mat-button-toggle *ngFor="let tool of tools"
                            (change)="activateTool($event.value)"
-                           [checked]="canvas?.scope?.tool == tool"
+                           [checked]="paperService.scope.tool == tool"
                            [value]="tool">
           <mat-icon [svgIcon]="tool.icon"
                     [matTooltip]="tool.toolTip"
@@ -13,6 +13,6 @@
     </mat-button-toggle-group>
   </div>
   <div class="drawing flex-grow">
-    <design-canvas [name]="file?.name" [data]="undoStack[0]" (changed)="addChange($event)"></design-canvas>
+    <class-canvas [name]="file?.name" [data]="undoStack[0]" (changed)="addChange($event)"></class-canvas>
   </div>
 </div>

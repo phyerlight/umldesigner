@@ -1,10 +1,10 @@
 import {Injectable, Injector, StaticProvider} from "@angular/core";
 
-import {NewClassTool} from "./tools/newClass.tool";
-import {AssocRelationTool} from "./tools/assocRelation.tool";
-import {InheritRelationTool} from "./tools/inheritRelation.tool";
-import {SelectionTool} from "./tools/selection.tool";
-import {DrawingTool} from "./tools/drawingTool.tool";
+import {NewClassTool} from "../../classFile/tools/newClass.tool";
+import {AssocRelationTool} from "../../classFile/tools/assocRelation.tool";
+import {InheritRelationTool} from "../../classFile/tools/inheritRelation.tool";
+import {SelectionTool} from "../../classFile/tools/selection.tool";
+import {DrawingTool} from "../../common/paper/drawingTool.tool";
 
 export function loadTools() {
   ToolService.registerTool(SelectionTool);

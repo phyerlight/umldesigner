@@ -1,0 +1,29 @@
+<mat-toolbar color="primary">
+  <button mat-icon-button (click)="toggleSideNav(snav)"><mat-icon>menu</mat-icon></button>
+  UML Designer
+</mat-toolbar>
+<mat-sidenav-container>
+  <mat-sidenav #snav mode="side" class="" opened [fixedInViewport]="true" [fixedTopGap]="64">
+    <div class="nav-card flex-col">
+      <app-drawing-list class="flex-grow" [projects]="projects$ | async"
+        [selection]="selection"
+        (onSelection)="handleSelection($event)"
+        (onProjectAdded)="handleAddProject()"
+        (onProjectRemoved)="handleRemoveProject($event)"
+        (onFileAdded)="handleAddFile($event)"
+        (onFileRemoved)="handleRemoveFile($event)"
+      ></app-drawing-list>
+      <div class="flex-shrink" style="display: block; min-height: 50px; width: 100%; align-items: flex-end; align-content: flex-end">
+        <button mat-fab class="bottom-right"
+              [class.bottom-state]="(fabState$ | async) == 'bottom'"
+              (click)="handleAddProject()"
+              (@fabState.done)="fabAnimationDone($event, snav)"
+              [@fabState]="fabState$ | async"
+        ><mat-icon>add</mat-icon></button>
+      </div>
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <app-editor [file]="file"></app-editor>
+  </mat-sidenav-content>
+</mat-sidenav-container>

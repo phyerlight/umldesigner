@@ -1,6 +1,6 @@
 import { State, Action, StateContext } from '@ngxs/store';
 
-import { FileMetadata } from './model';
+import { FileMetadata } from '../../common/models';
 
 export class AddFileMetadata {
   static readonly type = '[FileMetadata] AddFileMetadata'

@@ -1,9 +1,12 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Project} from "../project.service";
-import {File, FileService} from "../file.service";
-import {Selection} from "../app.component";
+import {Project} from "../models/Project";
+import {FileService} from "../services/file.service";
+import {File} from "../../common/models";
+import {Selection} from "../containers/app/app.component";
 import {Observable} from "rxjs/Observable";
 import 'rxjs/add/operator/mergeMap';
+import {Store} from "@ngxs/store";
+import {ProjectState} from "../state/project.state";
 
 @Component({
   selector: 'app-drawing-list',
@@ -57,7 +60,7 @@ export class DrawingListComponent implements OnInit {
   // }
 
   // constructor(private projectFiles: ProjectFileService,private files: FileService) { }
-  constructor() { }
+  constructor(protected store: Store) { }
 
   ngOnInit() {
     // console.log(this.project$);
@@ -73,7 +76,9 @@ export class DrawingListComponent implements OnInit {
     //   return fs.map(f => { return {project: project, file: f} });
     // });
     // return [];
-    return project.files.map(v => { return {project: project, file: v} });
+    let list =this.store.selectSnapshot(ProjectState.projectFiles)(project).map(v => { return {project: project, file: v} });
+    // console.log(list);
+    return list;
   }
 
   handleSelection(selection: Selection) {

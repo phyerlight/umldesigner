@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import {Params, RouteReuseStrategy, RouterModule, Routes, ActivatedRouteSnapshot} from "@angular/router";
-import {AppComponent} from "./app.component";
+import {AppComponent} from "./containers/app/app.component";
 import {DetachedRouteHandle} from '@angular/router/src/route_reuse_strategy';
 
 export interface RouteParams extends Params {

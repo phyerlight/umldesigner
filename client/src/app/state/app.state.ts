@@ -1,12 +1,6 @@
-import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { ClassFile } from './model';
-import { PatchClass } from './file.state';
-
-export interface User {
-  _key: string,
-  name: string,
-  preferences: {}
-}
+import {Action, Selector, State, StateContext} from '@ngxs/store';
+import {CancelEditClass, EditClass, SaveEditClass, SetActiveFile, SetSelection} from "./app.actions";
+import {User} from "../models/User";
 
 export interface AppStateModel {
   editor: {
@@ -21,30 +15,6 @@ export interface AppStateModel {
     cls: any
   },
   user: User
-}
-
-export class SetSelection {
-  static readonly type = '[App] SetSelection';
-  constructor(public fileKey: string, public entityIds: number[]) {}
-}
-
-export class SetActiveFile {
-  static readonly type = '[App] SetActiveFile';
-  constructor(public fileKey: string) {}
-}
-
-export class EditClass {
-  static readonly type = '[App] EditClass';
-  constructor(public fileKey: string, public cls: any) {}
-}
-
-export class CancelEditClass {
-  static readonly type = '[App] CancelEditClass';
-}
-
-export class SaveEditClass {
-  static readonly type = '[App] SaveEditClass';
-  constructor(public cls: any) {}
 }
 
 @State<AppStateModel>({

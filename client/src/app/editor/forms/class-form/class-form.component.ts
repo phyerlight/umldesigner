@@ -1,7 +1,6 @@
 import {Component, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
-import {Class} from "../../../file.service";
-import {List} from "immutable";
+import {ClassEntity} from "../../../../classFile/models";
 
 @Component({
   selector: 'app-class-form',
@@ -22,17 +21,18 @@ export class ClassFormComponent implements OnInit {
 
   ngOnInit() {
     if (this.data.cls) {
-      let cls: Class = this.data.cls;
+      let cls: ClassEntity = this.data.cls;
       this.name = cls.name;
-      this.attributes = cls.attrs.join('\n');
+      this.attributes = cls.attrs;
     }
   }
 
   save() {
-    let cls = (this.data.cls as Class).with({
+    let cls = {
+      ...this.data.cls,
       name: this.name,
-      attrs: List<string>(this.attributes.split('\n'))
-    });
+      attrs: this.attributes
+    };
     this.dialogRef.close(cls);
   }
 }

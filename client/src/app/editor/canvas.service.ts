@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {PaperCanvasComponent} from "./paperCanvas.component";
+import {PaperCanvasComponent} from "../paper/paperCanvas.component";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Observable} from "rxjs/Observable";
 import { map, filter } from "rxjs/operators";
@@ -30,9 +30,9 @@ export class CanvasService {
         let iti = it.next(); // iterator item
         while (!iti.done) {
           let c = iti.value;
-          if (c.project == window['paper'].project) {
+          // if (c.project == window['tools'].project) {
             return c;
-          }
+          // }
           iti = it.next();
         }
       }),

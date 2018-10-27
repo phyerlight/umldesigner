@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 
 import { Project, PaperScope } from 'paper';
+// @ts-ignore
 import paper from 'paper';
 
 @Injectable()
@@ -37,7 +38,8 @@ export class PaperService {
     };
 
     this._scope = new paper.PaperScope();
-    this._scope.settings = {...this._scope.settings, ...defaults};
+    // @ts-ignore
+      this._scope.settings = {...this._scope.settings, ...defaults};
     this._scope.setup(el);
 
     this._fileId = fileId;

@@ -8,7 +8,7 @@
         <span>{{project.name}}</span>
       </mat-expansion-panel-header>
 
-      <mat-nav-list *ngIf="project.files?.length > 0">
+      <mat-nav-list *ngIf="project.fileKeys?.length > 0">
         <mat-list-item [class.selectedFile]="selection?.file==item.file"
                        *ngFor="let item of (genFileList(project))">
             <div class="flex-row">
@@ -21,7 +21,7 @@
             </div>
         </mat-list-item>
       </mat-nav-list>
-      <span *ngIf="project.files?.length < 1" [ngStyle]="{'text-align':'center'}">
+      <span *ngIf="project.fileKeys?.length < 1" [ngStyle]="{'text-align':'center'}">
         No files have been added yet.
       </span>
       <mat-action-row>

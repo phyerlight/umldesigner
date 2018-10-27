@@ -9,23 +9,23 @@ import {
   MatToolbarModule, MatTooltipModule, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './containers/app/app.component';
 import { EditorComponent } from './editor/editor.component';
-import { ProjectService } from "./project.service";
+import { ProjectService } from "./services/project.service";
 import { AppRoutingModule } from './app-routing.module';
-import { OutletWrapperComponent } from './outlet-wrapper/outlet-wrapper.component';
+import { OutletWrapperComponent } from './containers/outlet-wrapper/outlet-wrapper.component';
 import { DrawingListComponent } from './drawing-list/drawing-list.component';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { NewDialogComponent } from './new-dialog/new-dialog.component';
-import {PaperCanvasComponent} from "./editor/paperCanvas.component";
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
 import {HttpClientModule} from "@angular/common/http";
-import {FileService} from "./file.service";
-import {ToolService} from "./editor/tools.service";
-import {CanvasService} from "./editor/canvas.service";
+import {FileService} from "./services/file.service";
 import { ClassFormComponent } from './editor/forms/class-form/class-form.component';
-import {DesignCanvasComponent} from "./editor/designCanvas.component";
+// import {DesignCanvasComponent} from "./editor/designCanvas.component";
 import {NgxsModule} from "@ngxs/store";
-import {ClassCanvasComponent} from "./classFile/classCanvas.component";
+import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
+import {AllFileStates, FileState} from "../common/state/file.state";
+import {ClassFileModule} from "../classFile/classFile.module";
+import {ProjectState} from "./state/project.state";
 
 @NgModule({
   declarations: [
@@ -33,12 +33,10 @@ import {ClassCanvasComponent} from "./classFile/classCanvas.component";
     EditorComponent,
     OutletWrapperComponent,
     DrawingListComponent,
-    PaperCanvasComponent,
-    DesignCanvasComponent,
+    // DesignCanvasComponent,
     ConfirmDialogComponent,
     NewDialogComponent,
     ClassFormComponent,
-    ClassCanvasComponent,
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -53,7 +51,13 @@ import {ClassCanvasComponent} from "./classFile/classCanvas.component";
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgxsModule.forRoot([]),
+    NgxsModule.forRoot([
+      ProjectState,
+      FileState,
+      ...AllFileStates
+    ]),
+    NgxsReduxDevtoolsPluginModule.forRoot({name: 'URLDesigner'}),
+    ClassFileModule,
     //Angular Material
     MatDialogModule,
     MatSidenavModule,

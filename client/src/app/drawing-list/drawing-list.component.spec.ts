@@ -5,22 +5,24 @@ import {
   MatNavList
 } from "@angular/material";
 import {RouterTestingModule} from "@angular/router/testing";
-import {RouterLink, Routes} from "@angular/router";
+import {Routes} from "@angular/router";
 import {Component} from "@angular/core";
-import {Project} from "../project.service";
+import {Project} from "../models/Project";
 import {By} from "@angular/platform-browser";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {createFile, File} from "../../common/models";
 
 let projects: Project[] = [
-  {id: '1', name: 'test1', files:[
-      {name: 't1f1', data: {}},
-      {name: 't1f2', data: {}}
-  ]},
-  {id: '2', name: 'test2', files:[
-      {name: 't2f1', data: {}},
-      {name: 't2f2', data: {}}
-  ]}
+  {_key: '1', name: 'test1', fileKeys:['t1f1','t1f2']},
+  {_key: '2', name: 'test2', fileKeys:['t2f1','t2f2']}
 ];
+
+let files: {[key: string]: File} = {
+  't1f1': createFile({_key: 't1f1', name: 't1f1'}),
+  't1f2': createFile({_key: 't1f2', name: 't1f2'}),
+  't2f1': createFile({_key: 't2f1', name: 't2f1'}),
+  't2f2': createFile({_key: 't2f2', name: 't2f2'})
+};
 
 declare var spyOn: any;
 
@@ -120,13 +122,13 @@ describe('DrawingListComponentUserInterface', () => {
 
     let epanels = fixture.debugElement.queryAll(By.directive(MatExpansionPanelHeader));
 
-    component.selection = {project: projects[1], file: projects[1].files[0]};
+    component.selection = {project: projects[1], file: files[projects[1].fileKeys[0]]};
     fixture.detectChanges();
 
     expect(epanels[1].classes['mat-expanded']).toBeTruthy("selected project panel did not expand");
     expect(component.isSelectedProject(projects[1])).toBeTruthy("isSelectedProject not returning true");
 
-    component.selection = {project: projects[0], file: projects[0].files[0]};
+    component.selection = {project: projects[0], file: files[projects[0].fileKeys[0]]};
     fixture.detectChanges();
 
     expect(epanels[1].classes['mat-expanded']).toBeFalsy("old selected project panel did not contract");
@@ -138,22 +140,22 @@ describe('DrawingListComponentUserInterface', () => {
     component.projects = projects;
     fixture.detectChanges();
 
-    component.selection = {project: projects[1], file: projects[1].files[0]};
+    component.selection = {project: projects[1], file: files[projects[1].fileKeys[0]]};
     fixture.detectChanges();
 
     let fList = fixture.debugElement.queryAll(By.directive(MatNavList));
     expect(fList.length).toBe(2);
     let listItems = fList[0].queryAll(By.directive(MatListItem));
     expect(listItems.length).toBe(2);
-    expect(listItems[0].nativeElement.textContent).toContain(projects[0].files[0].name);
-    expect(listItems[1].nativeElement.textContent).toContain(projects[0].files[1].name);
+    expect(listItems[0].nativeElement.textContent).toContain(files[projects[0].fileKeys[0]].name);
+    expect(listItems[1].nativeElement.textContent).toContain(files[projects[0].fileKeys[1]].name);
   });
 
   it('should link list items to a routerLink', () => {
     component.projects = projects;
     fixture.detectChanges();
 
-    component.selection = {project: projects[1], file: projects[1].files[0]};
+    component.selection = {project: projects[1], file: files[projects[1].fileKeys[0]]};
     fixture.detectChanges();
 
     let fList = fixture.debugElement.queryAll(By.directive(MatNavList));

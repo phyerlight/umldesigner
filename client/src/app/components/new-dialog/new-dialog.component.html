@@ -1,0 +1,18 @@
+<h1 mat-dialog-title>New {{data.type | titlecase}}</h1>
+<mat-dialog-content>
+  <mat-error *ngIf="data.message">{{data.message}}</mat-error>
+  <form [formGroup]="form">
+    <mat-form-field class="full-width">
+      <input matInput #nameInput type="text"
+             formControlName="name"
+             (keyup.enter)="close(nameInput.value)"
+             [placeholder]="placeholder" />
+      <mat-error *ngIf="name.errors?.required">The name is <strong>required</strong></mat-error>
+      <mat-error *ngIf="name.errors?.pattern">A name is not allowed to have the characters ' " \ / ( ) ] [ ? {{'{'}} {{'}'}} or &</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="close(null)" type="button">Cancel</button>
+  <button mat-button (click)="close(nameInput.value)" type="submit" [disabled]="form.invalid">Create</button>
+</mat-dialog-actions>
