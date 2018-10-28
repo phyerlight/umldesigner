@@ -4,18 +4,18 @@ import {ProjectService} from "../../services/project.service";
 import {createProject, Project} from "../../models/Project";
 import {FileService} from "../../services/file.service";
 import {createFile, File} from "../../../common/models";
-import {ActivatedRoute, Router} from "@angular/router";
 import {RouteParams} from "../../app-routing.module";
 import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "../../components/new-dialog/new-dialog.component";
 import { take, delay, filter, mergeMap, map } from "rxjs/operators";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Select, Store} from "@ngxs/store";
+import {Actions, ofActionSuccessful, Select, Store} from "@ngxs/store";
 import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
 import {combineLatest, Observable} from "rxjs";
 import {LoadProjects} from "../../state/project.actions";
+import {Navigate, RouterNavigation} from "@ngxs/router-plugin";
 
 export type Selection = {
   project: Project,
@@ -56,41 +56,33 @@ export class AppComponent implements OnInit, AfterViewInit {
   protected fileByKey: (fileKey: string)=>File;
 
   constructor(
-    private route: ActivatedRoute,
-    private router: Router,
+    // private route: ActivatedRoute,
+    // private router: Router,
     protected projectService: ProjectService,
     private fileService: FileService,
     protected store: Store,
+    protected actions$: Actions,
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.route.params.pipe(
+    this.actions$.pipe(
+      ofActionSuccessful(RouterNavigation),
+      map((nav: RouterNavigation) => {
+        return nav.routerState.root.firstChild.params;
+      }),
       filter((p: RouteParams) => exists(p.project, p.file)),
       mergeMap((params: RouteParams) => {
-        // this.selection = null;
-
         let project$ = this.projects$.pipe(map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)));
         let file$ = this.store.select(ProjectState.projectFileByName).pipe(map(fn => fn(params.project, params.file)));
 
         return combineLatest(project$, file$);
-
-        // return this.projects$.pipe(
-        //   map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)),
-        //   // filter((p: Project) => exists(p)),
-        //   map((p: Project) => {
-        //     return [p as Project, (p.files.find((f: File) => f.name == params.file)) as File]
-        //   }),
-        //   // filter(v => v.length == 2 && exists(v[1]))
-        // );
       })
     ).subscribe(([project, file]: [Project, File]) => {
       if (!exists(project, file)) {
-        this.router.navigateByUrl("");
+        this.store.dispatch(new Navigate(['']));
+        // this.router.navigateByUrl("");
       }
       this.selection = {project, file};
-      // this.store.select(FileState.fileByKey).pipe(map(fn => fn(file._key))).subscribe((f: File) => {
-      //   this.file = f;
-      // });
       this.file = this.fileByKey(file._key);
     });
 
@@ -120,7 +112,8 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   handleSelection(selection: Selection) {
     if (selection != null) {
-      this.router.navigate([selection.project.name, selection.file.name]);
+      this.store.dispatch(new Navigate([selection.project.name, selection.file.name]));
+      // this.router.navigate([selection.project.name, selection.file.name]);
     }
   }
 
@@ -163,7 +156,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       filter((accept: boolean) => accept),
       mergeMap(() => this.projectService.delete(project))
     ).subscribe(() => {
-      this.router.navigateByUrl("");
+      this.store.dispatch(new Navigate(['']));
+      // this.router.navigateByUrl("");
       this.loadData();
     });
   }
@@ -186,7 +180,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       //On successful saving, reload the data from the server
       this.loadData();
       //navigate to the new file
-      this.router.navigate([project.name, newFile.name]);
+      this.store.dispatch(new Navigate([project.name, newFile.name]));
+      // this.router.navigate([project.name, newFile.name]);
     }, err => {
       if (err.status == 409) {
         this.handleAddFile(project, "A file with that name already exists");
@@ -208,7 +203,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       mergeMap(() => this.fileService.delete(sel.file))
     ).subscribe(() => {
       if (this.selection.project == sel.project && this.selection.file == sel.file) {
-        this.router.navigateByUrl("");
+        this.store.dispatch(new Navigate(['']));
+        // this.router.navigateByUrl("");
       }
       this.loadData();
     });

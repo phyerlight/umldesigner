@@ -3,13 +3,13 @@ import {CancelEditClass, EditClass, SaveEditClass, SetActiveFile, SetSelection} 
 import {User} from "../models/User";
 
 export interface AppStateModel {
+  editorTab: string,
   editor: {
-    activeTool: string
+    [fileKey: string]: {
+      activeTool: string,
+      selection: number[]
+    }
   },
-  selection: {
-    fileKey: string,
-    entityIds: number[]
-  }
   clsEditor: {
     fileKey: string,
     cls: any
@@ -20,13 +20,8 @@ export interface AppStateModel {
 @State<AppStateModel>({
   name: "app",
   defaults: {
-    editor: {
-      activeTool: null
-    },
-    selection: {
-      fileKey: null,
-      entityIds: []
-    },
+    editorTab: null,
+    editor: {},
     clsEditor: null,
     user: null
   }
@@ -39,10 +34,10 @@ export class AppState {
   }
 
   @Selector()
-  static isEntitySelected(app: AppStateModel) {
-    return (fileKey:string, entityId: number) => {
-      if (app.selection.fileKey != fileKey) return false;
-      return app.selection.entityIds.find((v) => v == entityId) != undefined;
+  static isEntitySelected(app: AppStateModel){
+    return (fileKey:string, entityId: number): boolean => {
+      if (app.editorTab != fileKey) return false;
+      return app.editor[fileKey].selection.find((v) => v == entityId) != undefined;
     }
   }
 
@@ -52,9 +47,12 @@ export class AppState {
 
     ctx.setState({
       ...app,
-      selection: {
-        ...app.selection,
-        entityIds: action.entityIds
+      editor:{
+        ...app.editor,
+        [app.editorTab]: {
+          ...app.editor[app.editorTab],
+          selection: action.entityIds
+        }
       }
     });
   }
@@ -63,14 +61,11 @@ export class AppState {
   setActiveFile(ctx: StateContext<AppStateModel>, action: SetActiveFile) {
     const app = ctx.getState();
 
-    if (app.selection.fileKey == action.fileKey) return;
+    if (app.editorTab == action.fileKey) return;
 
     ctx.setState({
       ...app,
-      selection: {
-        fileKey: action.fileKey,
-        entityIds: []
-      }
+      editorTab: action.fileKey,
     });
   }
 
@@ -96,12 +91,12 @@ export class AppState {
   saveEditClass(ctx: StateContext<AppStateModel>, action: SaveEditClass) {
     const state = ctx.getState();
 
-    const {fileKey} = state.clsEditor
+    const {fileKey} = state.clsEditor;
 
     const cls = {
       ...action.cls,
       id: state.clsEditor.cls.id
-    }
+    };
 
     // ctx.dispatch(new PatchClass(fileKey, cls));
 

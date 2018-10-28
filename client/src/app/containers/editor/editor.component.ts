@@ -11,8 +11,8 @@ import {InheritRelationTool} from "../../../classFile/tools/inheritRelation.tool
 import {NewClassTool} from "../../../classFile/tools/newClass.tool";
 import {AssocRelationTool} from "../../../classFile/tools/assocRelation.tool";
 import {SelectionTool} from "../../../classFile/tools/selection.tool";
-import {ConfirmDialogComponent} from "../confirm-dialog/confirm-dialog.component";
-import {ClassFormComponent} from "./forms/class-form/class-form.component";
+import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
+import {ClassFormComponent} from "../../../classFile/components/class-form/class-form.component";
 import {NgZone} from '@angular/core';
 import {PaperService} from "../../../common/paper/paper.service";
 

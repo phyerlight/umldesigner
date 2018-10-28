@@ -3,9 +3,7 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {AppState, AppStateModel} from '../../app/state/app.state';
 
 import {AddFile} from './file.actions';
-import {File, FileStateModel, FileType} from "../models/index";
-import {ClassFileState} from "../../classFile/state/classFile.state";
-import {ProjectState} from "../../app/state/project.state";
+import {File, FileStateModel, FileType} from "../models";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {
@@ -25,7 +23,7 @@ export class FileState {
 
   @Selector([AppState])
   static activeFile(state: FileStateModel, appState: AppStateModel) {
-    return state[appState.selection.fileKey]
+    return state[appState.editorTab]
   }
 
   @Selector()
@@ -37,13 +35,13 @@ export class FileState {
 
   @Selector([AppState])
   static selectedEntity(files: FileStateModel, appState: AppStateModel) {
-    if (appState.selection.entityIds.length < 1 ||
-      appState.selection.fileKey == null) {
+    if (appState.editor[appState.editorTab].selection.length < 1 ||
+      appState.editorTab == null) {
       return null;
     }
 
-    let f: File = files[appState.selection.fileKey];
-    let i = appState.selection.entityIds[0];
+    let f: File = files[appState.editorTab];
+    let i = appState.editor[appState.editorTab].selection[0];
     return f.entities[i];
   }
 

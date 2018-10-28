@@ -23,15 +23,6 @@ export class SelectionTool extends DrawingTool {
 
   private activeItem = null;
   onMouseDown = (event: paper.ToolEvent) => {
-    // let cls = null;
-    //
-    // this.canvasService.getActiveCanvas().pipe(take(1)).subscribe((c) => {
-    //   cls = c.project.getItem({match: (item) => {
-    //       if (item.data && item.data.type && item.data.type == 'class') {
-    //         return item.bounds.contains(event.point);
-    //       }
-    //     },
-    //     data: {type: 'class'}
     //   });
     // });
     //

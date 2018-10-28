@@ -10,7 +10,7 @@ import {
 } from "@angular/material";
 
 import { AppComponent } from './containers/app/app.component';
-import { EditorComponent } from './components/editor/editor.component';
+import { EditorComponent } from './containers/editor/editor.component';
 import { ProjectService } from "./services/project.service";
 import { AppRoutingModule } from './app-routing.module';
 import { OutletWrapperComponent } from './containers/outlet-wrapper/outlet-wrapper.component';
@@ -19,9 +19,10 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
-import { ClassFormComponent } from './components/editor/forms/class-form/class-form.component';
+import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
 import {NgxsModule} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
+import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
 import {ClassFileModule} from "../classFile/classFile.module";
 import {ProjectState} from "./state/project.state";
@@ -55,6 +56,7 @@ import {ProjectState} from "./state/project.state";
       FileState,
       ...AllFileStates
     ]),
+    NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot({name: 'URLDesigner'}),
     ClassFileModule,
     //Angular Material
