@@ -9,7 +9,7 @@ import {
 } from "@angular/material";
 import {HttpClientModule} from "@angular/common/http";
 
-import {ClassCanvasComponent} from "./components/classCanvas.component";
+import {ClassCanvasComponent} from "./components/classCanvas/classCanvas.component";
 import './state/classFile.state';
 
 @NgModule({
@@ -20,6 +20,7 @@ import './state/classFile.state';
       ClassCanvasComponent
     ],
     entryComponents: [
+      ClassCanvasComponent
     ],
     imports: [
         CommonModule,

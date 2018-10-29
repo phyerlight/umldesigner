@@ -23,7 +23,7 @@ export class FileState {
 
   @Selector([AppState])
   static activeFile(state: FileStateModel, appState: AppStateModel) {
-    return state[appState.editorTab]
+    return state[appState.editor.activeKey]
   }
 
   @Selector()
@@ -35,13 +35,13 @@ export class FileState {
 
   @Selector([AppState])
   static selectedEntity(files: FileStateModel, appState: AppStateModel) {
-    if (appState.editor[appState.editorTab].selection.length < 1 ||
-      appState.editorTab == null) {
+    if (appState.editor[appState.editor.activeKey].selection.length < 1 ||
+      appState.editor.activeKey == null) {
       return null;
     }
 
-    let f: File = files[appState.editorTab];
-    let i = appState.editor[appState.editorTab].selection[0];
+    let f: File = files[appState.editor.activeKey];
+    let i = appState.editor[appState.editor.activeKey].selection[0];
     return f.entities[i];
   }
 

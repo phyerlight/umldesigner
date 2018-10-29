@@ -83,7 +83,7 @@ export class AppComponent implements OnInit, AfterViewInit {
         // this.router.navigateByUrl("");
       }
       this.selection = {project, file};
-      this.file = this.fileByKey(file._key);
+      this.file = file; //this.fileByKey(file._key);
     });
 
     this.loadData();

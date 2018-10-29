@@ -1,5 +1,5 @@
-import {Point} from "../../common/models/index";
-import {ClassEntity} from "../models/index";
+import {Point} from "../../common/models";
+import {ClassEntity} from "../models";
 
 export class PatchClassMetaData {
     static readonly type = '[File] PatchClassMetaData';
@@ -18,8 +18,7 @@ export class PatchClass {
 export class AddClass {
     static readonly type = '[File] AddClass';
 
-    constructor(public fileKey: string) {
-    }
+    constructor(public fileKey: string, cls: Partial<ClassEntity>={}) {}
 }
 
 export class MoveClass {

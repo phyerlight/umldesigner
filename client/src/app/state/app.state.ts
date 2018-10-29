@@ -3,12 +3,16 @@ import {CancelEditClass, EditClass, SaveEditClass, SetActiveFile, SetSelection} 
 import {User} from "../models/User";
 
 export interface AppStateModel {
-  editorTab: string,
-  editor: {
+  editorTabs: {
     [fileKey: string]: {
       activeTool: string,
-      selection: number[]
+      selection: number[],
+      undo: File[]
     }
+  },
+  editor: {
+    activeKey: string,
+    tabOrder: string[]
   },
   clsEditor: {
     fileKey: string,
@@ -20,8 +24,11 @@ export interface AppStateModel {
 @State<AppStateModel>({
   name: "app",
   defaults: {
-    editorTab: null,
-    editor: {},
+    editorTabs: {},
+    editor: {
+      activeKey: null,
+      tabOrder: null
+    },
     clsEditor: null,
     user: null
   }
@@ -36,8 +43,8 @@ export class AppState {
   @Selector()
   static isEntitySelected(app: AppStateModel){
     return (fileKey:string, entityId: number): boolean => {
-      if (app.editorTab != fileKey) return false;
-      return app.editor[fileKey].selection.find((v) => v == entityId) != undefined;
+      if (app.editor.activeKey != fileKey) return false;
+      return app.editorTabs[fileKey].selection.find((v) => v == entityId) != undefined;
     }
   }
 
@@ -47,10 +54,10 @@ export class AppState {
 
     ctx.setState({
       ...app,
-      editor:{
-        ...app.editor,
-        [app.editorTab]: {
-          ...app.editor[app.editorTab],
+      editorTabs:{
+        ...app.editorTabs,
+        [app.editor.activeKey]: {
+          ...app.editorTabs[app.editor.activeKey],
           selection: action.entityIds
         }
       }
@@ -61,11 +68,14 @@ export class AppState {
   setActiveFile(ctx: StateContext<AppStateModel>, action: SetActiveFile) {
     const app = ctx.getState();
 
-    if (app.editorTab == action.fileKey) return;
+    if (app.editor.activeKey == action.fileKey) return;
 
     ctx.setState({
       ...app,
-      editorTab: action.fileKey,
+      editor: {
+        ...app.editor,
+        activeKey: action.fileKey,
+      }
     });
   }
 

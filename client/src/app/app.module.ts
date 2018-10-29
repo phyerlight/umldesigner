@@ -4,10 +4,22 @@ import { NgModule } from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
   ErrorStateMatcher,
-  MatButtonModule, MatButtonToggleModule, MatCardModule,
-  MatDialogModule, MatDividerModule, MatExpansionModule, MatIconModule, MatInputModule, MatListModule, MatSidenavModule,
-  MatToolbarModule, MatTooltipModule, ShowOnDirtyErrorStateMatcher
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatExpansionModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatSidenavModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule,
+  ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
+import {PortalModule} from '@angular/cdk/portal'
 
 import { AppComponent } from './containers/app/app.component';
 import { EditorComponent } from './containers/editor/editor.component';
@@ -71,7 +83,9 @@ import {ProjectState} from "./state/project.state";
     MatCardModule,
     MatInputModule,
     MatButtonToggleModule,
-    MatTooltipModule
+    MatTooltipModule,
+    PortalModule,
+    MatTabsModule
   ],
   providers: [
     ProjectService,

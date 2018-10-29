@@ -3,6 +3,7 @@ import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType} fr
 import {FileState} from "../../common/state/file.state";
 import {FileStateModel, filterByEntityType, registerFileType} from "../../common/models";
 import {AddClass, PatchClass, PatchClassMetaData} from "./actions";
+import {ClassCanvasComponent} from "../components/classCanvas/classCanvas.component";
 
 @State<FileStateModel>({
     name: "classfiles",
@@ -96,4 +97,7 @@ export class ClassFileState extends FileState {
     }
 }
 
-registerFileType(CLASS_FILE_TYPE);
+registerFileType(CLASS_FILE_TYPE, {
+    state: ClassFileState,
+    editor: ClassCanvasComponent
+});

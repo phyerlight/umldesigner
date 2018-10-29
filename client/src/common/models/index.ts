@@ -17,3 +17,5 @@ export function filterByEntityType(t: string, file: File): FileEntity[] {
         return file.entities[eid];
     });
 }
+
+export {FileTypeOptions} from "./FileTypeOptions";

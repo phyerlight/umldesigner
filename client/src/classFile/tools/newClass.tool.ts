@@ -5,8 +5,10 @@ import {DrawingTool} from "../../common/paper/drawingTool.tool";
 import {ClassFormComponent} from "../components/class-form/class-form.component";
 import {take, filter} from "rxjs/operators";
 import {PaperCanvasComponent} from "../../common/paper/paperCanvas.component";
-import {List} from "immutable";
 import {PaperService} from "../../common/paper/paper.service";
+import {Store} from "@ngxs/store";
+import {AddClass} from "../state/actions";
+import {AppState} from "../../app/state/app.state";
 
 @Injectable()
 export class NewClassTool extends DrawingTool {
@@ -18,12 +20,21 @@ export class NewClassTool extends DrawingTool {
               iconRegistry: MatIconRegistry,
               sanitizer: DomSanitizer,
               private classDialog: MatDialog,
-              private ngZone: NgZone) {
+              private ngZone: NgZone,
+              protected store: Store) {
     super(paperService, iconRegistry, sanitizer);
     this.registerIcon();
   }
 
   onMouseUp = (event: paper.ToolEvent) => {
+    let currentFileKey = this.store.selectSnapshot(AppState).app.editorTab;
+    this.store.dispatch(new AddClass(currentFileKey, {
+      metadata : {
+        location: {x: event.point.x , y: event.point.y},
+        width: null,
+        height: null
+      }
+    }));
     // this.canvasService.getActiveCanvas().pipe(take(1)).subscribe((pc: DesignCanvasComponent) => {
     //   this.ngZone.run(() => {
     //     let dialogRef = this.classDialog.open(ClassFormComponent, {

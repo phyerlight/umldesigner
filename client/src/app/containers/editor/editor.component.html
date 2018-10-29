@@ -1,3 +1,12 @@
+<nav mat-tab-nav-bar>
+  <a mat-tab-link
+     *ngFor="let tab of editorMeta.tabOrder"
+     (click)="selectTab(tab)"
+     [active]="tab == editorMeta.activeKey"
+     >{{editorData[tab].name}}</a>
+</nav>
+
+
 <div class="container flex-row">
   <div class="tools flex-shrink" [ngStyle]="{'border-right':'1px solid black'}">
     <mat-button-toggle-group [vertical]="true">
@@ -13,6 +22,9 @@
     </mat-button-toggle-group>
   </div>
   <div class="drawing flex-grow">
-    <class-canvas [name]="file?.name" [data]="undoStack[0]" (changed)="addChange($event)"></class-canvas>
+    <ng-template [cdkPortalOutlet]="canvasPortal"></ng-template>
   </div>
+    <div class="properties flex-shrink">
+
+    </div>
 </div>

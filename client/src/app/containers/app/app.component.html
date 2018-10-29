@@ -3,7 +3,7 @@
   UML Designer
 </mat-toolbar>
 <mat-sidenav-container>
-  <mat-sidenav #snav mode="side" class="" opened [fixedInViewport]="true" [fixedTopGap]="64">
+  <mat-sidenav #snav mode="side" class="" [opened]="false" [fixedInViewport]="true" [fixedTopGap]="64">
     <div class="nav-card flex-col">
       <app-drawing-list class="flex-grow" [projects]="projects$ | async"
         [selection]="selection"

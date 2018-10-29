@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
-import { File } from "../../../common/models/index";
+import {File, FileType} from "../../../common/models";
 import {PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
 import {ToolService} from "./tools.service";
 import {combineLatest} from "rxjs/internal/observable/combineLatest";
@@ -15,6 +15,11 @@ import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-di
 import {ClassFormComponent} from "../../../classFile/components/class-form/class-form.component";
 import {NgZone} from '@angular/core';
 import {PaperService} from "../../../common/paper/paper.service";
+import {CdkPortal, ComponentPortal} from "@angular/cdk/portal";
+import {ClassCanvasComponent} from "../../../classFile/components/classCanvas/classCanvas.component";
+import {AppState} from "../../state/app.state";
+import {Select, Store} from "@ngxs/store";
+import {Navigate} from "@ngxs/router-plugin";
 
 @Component({
   selector: 'app-editor',
@@ -22,43 +27,48 @@ import {PaperService} from "../../../common/paper/paper.service";
   styleUrls: ['./editor.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [],
-  providers: [
-    ToolService,
-    PaperService,
-
-    SelectionTool,
-    NewClassTool,
-    AssocRelationTool,
-    InheritRelationTool
-  ]
+  providers: []
 })
 export class EditorComponent implements OnInit {
 
-  protected undoStack: File[] = [];
+  @Select(state => state.app.editor)
+  protected editorMeta;
+
+  @Select(state => state.app.editorTabs)
+  protected editorData;
+
+  // protected undoStack: File[] = [];
   private _file: File;
   @Input()
+  // file: File;
   set file(file: File) {
     if (file) {
       this._file = file;
-      this.undoStack = [file];
+
+      // this.canvasPortal = new ComponentPortal(FileType[file.type].editor);
+      this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
+      console.log(this.canvasPortal);
     }
   }
   get file(): File {
     return this._file;
   }
 
-  @ViewChild(PaperCanvasComponent)
-  protected canvas: PaperCanvasComponent;
+  protected canvasPortal;
 
   public tools: DrawingTool[];
 
-  constructor(public toolService: ToolService,
-              protected paperService: PaperService){}
+  constructor(protected store: Store){}
+
+  selectTab(fileKey: string) {
+    this.store.dispatch(new Navigate([]));
+  }
 
   ngOnInit() {
-    this.paperService.hasInitialized.then(() => {
-      this.tools = this.toolService.getTools();
-    })
+    // this.paperService.hasInitialized.then(() => {
+    //   this.tools = this.toolService.getTools();
+    //   this.paperService.scope.activate();
+    // })
     // combineLatest (
     //   this.canvasService.getCanvas(this.canvasName),
     //   this.file$
@@ -69,21 +79,14 @@ export class EditorComponent implements OnInit {
 
   }
 
-  public addChange(data: File) {
-    this.undoStack.unshift(data);
-  }
-
-  public undoChange() {
-    if (this.undoStack.length > 1) {
-      this.undoStack.shift();
-    }
-  }
-
-  get activeTool() {
-    return this.paperService.scope.tool;
-  }
-
-  activateTool(tool: DrawingTool) {
-    tool.activate();
-  }
+  // public addChange(data: File) {
+  //   this.undoStack.unshift(data);
+  // }
+  //
+  // public undoChange() {
+  //   if (this.undoStack.length > 1) {
+  //     this.undoStack.shift();
+  //   }
+  // }
+  //
 }
