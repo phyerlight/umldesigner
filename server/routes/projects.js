@@ -34,7 +34,7 @@ router.get('list', function (req, res) {
     FOR project IN ${projects}
       let files = (FOR f IN ${files}
         FILTER f.project_key == project._key
-        RETURN {_key: f._key, name: f.name}
+        RETURN {_key: f._key, name: f.name, type: f.type}
       )
     RETURN merge(project, {files: files})
   `);

@@ -9,7 +9,8 @@ module.exports = {
     name: joi.string().required(),
     files: joi.array().items(joi.object({
       _key: joi.string(),
-      name: joi.string()
+      name: joi.string(),
+      type: joi.string()
     }))
   }),
   forClient(obj) {

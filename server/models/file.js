@@ -26,6 +26,7 @@ module.exports = {
     _key: joi.string(),
     project_key: joi.string(),
     name: joi.string().required(),
+    type: joi.string().required(),
     data: joi.object().keys({
       classes: joi.array().items(Class),
       relations: joi.array().items(Relation)
