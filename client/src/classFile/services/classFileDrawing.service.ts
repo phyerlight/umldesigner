@@ -17,14 +17,16 @@ import {File, filterByEntityType} from "../../common/models";
 import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models";
 import {SetSelection} from "../../app/state/app.actions";
 
+import {DrawingService} from '../../common/services/drawing.service'
+
 let brk = (fid, cid) => {
   return `${fid},${cid}`;
 };
 
 @Injectable()
-export class DrawingService {
+export class ClassFileDrawingService implements DrawingService {
 
-  protected tool: paper.Tool;
+  // protected tool: paper.Tool;
 
   protected isEntitySelected: (fId, cId) => boolean;
 
@@ -37,37 +39,37 @@ export class DrawingService {
 
     paperService.hasInitialized.then(() => {
       paperService.scope.activate();
-      this.tool = new paper.Tool();
-
-      this.tool.onMouseDown = (event: paper.ToolEvent) => {
-        let action;
-        if (event.item) {
-          if (event.item.data.type == ClassFileEntityType.Class) {
-            action = new SetSelection(paperService.fileId, [event.item.data.id]);
-          } else if (event.item.data.type == ClassFileEntityType.Relation) {
-            action = new SetSelection(paperService.fileId, [event.item.data.id]);
-          } else {
-            action = new SetSelection(paperService.fileId, []);
-          }
-        } else {
-          action = new SetSelection(paperService.fileId, []);
-        }
-        this.store.dispatch(action);
-      };
-
-      this.tool.onMouseDrag = (event: paper.ToolEvent) => {
-        let selEntity = this.store.selectSnapshot(FileState.selectedEntity) as ClassEntity;
-        if (selEntity == null) {
-          return;
-        } else if (selEntity.type == ClassFileEntityType.Class) {
-          let loc = new paper.Point(selEntity.metadata.location || this.paperService.project.view.bounds.center).add(event.delta);
-
-          let action = new PatchClassMetaData(paperService.fileId, selEntity.id, {
-            location: {x: loc.x, y: loc.y},
-          });
-          this.store.dispatch(action);
-        }
-      }
+      // this.tool = new paper.Tool();
+      //
+      // this.tool.onMouseDown = (event: paper.ToolEvent) => {
+      //   let action;
+      //   if (event.item) {
+      //     if (event.item.data.type == ClassFileEntityType.Class) {
+      //       action = new SetSelection(paperService.fileId, [event.item.data.id]);
+      //     } else if (event.item.data.type == ClassFileEntityType.Relation) {
+      //       action = new SetSelection(paperService.fileId, [event.item.data.id]);
+      //     } else {
+      //       action = new SetSelection(paperService.fileId, []);
+      //     }
+      //   } else {
+      //     action = new SetSelection(paperService.fileId, []);
+      //   }
+      //   this.store.dispatch(action);
+      // };
+      //
+      // this.tool.onMouseDrag = (event: paper.ToolEvent) => {
+      //   let selEntity = this.store.selectSnapshot(FileState.selectedEntity) as ClassEntity;
+      //   if (selEntity == null) {
+      //     return;
+      //   } else if (selEntity.type == ClassFileEntityType.Class) {
+      //     let loc = new paper.Point(selEntity.metadata.location || this.paperService.project.view.bounds.center).add(event.delta);
+      //
+      //     let action = new PatchClassMetaData(paperService.fileId, selEntity.id, {
+      //       location: {x: loc.x, y: loc.y},
+      //     });
+      //     this.store.dispatch(action);
+      //   }
+      // }
     });
   }
 

@@ -3,7 +3,8 @@ import {PaperService} from "./paper.service";
 import {File} from "../models";
 import {Store} from "@ngxs/store";
 import {DrawingTool} from "./drawingTool.tool";
-import {ToolService} from "../../app/containers/editor/tools.service";
+import {ToolService} from "../services/tools.service";
+import {DrawingService} from "../services/drawing.service";
 
 
 // @Component({
@@ -21,12 +22,14 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit {
   protected tools: DrawingTool[];
 
   constructor(protected paperService: PaperService,
-              protected toolService: ToolService) { }
+              protected toolService: ToolService,
+              protected drawingService: DrawingService) { }
 
   ngOnInit() {
     this.paperService.hasInitialized.then(() => {
       this.tools = this.toolService.getTools();
-      // this.paperService.scope.activate();
+
+      this.drawingService.draw(this.file);
     });
   }
 

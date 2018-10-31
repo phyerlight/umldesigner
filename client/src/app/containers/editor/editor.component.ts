@@ -1,16 +1,11 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {File, FileType} from "../../../common/models";
 import {PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
-import {ToolService} from "./tools.service";
 import {combineLatest} from "rxjs/internal/observable/combineLatest";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/combineLatest';
 import {MatDialog} from "@angular/material";
 import {DrawingTool} from "../../../common/paper/drawingTool.tool";
-import {InheritRelationTool} from "../../../classFile/tools/inheritRelation.tool";
-import {NewClassTool} from "../../../classFile/tools/newClass.tool";
-import {AssocRelationTool} from "../../../classFile/tools/assocRelation.tool";
-import {SelectionTool} from "../../../classFile/tools/selection.tool";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {ClassFormComponent} from "../../../classFile/components/class-form/class-form.component";
 import {NgZone} from '@angular/core';
@@ -45,8 +40,8 @@ export class EditorComponent implements OnInit {
     if (file) {
       this._file = file;
 
-      // this.canvasPortal = new ComponentPortal(FileType[file.type].editor);
-      this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
+      this.canvasPortal = new ComponentPortal(FileType[file.type].editor);
+      // this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
       console.log(this.canvasPortal);
     }
   }
@@ -56,7 +51,7 @@ export class EditorComponent implements OnInit {
 
   protected canvasPortal;
 
-  public tools: DrawingTool[];
+  // public tools: DrawingTool[];
 
   constructor(protected store: Store){}
 
