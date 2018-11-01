@@ -8,12 +8,12 @@ import {RouteParams} from "../../app-routing.module";
 import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "../../components/new-dialog/new-dialog.component";
-import { take, delay, filter, mergeMap, map } from "rxjs/operators";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {Actions, ofActionSuccessful, Select, Store} from "@ngxs/store";
 import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
-import {combineLatest, Observable} from "rxjs";
+import {combineLatest, Observable, concat} from "rxjs";
+import {take, delay, filter, mergeMap, map, ignoreElements} from "rxjs/operators";
 import {LoadProjects} from "../../state/project.actions";
 import {Navigate, RouterNavigation} from "@ngxs/router-plugin";
 
@@ -49,7 +49,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   protected fabState$ = new BehaviorSubject('out');
   protected file: File;
 
-  @Select(ProjectState.projectList)
+  // @Select(ProjectState.projectList)
   protected projects$: Observable<Project[]>;
 
   @Select(FileState.fileByKey)
@@ -86,7 +86,8 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.file = file; //this.fileByKey(file._key);
     });
 
-    this.loadData();
+    this.projects$ = concat(this.loadData().pipe(ignoreElements()),
+           this.store.select(ProjectState.projectList))
 
   }
 
@@ -104,7 +105,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   loadData() {
-    this.store.dispatch(new LoadProjects());
+    return this.store.dispatch(new LoadProjects());
     // this.projectService.getProjectList().pipe(take(1)).subscribe();
     // this.fileService.getProjectList().pipe(take(1)).subscribe();
     // this.projectFileService.getProjectList().pipe(take(1)).subscribe();
