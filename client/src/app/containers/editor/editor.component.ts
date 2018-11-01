@@ -10,7 +10,7 @@ import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-di
 import {ClassFormComponent} from "../../../classFile/components/class-form/class-form.component";
 import {NgZone} from '@angular/core';
 import {PaperService} from "../../../common/paper/paper.service";
-import {CdkPortal, ComponentPortal} from "@angular/cdk/portal";
+import {CdkPortal, ComponentPortal, ComponentType} from "@angular/cdk/portal";
 import {ClassCanvasComponent} from "../../../classFile/components/classCanvas/classCanvas.component";
 import {AppState} from "../../state/app.state";
 import {Select, Store} from "@ngxs/store";
@@ -40,7 +40,7 @@ export class EditorComponent implements OnInit {
     if (file) {
       this._file = file;
 
-      this.canvasPortal = new ComponentPortal(FileType[file.type].editor);
+      this.canvasPortal = new ComponentPortal(FileType[file.type].editor as unknown as ComponentType<any>);
       // this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
       console.log(this.canvasPortal);
     }
