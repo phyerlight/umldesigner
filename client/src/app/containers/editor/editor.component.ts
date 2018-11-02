@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, ViewChild} from '@angular/core';
-import {File, FileType} from "../../../common/models";
-import {PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
+import {ChangeDetectionStrategy, Component, Injector, Input, OnInit, ViewChild} from '@angular/core';
+import {File, FileType, FileTypeOptions} from "../../../common/models";
+import {EDITOR_DATA, PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
 import {combineLatest} from "rxjs/internal/observable/combineLatest";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import 'rxjs/add/operator/combineLatest';
@@ -15,6 +15,7 @@ import {ClassCanvasComponent} from "../../../classFile/components/classCanvas/cl
 import {AppState} from "../../state/app.state";
 import {Select, Store} from "@ngxs/store";
 import {Navigate} from "@ngxs/router-plugin";
+import {FileState} from "../../../common/state/file.state";
 
 @Component({
   selector: 'app-editor',
@@ -33,20 +34,24 @@ export class EditorComponent implements OnInit {
   protected editorData;
 
   // protected undoStack: File[] = [];
-  private _file: File;
+  private _file_key: string;
   @Input()
   // file: File;
-  set file(file: File) {
-    if (file) {
-      this._file = file;
+  set file_key(file_key: string) {
+    if (file_key) {
+      this._file_key = file_key;
 
-      this.canvasPortal = new ComponentPortal(FileType[file.type].editor as unknown as ComponentType<any>);
+      let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
+      let injector = Injector.create({providers: [{provide: EDITOR_DATA, useValue:{file_key}}]});
+      this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>,
+            null,
+            injector);
       // this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
       console.log(this.canvasPortal);
     }
   }
-  get file(): File {
-    return this._file;
+  get file_key(): string {
+    return this._file_key;
   }
 
   protected canvasPortal;

@@ -3,7 +3,7 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 import {AppState, AppStateModel} from '../../app/state/app.state';
 
 import {AddFile} from './file.actions';
-import {File, FileStateModel, FileType} from "../models";
+import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {
@@ -30,6 +30,13 @@ export class FileState {
   static fileByKey(state: FileStateModel) {
     return (key: string) => {
       return state[key];
+    }
+  }
+
+  @Selector()
+  static fileType(state: FileStateModel) {
+    return (key: string): FileTypeOptions => {
+      return FileType[state[key].type];
     }
   }
 

@@ -1,4 +1,4 @@
-import {OnInit, ViewChild, ElementRef, Input, AfterViewInit} from '@angular/core';
+import {OnInit, ViewChild, ElementRef, Input, AfterViewInit, InjectionToken, Inject} from '@angular/core';
 import {PaperService} from "./paper.service";
 import {File} from "../models";
 import {Store} from "@ngxs/store";
@@ -6,6 +6,7 @@ import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
 
+export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
 // @Component({
 //   styles: ['canvas {width: 100%; height: 100%}'],
@@ -23,7 +24,8 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit {
 
   constructor(protected paperService: PaperService,
               protected toolService: ToolService,
-              protected drawingService: DrawingService) { }
+              protected drawingService: DrawingService,
+              protected editorData: any) { }
 
   ngOnInit() {
     this.paperService.hasInitialized.then(() => {
@@ -34,7 +36,7 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.paperService.initialize(this.canvasElement.nativeElement, this.file._key, {hitTolerance:1});
+    this.paperService.initialize(this.canvasElement.nativeElement, this.editorData.file_key, {hitTolerance:1});
   }
 
   public clearCanvas() {
