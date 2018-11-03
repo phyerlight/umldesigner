@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { Store } from '@ngxs/store';
 
-import { PatchClassMetaData } from '../state/actions';
+import { PatchClassMetaData } from '../state/classFile.actions';
 
 import { AppState} from '../../app/state/app.state';
 import { FileState} from '../../common/state/file.state';

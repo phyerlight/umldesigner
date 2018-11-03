@@ -44,7 +44,7 @@ export class AppState {
   static isEntitySelected(app: AppStateModel){
     return (fileKey:string, entityId: number): boolean => {
       if (app.editor.activeKey != fileKey) return false;
-      return app.editorTabs[fileKey].selection.find((v) => v == entityId) != undefined;
+      return app.editorTabs[fileKey].selection.find((v: number) => v == entityId) != undefined;
     }
   }
 

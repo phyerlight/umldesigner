@@ -7,7 +7,7 @@ import {take, filter} from "rxjs/operators";
 import {PaperCanvasComponent} from "../../common/paper/paperCanvas.component";
 import {PaperService} from "../../common/paper/paper.service";
 import {Store} from "@ngxs/store";
-import {AddClass} from "../state/actions";
+import {AddClass} from "../state/classFile.actions";
 import {AppState} from "../../app/state/app.state";
 
 @Injectable()

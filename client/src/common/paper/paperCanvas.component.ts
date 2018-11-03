@@ -1,12 +1,20 @@
-import {OnInit, ViewChild, ElementRef, Input, AfterViewInit, InjectionToken, Inject} from '@angular/core';
+import {OnInit, OnDestroy, ViewChild, ElementRef, Input, AfterViewInit, InjectionToken, Inject} from '@angular/core';
 import {PaperService} from "./paper.service";
 import {File} from "../models";
 import {Store} from "@ngxs/store";
 import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
+import {concat, from, Subscription} from "rxjs";
+import {LoadFile} from "../state/file.actions";
+import {FileState} from "../state/file.state";
+import {ignoreElements, map} from "rxjs/operators";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
+
+export type EDITOR_DATA_TYPE = {
+  file_key: string
+}
 
 // @Component({
 //   styles: ['canvas {width: 100%; height: 100%}'],
@@ -15,7 +23,8 @@ export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 //     PaperService
 //   ]
 // })
-export abstract class PaperCanvasComponent implements OnInit, AfterViewInit {
+export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
+  private fileSubscription: Subscription = null;
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
   @Input() file: File;
@@ -25,14 +34,23 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit {
   constructor(protected paperService: PaperService,
               protected toolService: ToolService,
               protected drawingService: DrawingService,
-              protected editorData: any) { }
+              protected editorData: EDITOR_DATA_TYPE,
+              protected store: Store) { }
 
   ngOnInit() {
-    this.paperService.hasInitialized.then(() => {
+    this.fileSubscription = concat(
+      from(this.paperService.hasInitialized).pipe(ignoreElements()),
+      this.store.dispatch(new LoadFile(this.editorData.file_key)).pipe(ignoreElements()),
+      this.store.select(FileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
+    ).subscribe((file: File) => {
       this.tools = this.toolService.getTools();
-
-      this.drawingService.draw(this.file);
+      console.log(`drawing file ${file.name}`);
+      this.drawingService.draw(file);
     });
+  }
+
+  ngOnDestroy() {
+    this.fileSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {

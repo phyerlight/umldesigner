@@ -2,7 +2,7 @@ import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType} from "../models";
 import {FileState} from "../../common/state/file.state";
 import {FileStateModel, filterByEntityType, registerFileType} from "../../common/models";
-import {AddClass, PatchClass, PatchClassMetaData} from "./actions";
+import {AddClass, PatchClass, PatchClassMetaData} from "./classFile.actions";
 import {ClassCanvasComponent} from "../components/classCanvas/classCanvas.component";
 
 @State<FileStateModel>({

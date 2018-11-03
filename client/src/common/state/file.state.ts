@@ -2,8 +2,10 @@ import {Action, Selector, State, StateContext} from '@ngxs/store';
 
 import {AppState, AppStateModel} from '../../app/state/app.state';
 
-import {AddFile} from './file.actions';
+import {AddFile, LoadFile} from './file.actions';
 import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
+import {FileService} from "../../app/services/file.service";
+import {tap} from "rxjs/operators";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {
@@ -28,7 +30,7 @@ export class FileState {
 
   @Selector()
   static fileByKey(state: FileStateModel) {
-    return (key: string) => {
+    return (key: string): File => {
       return state[key];
     }
   }
@@ -52,6 +54,8 @@ export class FileState {
     return f.entities[i];
   }
 
+  constructor(protected fileService: FileService) {}
+
   rotateEntityId(nextEntityId: number[]): any[] {
     let newEId: number;
     let newIdSet: number[];
@@ -67,6 +71,18 @@ export class FileState {
     }
 
     return [newEId, newIdSet];
+  }
+
+  @Action(LoadFile)
+  loadFile(ctx: StateContext<FileStateModel>, action: LoadFile) {
+    return this.fileService.fetchFile(action.file_key).pipe(tap(file => {
+      const state = ctx.getState();
+
+      ctx.setState({
+        ...state,
+        [action.file_key]: file
+      });
+    }));
   }
 
   @Action(AddFile)

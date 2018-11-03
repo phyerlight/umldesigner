@@ -16,6 +16,7 @@ import {AppState} from "../../state/app.state";
 import {Select, Store} from "@ngxs/store";
 import {Navigate} from "@ngxs/router-plugin";
 import {FileState} from "../../../common/state/file.state";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'app-editor',
@@ -42,12 +43,11 @@ export class EditorComponent implements OnInit {
       this._file_key = file_key;
 
       let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
-      let injector = Injector.create({providers: [{provide: EDITOR_DATA, useValue:{file_key}}]});
-      this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>,
-            null,
-            injector);
-      // this.canvasPortal = new ComponentPortal(ClassCanvasComponent);
-      console.log(this.canvasPortal);
+      let injector = Injector.create({providers: [
+        {provide: EDITOR_DATA,
+          useValue: {file_key}}
+      ]});
+      this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>, null, injector);
     }
   }
   get file_key(): string {
