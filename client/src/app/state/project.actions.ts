@@ -1,15 +1,15 @@
 
 export class LoadProjects {
-  static readonly type = '[App] Load Projects';
+  static readonly type = '[Project] Load Projects';
   constructor() {}
 }
 
 export class LoadProjectsSuccess {
-  static readonly type = '[App] Load Projects Success';
+  static readonly type = '[Project] Load Projects Success';
   constructor() {}
 }
 
 export class LoadProjectsFail {
-  static readonly type = '[App] Load Projects Fail';
+  static readonly type = '[Project] Load Projects Fail';
   constructor() {}
 }

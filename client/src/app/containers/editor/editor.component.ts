@@ -12,11 +12,13 @@ import {NgZone} from '@angular/core';
 import {PaperService} from "../../../common/paper/paper.service";
 import {CdkPortal, ComponentPortal, ComponentType} from "@angular/cdk/portal";
 import {ClassCanvasComponent} from "../../../classFile/components/classCanvas/classCanvas.component";
-import {AppState} from "../../state/app.state";
+import {AppState, EditorTabData} from "../../state/app.state";
 import {Select, Store} from "@ngxs/store";
 import {Navigate} from "@ngxs/router-plugin";
 import {FileState} from "../../../common/state/file.state";
-import {map} from "rxjs/operators";
+import {distinctUntilChanged, map} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {ProjectState} from "../../state/project.state";
 
 @Component({
   selector: 'app-editor',
@@ -29,30 +31,32 @@ import {map} from "rxjs/operators";
 export class EditorComponent implements OnInit {
 
   @Select(state => state.app.editor)
-  protected editorMeta;
+  protected editorMeta$;
 
-  @Select(state => state.app.editorTabs)
-  protected editorData;
+  @Select(AppState.editorTabData)
+  protected editorTabData$: Observable<EditorTabData[]>;
 
   // protected undoStack: File[] = [];
   private _file_key: string;
-  @Input()
+  // @Input()
   // file: File;
-  set file_key(file_key: string) {
-    if (file_key) {
-      this._file_key = file_key;
-
-      let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
-      let injector = Injector.create({providers: [
-        {provide: EDITOR_DATA,
-          useValue: {file_key}}
-      ]});
-      this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>, null, injector);
-    }
-  }
-  get file_key(): string {
-    return this._file_key;
-  }
+  @Select(state => state.app.editor.activeKey)
+  protected file_key$: Observable<string>;
+  // set file_key(file_key: string) {
+  //   if (file_key) {
+  //     this._file_key = file_key;
+  //
+  //     let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
+  //     let injector = Injector.create({providers: [
+  //       {provide: EDITOR_DATA,
+  //         useValue: {file_key}}
+  //     ]});
+  //     this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>, null, injector);
+  //   }
+  // }
+  // get file_key(): string {
+  //   return this._file_key;
+  // }
 
   protected canvasPortal;
 
@@ -60,33 +64,31 @@ export class EditorComponent implements OnInit {
 
   constructor(protected store: Store){}
 
-  selectTab(fileKey: string) {
-    this.store.dispatch(new Navigate([]));
+  selectTab(file: File) {
+    let project = this.store.selectSnapshot(ProjectState)[file.project_key];
+    this.store.dispatch(new Navigate([project.name,file.name]));
   }
 
   ngOnInit() {
-    // this.paperService.hasInitialized.then(() => {
-    //   this.tools = this.toolService.getTools();
-    //   this.paperService.scope.activate();
-    // })
-    // combineLatest (
-    //   this.canvasService.getCanvas(this.canvasName),
-    //   this.file$
-    // ).subscribe((v: [ClassCanvasComponent, File]) => {
-    //   this.canvas = v[0];
-    //   this.canvas.data = v[1];
-    // });
+    this.file_key$.pipe(distinctUntilChanged()).subscribe(file_key => {
+      if (file_key) {
+
+        let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
+        let injector = Injector.create({providers: [
+          {provide: EDITOR_DATA,
+            useValue: {file_key}}
+        ]});
+        console.log(`making a new editor portal with key ${file_key}`);
+        this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>, null, injector);
+      } else {
+        // if (this.canvasPortal) {
+        //   this.canvasPortal.destroy();
+        // }
+        this.canvasPortal = null;
+      }
+
+    });
 
   }
 
-  // public addChange(data: File) {
-  //   this.undoStack.unshift(data);
-  // }
-  //
-  // public undoChange() {
-  //   if (this.undoStack.length > 1) {
-  //     this.undoStack.shift();
-  //   }
-  // }
-  //
 }

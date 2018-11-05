@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
-import { NgModule } from '@angular/core';
+import {APP_INITIALIZER, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
   ErrorStateMatcher,
@@ -32,12 +32,19 @@ import { NewDialogComponent } from './components/new-dialog/new-dialog.component
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
 import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
-import {NgxsModule} from "@ngxs/store";
+import {getActionTypeFromInstance, NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
 import {ClassFileModule} from "../classFile/classFile.module";
-import {ProjectState} from "./state/project.state";
+import {ProjectState, ProjectStateModel} from "./state/project.state";
+import {LoadProjects} from "./state/project.actions";
+import {File, FileMetadata} from "../common/models";
+import {mergeMap, tap} from "rxjs/operators";
+import {ProjectWithMeta} from "../common/models/ProjectWithMeta";
+import {AddFile} from "../common/state/file.actions";
+import {DataBootStrapPlugin} from "./services/dataBootStrap.plugin";
+import {AppState} from "./state/app.state";
 
 @NgModule({
   declarations: [
@@ -64,6 +71,7 @@ import {ProjectState} from "./state/project.state";
     ReactiveFormsModule,
     HttpClientModule,
     NgxsModule.forRoot([
+      AppState,
       ProjectState,
       FileState,
       ...AllFileStates
@@ -90,6 +98,20 @@ import {ProjectState} from "./state/project.state";
   providers: [
     ProjectService,
     FileService,
+    {
+      provide: NGXS_PLUGINS,
+      multi: true,
+      useClass: DataBootStrapPlugin,
+      deps: [ProjectService]
+    },
+    {
+      provide: APP_INITIALIZER,
+      multi: true,
+      useFactory: (store: Store) => function() {
+        return store.dispatch(new LoadProjects()).toPromise();
+      },
+      deps: [Store]
+    },
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
     // ToolService,
     // CanvasService,

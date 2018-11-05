@@ -76,7 +76,9 @@ export class DrawingListComponent implements OnInit {
     //   return fs.map(f => { return {project: project, file: f} });
     // });
     // return [];
-    let list =this.store.selectSnapshot(ProjectState.projectFiles)(project).map(v => { return {project: project, file: v} });
+    let list =this.store.selectSnapshot(ProjectState.projectFiles)(project)
+      .map(v => { return {project: project, file: v}; })
+      .filter(v => v.file != null);
     // console.log(list);
     return list;
   }

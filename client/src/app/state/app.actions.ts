@@ -5,6 +5,11 @@ export class SetSelection {
   }
 }
 
+export class OpenFile {
+  static readonly type = '[App] OpenFile';
+  constructor(public fileKey: string) {}
+}
+
 export class SetActiveFile {
   static readonly type = '[App] SetActiveFile';
 

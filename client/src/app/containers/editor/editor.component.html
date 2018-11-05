@@ -1,9 +1,9 @@
 <nav mat-tab-nav-bar>
   <a mat-tab-link
-     *ngFor="let tab of editorMeta.tabOrder"
-     (click)="selectTab(tab)"
-     [active]="tab == editorMeta.activeKey"
-     >{{editorData[tab].name}}</a>
+     *ngFor="let tab of (editorTabData$ | async)"
+     (click)="selectTab(tab.file)"
+     [active]="tab.active"
+     >{{tab.file.name}}</a>
 </nav>
 
 
@@ -22,7 +22,7 @@
     <!--</mat-button-toggle-group>-->
   <!--</div>-->
   <!--<div class="drawing flex-grow">-->
-    <ng-template [cdkPortalOutlet]="canvasPortal" file="file"></ng-template>
+    <ng-template [cdkPortalOutlet]="canvasPortal"></ng-template>
   <!--</div>-->
     <!--<div class="properties flex-shrink">-->
 

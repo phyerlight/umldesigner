@@ -1,4 +1,4 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {trigger, state, style, animate, transition } from '@angular/animations';
 import {ProjectService} from "../../services/project.service";
 import {createProject, Project} from "../../models/Project";
@@ -9,7 +9,7 @@ import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "../../components/new-dialog/new-dialog.component";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Actions, ofActionSuccessful, Select, Store} from "@ngxs/store";
+import {Actions, ofActionSuccessful, ofAction, Select, Store} from "@ngxs/store";
 import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
 import {combineLatest, Observable, concat} from "rxjs";
@@ -21,8 +21,6 @@ export type Selection = {
   project: Project,
   file: File
 }
-
-let exists = (...v) => v.every(v => v != null && v != undefined);
 
 @Component({
   selector: 'app-root',
@@ -45,9 +43,12 @@ let exists = (...v) => v.every(v => v != null && v != undefined);
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'UML Designer 4';
 
+  @Input()
   protected selection: Selection;
-  protected fabState$ = new BehaviorSubject('out');
+  @Input()
   protected file: File;
+
+  protected fabState$ = new BehaviorSubject('out');
 
   // @Select(ProjectState.projectList)
   protected projects$: Observable<Project[]>;
@@ -62,32 +63,33 @@ export class AppComponent implements OnInit, AfterViewInit {
     private fileService: FileService,
     protected store: Store,
     protected actions$: Actions,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog) {  }
 
   ngOnInit() {
-    this.actions$.pipe(
-      ofActionSuccessful(RouterNavigation),
-      map((nav: RouterNavigation) => {
-        return nav.routerState.root.firstChild.params;
-      }),
-      filter((p: RouteParams) => exists(p.project, p.file)),
-      mergeMap((params: RouteParams) => {
-        let project$ = this.projects$.pipe(map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)));
-        let file$ = this.store.select(ProjectState.projectFileByName).pipe(map(fn => fn(params.project, params.file)));
+    // this.actions$.pipe(
+    //   ofAction(RouterNavigation),
+    //   map((nav: RouterNavigation) => {
+    //     return nav.routerState.root.firstChild.params;
+    //   }),
+    //   filter((p: RouteParams) => exists(p.project, p.file)),
+    //   mergeMap((params: RouteParams) => {
+    //     let project$ = this.projects$.pipe(map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)));
+    //     let file$ = this.store.select(ProjectState.projectFileByName).pipe(map(fn => fn(params.project, params.file)));
+    //
+    //     return combineLatest(project$, file$);
+    //   })
+    // ).subscribe(([project, file]: [Project, File]) => {
+    //   if (!exists(project, file)) {
+    //     this.store.dispatch(new Navigate(['']));
+    //     // this.router.navigateByUrl("");
+    //   }
+    //   this.selection = {project, file};
+    //   this.file = file; //this.fileByKey(file._key);
+    // });
 
-        return combineLatest(project$, file$);
-      })
-    ).subscribe(([project, file]: [Project, File]) => {
-      if (!exists(project, file)) {
-        this.store.dispatch(new Navigate(['']));
-        // this.router.navigateByUrl("");
-      }
-      this.selection = {project, file};
-      this.file = file; //this.fileByKey(file._key);
-    });
-
-    this.projects$ = concat(this.loadData().pipe(ignoreElements()),
-           this.store.select(ProjectState.projectList))
+    // this.projects$ = concat(this.loadData().pipe(ignoreElements()),
+    //        this.store.select(ProjectState.projectList));
+    this.projects$ = this.store.select(ProjectState.projectList);
 
   }
 

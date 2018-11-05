@@ -6,7 +6,7 @@ import {AddClass, PatchClass, PatchClassMetaData} from "./classFile.actions";
 import {ClassCanvasComponent} from "../components/classCanvas/classCanvas.component";
 
 @State<FileStateModel>({
-    name: "classfiles",
+    name: CLASS_FILE_TYPE,
     defaults: {}
 })
 export class ClassFileState extends FileState {

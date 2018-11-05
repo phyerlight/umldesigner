@@ -1,11 +1,9 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
-
-import {AppState, AppStateModel} from '../../app/state/app.state';
-
 import {AddFile, LoadFile} from './file.actions';
 import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
 import {FileService} from "../../app/services/file.service";
-import {tap} from "rxjs/operators";
+import {take, tap} from "rxjs/operators";
+import {AppStateModel} from "../../app/state/app.state";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {
@@ -16,6 +14,18 @@ export interface GlobalFileStateModel {
     [fileType: string]: FileStateModel
 }
 
+export function filesByKey(files: GlobalFileStateModel, keys: string): File;
+export function filesByKey(files: GlobalFileStateModel, keys: string[]): File[];
+export function filesByKey(files: GlobalFileStateModel, keys: string|string[]): File|File[] {
+  let mergedDict = Object.keys(files).reduce((dict, type) => { return {...dict, ...files[type]}; }, {});
+
+  if (typeof keys == 'string') {
+    return mergedDict[keys];
+  } else {
+    return keys.map(k => mergedDict[k]);
+  }
+}
+
 @State<GlobalFileStateModel>({
   name: "files",
   defaults: {},
@@ -23,35 +33,18 @@ export interface GlobalFileStateModel {
 })
 export class FileState {
 
-  @Selector([AppState])
-  static activeFile(state: FileStateModel, appState: AppStateModel) {
-    return state[appState.editor.activeKey]
-  }
-
   @Selector()
-  static fileByKey(state: FileStateModel) {
+  static fileByKey(state: GlobalFileStateModel) {
     return (key: string): File => {
-      return state[key];
+      return filesByKey(state, key);
     }
   }
 
   @Selector()
-  static fileType(state: FileStateModel) {
+  static fileType(state: GlobalFileStateModel) {
     return (key: string): FileTypeOptions => {
-      return FileType[state[key].type];
+      return FileType[filesByKey(state, key).type];
     }
-  }
-
-  @Selector([AppState])
-  static selectedEntity(files: FileStateModel, appState: AppStateModel) {
-    if (appState.editor[appState.editor.activeKey].selection.length < 1 ||
-      appState.editor.activeKey == null) {
-      return null;
-    }
-
-    let f: File = files[appState.editor.activeKey];
-    let i = appState.editor[appState.editor.activeKey].selection[0];
-    return f.entities[i];
   }
 
   constructor(protected fileService: FileService) {}
@@ -74,13 +67,16 @@ export class FileState {
   }
 
   @Action(LoadFile)
-  loadFile(ctx: StateContext<FileStateModel>, action: LoadFile) {
-    return this.fileService.fetchFile(action.file_key).pipe(tap(file => {
+  loadFile(ctx: StateContext<GlobalFileStateModel>, action: LoadFile) {
+    return this.fileService.fetchFile(action.file_key).pipe(take(1),tap(file => {
       const state = ctx.getState();
 
       ctx.setState({
         ...state,
-        [action.file_key]: file
+        [file.type]: {
+          ...state[file.type],
+          [action.file_key]: file
+        }
       });
     }));
   }
@@ -90,7 +86,10 @@ export class FileState {
     const state = ctx.getState();
     ctx.setState({
       ...state,
-      [action.file._key]: action.file
+      [action.file.type]: {
+        ...state[action.file.type],
+        [action.file._key]: action.file
+      }
     });
   }
 }

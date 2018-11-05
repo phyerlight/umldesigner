@@ -6,9 +6,8 @@ import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
 import {concat, from, Subscription} from "rxjs";
-import {LoadFile} from "../state/file.actions";
 import {FileState} from "../state/file.state";
-import {ignoreElements, map} from "rxjs/operators";
+import {ignoreElements, map, take} from "rxjs/operators";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
@@ -39,13 +38,15 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
 
   ngOnInit() {
     this.fileSubscription = concat(
-      from(this.paperService.hasInitialized).pipe(ignoreElements()),
-      this.store.dispatch(new LoadFile(this.editorData.file_key)).pipe(ignoreElements()),
+      from(this.paperService.hasInitialized).pipe(take(1),ignoreElements()),
+      // this.store.dispatch(new LoadFile(this.editorData.file_key)).pipe(take(1),ignoreElements()),
       this.store.select(FileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
     ).subscribe((file: File) => {
       this.tools = this.toolService.getTools();
-      console.log(`drawing file ${file.name}`);
-      this.drawingService.draw(file);
+      if (file.entities) {
+        console.log(`drawing file ${file.name}`);
+        this.drawingService.draw(file);
+      }
     });
   }
 
