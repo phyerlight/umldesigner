@@ -21,9 +21,6 @@ import {LoadFile} from "../../../common/state/file.actions";
 })
 export class OutletWrapperComponent implements OnInit {
 
-  // selection: Selection;
-  // file: File;
-
   constructor(protected actions$: Actions,
               protected store: Store) { }
 
@@ -45,13 +42,6 @@ export class OutletWrapperComponent implements OnInit {
       if (!exists(file)) {
         this.store.dispatch(new Navigate(['']));
       }
-
-
-      // let actions:any[] = [new SetActiveFile(file._key)];
-      // if (!this.store.selectSnapshot(AppState.isFileOpen)(file._key)) {
-      //   actions.push(new LoadFile(file._key), new OpenFile(file._key));
-      // }
-      // this.store.dispatch(actions);
 
       this.store.dispatch(new SetActiveFile(file._key));
       if (!this.store.selectSnapshot(AppState.isFileOpen)(file._key)) {

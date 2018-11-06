@@ -125,7 +125,6 @@ export class AppState {
   openFile(ctx: StateContext<AppStateModel>, action: OpenFile) {
     const app = ctx.getState();
 
-    let newTab = false;
     let editorTabs = app.editorTabs;
 
     if (!editorTabs[action.fileKey]) {
@@ -137,7 +136,6 @@ export class AppState {
           undo: []
         }
       };
-      newTab = true;
     }
 
     let tabOrder = app.editor.tabOrder;
@@ -183,8 +181,6 @@ export class AppState {
       ...action.cls,
       id: state.clsEditor.cls.id
     };
-
-    // ctx.dispatch(new PatchClass(fileKey, cls));
 
     ctx.setState({
       ...state,

@@ -7,7 +7,7 @@ import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
 import {concat, from, Subscription} from "rxjs";
 import {FileState} from "../state/file.state";
-import {ignoreElements, map, take} from "rxjs/operators";
+import {ignoreElements, map, take, tap} from "rxjs/operators";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
@@ -26,8 +26,7 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
   private fileSubscription: Subscription = null;
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
-  @Input() file: File;
-
+  protected file: File;
   protected tools: DrawingTool[];
 
   constructor(protected paperService: PaperService,
@@ -38,20 +37,25 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
 
   ngOnInit() {
     this.fileSubscription = concat(
-      from(this.paperService.hasInitialized).pipe(take(1),ignoreElements()),
-      // this.store.dispatch(new LoadFile(this.editorData.file_key)).pipe(take(1),ignoreElements()),
+      from(this.paperService.hasInitialized).pipe(tap(() => {
+        this.tools = this.toolService.getTools();
+      }),ignoreElements()),
       this.store.select(FileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
     ).subscribe((file: File) => {
-      this.tools = this.toolService.getTools();
-      if (file.entities) {
-        console.log(`drawing file ${file.name}`);
-        this.drawingService.draw(file);
-      }
+      this.file = file;
+      this.draw(file);
     });
   }
 
   ngOnDestroy() {
     this.fileSubscription.unsubscribe();
+  }
+
+  draw(file) {
+    if (file.entities) {
+      console.log(`drawing file ${file.name}`);
+      this.drawingService.draw(file);
+    }
   }
 
   ngAfterViewInit() {

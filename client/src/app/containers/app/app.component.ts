@@ -43,54 +43,22 @@ export type Selection = {
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'UML Designer 4';
 
-  @Input()
   protected selection: Selection;
-  @Input()
   protected file: File;
-
   protected fabState$ = new BehaviorSubject('out');
-
-  // @Select(ProjectState.projectList)
   protected projects$: Observable<Project[]>;
 
   @Select(FileState.fileByKey)
   protected fileByKey: (fileKey: string)=>File;
 
   constructor(
-    // private route: ActivatedRoute,
-    // private router: Router,
     protected projectService: ProjectService,
-    private fileService: FileService,
+    protected fileService: FileService,
     protected store: Store,
-    protected actions$: Actions,
-    private dialog: MatDialog) {  }
+    protected dialog: MatDialog) {  }
 
   ngOnInit() {
-    // this.actions$.pipe(
-    //   ofAction(RouterNavigation),
-    //   map((nav: RouterNavigation) => {
-    //     return nav.routerState.root.firstChild.params;
-    //   }),
-    //   filter((p: RouteParams) => exists(p.project, p.file)),
-    //   mergeMap((params: RouteParams) => {
-    //     let project$ = this.projects$.pipe(map((ps: Project[]) => ps.find((p: Project) => p.name == params.project)));
-    //     let file$ = this.store.select(ProjectState.projectFileByName).pipe(map(fn => fn(params.project, params.file)));
-    //
-    //     return combineLatest(project$, file$);
-    //   })
-    // ).subscribe(([project, file]: [Project, File]) => {
-    //   if (!exists(project, file)) {
-    //     this.store.dispatch(new Navigate(['']));
-    //     // this.router.navigateByUrl("");
-    //   }
-    //   this.selection = {project, file};
-    //   this.file = file; //this.fileByKey(file._key);
-    // });
-
-    // this.projects$ = concat(this.loadData().pipe(ignoreElements()),
-    //        this.store.select(ProjectState.projectList));
     this.projects$ = this.store.select(ProjectState.projectList);
-
   }
 
   ngAfterViewInit() {
@@ -100,23 +68,15 @@ export class AppComponent implements OnInit, AfterViewInit {
     ).subscribe((v)=> {
       this.fabState$.next('in');
     });
-
-    // this.project$.subscribe(v => {
-    //   console.log(v);
-    // });
   }
 
   loadData() {
     return this.store.dispatch(new LoadProjects());
-    // this.projectService.getProjectList().pipe(take(1)).subscribe();
-    // this.fileService.getProjectList().pipe(take(1)).subscribe();
-    // this.projectFileService.getProjectList().pipe(take(1)).subscribe();
   }
 
   handleSelection(selection: Selection) {
     if (selection != null) {
       this.store.dispatch(new Navigate([selection.project.name, selection.file.name]));
-      // this.router.navigate([selection.project.name, selection.file.name]);
     }
   }
 
@@ -160,7 +120,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       mergeMap(() => this.projectService.delete(project))
     ).subscribe(() => {
       this.store.dispatch(new Navigate(['']));
-      // this.router.navigateByUrl("");
       this.loadData();
     });
   }
@@ -184,7 +143,6 @@ export class AppComponent implements OnInit, AfterViewInit {
       this.loadData();
       //navigate to the new file
       this.store.dispatch(new Navigate([project.name, newFile.name]));
-      // this.router.navigate([project.name, newFile.name]);
     }, err => {
       if (err.status == 409) {
         this.handleAddFile(project, "A file with that name already exists");
@@ -207,7 +165,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     ).subscribe(() => {
       if (this.selection.project == sel.project && this.selection.file == sel.file) {
         this.store.dispatch(new Navigate(['']));
-        // this.router.navigateByUrl("");
       }
       this.loadData();
     });

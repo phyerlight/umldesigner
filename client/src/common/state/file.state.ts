@@ -3,7 +3,6 @@ import {AddFile, LoadFile} from './file.actions';
 import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
 import {FileService} from "../../app/services/file.service";
 import {take, tap} from "rxjs/operators";
-import {AppStateModel} from "../../app/state/app.state";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {

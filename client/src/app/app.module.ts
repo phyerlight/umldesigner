@@ -32,18 +32,13 @@ import { NewDialogComponent } from './components/new-dialog/new-dialog.component
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
 import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
-import {getActionTypeFromInstance, NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
+import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
 import {ClassFileModule} from "../classFile/classFile.module";
-import {ProjectState, ProjectStateModel} from "./state/project.state";
-import {LoadProjects} from "./state/project.actions";
-import {File, FileMetadata} from "../common/models";
-import {mergeMap, tap} from "rxjs/operators";
-import {ProjectWithMeta} from "../common/models/ProjectWithMeta";
-import {AddFile} from "../common/state/file.actions";
-import {DataBootStrapPlugin} from "./services/dataBootStrap.plugin";
+import {ProjectState} from "./state/project.state";
+import {DataBootStrapPlugin, initializeAppProjects} from "./services/dataBootStrap.plugin";
 import {AppState} from "./state/app.state";
 
 @NgModule({
@@ -52,7 +47,6 @@ import {AppState} from "./state/app.state";
     EditorComponent,
     OutletWrapperComponent,
     DrawingListComponent,
-    // DesignCanvasComponent,
     ConfirmDialogComponent,
     NewDialogComponent,
     ClassFormComponent,
@@ -107,14 +101,10 @@ import {AppState} from "./state/app.state";
     {
       provide: APP_INITIALIZER,
       multi: true,
-      useFactory: (store: Store) => function() {
-        return store.dispatch(new LoadProjects()).toPromise();
-      },
+      useFactory: initializeAppProjects,
       deps: [Store]
     },
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
-    // ToolService,
-    // CanvasService,
   ],
   bootstrap: [OutletWrapperComponent]
 })

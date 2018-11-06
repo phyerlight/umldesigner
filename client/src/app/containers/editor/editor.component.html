@@ -6,25 +6,4 @@
      >{{tab.file.name}}</a>
 </nav>
 
-
-<!--<div class="container flex-row">-->
-  <!--<div class="tools flex-shrink" [ngStyle]="{'border-right':'1px solid black'}">-->
-    <!--<mat-button-toggle-group [vertical]="true">-->
-        <!--<mat-button-toggle *ngFor="let tool of tools"-->
-                           <!--(change)="activateTool($event.value)"-->
-                           <!--[checked]="paperService.scope.tool == tool"-->
-                           <!--[value]="tool">-->
-          <!--<mat-icon [svgIcon]="tool.icon"-->
-                    <!--[matTooltip]="tool.toolTip"-->
-                    <!--matTooltipPosition="right"-->
-                    <!--matTooltipShowDelay="750">{{tool.icon}}</mat-icon>-->
-        <!--</mat-button-toggle>-->
-    <!--</mat-button-toggle-group>-->
-  <!--</div>-->
-  <!--<div class="drawing flex-grow">-->
-    <ng-template [cdkPortalOutlet]="canvasPortal"></ng-template>
-  <!--</div>-->
-    <!--<div class="properties flex-shrink">-->
-
-    <!--</div>-->
-<!--</div>-->
+<ng-template [cdkPortalOutlet]="canvasPortal"></ng-template>
