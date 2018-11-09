@@ -32,13 +32,13 @@ import { NewDialogComponent } from './components/new-dialog/new-dialog.component
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
 import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
-import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
+import {NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
 import {ClassFileModule} from "../classFile/classFile.module";
 import {ProjectState} from "./state/project.state";
-import {DataBootStrapPlugin, initializeAppProjects} from "./services/dataBootStrap.plugin";
+import {appProjectListInitializer} from "./services/appProjectList.Initializer";
 import {AppState} from "./state/app.state";
 
 @NgModule({
@@ -93,16 +93,10 @@ import {AppState} from "./state/app.state";
     ProjectService,
     FileService,
     {
-      provide: NGXS_PLUGINS,
-      multi: true,
-      useClass: DataBootStrapPlugin,
-      deps: [ProjectService]
-    },
-    {
       provide: APP_INITIALIZER,
       multi: true,
-      useFactory: initializeAppProjects,
-      deps: [Store]
+      useFactory: appProjectListInitializer,
+      deps: [Store, ProjectService]
     },
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
   ],

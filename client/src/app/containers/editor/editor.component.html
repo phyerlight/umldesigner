@@ -1,9 +1,12 @@
 <nav mat-tab-nav-bar>
-  <a mat-tab-link
-     *ngFor="let tab of (editorTabData$ | async)"
-     (click)="selectTab(tab.file)"
-     [active]="tab.active"
-     >{{tab.file.name}}</a>
+    <div *ngFor="let tab of (editorTabData$ | async)">
+        <a mat-tab-link
+           (click)="selectTab(tab.file)"
+           [active]="tab.active"
+        >{{tab.file.name}}
+            <button mat-icon-button><mat-icon>close</mat-icon></button>
+        </a>
+    </div>
 </nav>
 
 <ng-template [cdkPortalOutlet]="canvasPortal"></ng-template>

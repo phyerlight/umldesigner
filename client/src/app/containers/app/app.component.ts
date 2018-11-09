@@ -14,7 +14,7 @@ import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
 import {combineLatest, Observable, concat} from "rxjs";
 import {take, delay, filter, mergeMap, map, ignoreElements} from "rxjs/operators";
-import {LoadProjects} from "../../state/project.actions";
+import {LoadProjectList} from "../../state/project.actions";
 import {Navigate, RouterNavigation} from "@ngxs/router-plugin";
 
 export type Selection = {
@@ -71,7 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   loadData() {
-    return this.store.dispatch(new LoadProjects());
+    return this.store.dispatch(new LoadProjectList());
   }
 
   handleSelection(selection: Selection) {

@@ -1,5 +1,5 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
-import {AddFile, LoadFile} from './file.actions';
+import {AddFile, LoadFile, SetFileList} from './file.actions';
 import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
 import {FileService} from "../../app/services/file.service";
 import {take, tap} from "rxjs/operators";
@@ -78,6 +78,15 @@ export class FileState {
         }
       });
     }));
+  }
+
+  @Action(SetFileList)
+  setFileList(ctx: StateContext<GlobalFileStateModel>, {files}: SetFileList) {
+    ctx.setState(files.reduce((acc, f) => {
+      if (!acc[f.type]) acc[f.type] = {};
+      acc[f.type][f._key] = f;
+      return acc;
+    }, {}));
   }
 
   @Action(AddFile)

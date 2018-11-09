@@ -10,7 +10,6 @@ import {File} from "../../../common/models";
 import {exists} from "../../../common";
 import {Selection} from "../app/app.component";
 import {OpenFile, SetActiveFile} from "../../state/app.actions";
-import {LoadProjects} from "../../state/project.actions";
 import {AppState} from "../../state/app.state";
 import {LoadFile} from "../../../common/state/file.actions";
 
