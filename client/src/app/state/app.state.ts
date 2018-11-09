@@ -1,5 +1,13 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
-import {CancelEditClass, EditClass, OpenFile, SaveEditClass, SetActiveFile, SetSelection} from "./app.actions";
+import {
+  CancelEditClass,
+  CloseFile,
+  EditClass,
+  OpenFile,
+  SaveEditClass,
+  SetActiveFile,
+  SetSelection
+} from "./app.actions";
 import {User} from "../models/User";
 import {filesByKey, FileState, GlobalFileStateModel} from "../../common/state/file.state";
 import {File} from "../../common/models";
@@ -148,6 +156,41 @@ export class AppState {
       editorTabs,
       editor: {
         ...app.editor,
+        tabOrder
+      }
+    });
+  }
+
+  @Action(CloseFile)
+  closeFile(ctx: StateContext<AppStateModel>, {fileKey}: CloseFile) {
+    const app: AppStateModel = ctx.getState();
+
+    let editorTabs = {
+      ...app.editorTabs
+    };
+    delete editorTabs[fileKey];
+
+    let activeKey = app.editor.activeKey;
+    if (app.editor.activeKey == fileKey){
+      if (app.editor.tabOrder.length > 1) {
+        // set new active tab to the one before it in the list of editors.
+        let i = app.editor.tabOrder.indexOf(fileKey) - 1;
+        if (i < 0) {
+          i = 1;
+        }
+        activeKey = app.editor.tabOrder[i];
+      } else {
+        activeKey = null;
+      }
+    }
+
+    let tabOrder = app.editor.tabOrder.filter(v=>v!=fileKey);
+
+    ctx.setState({
+      ...app,
+      editorTabs,
+      editor: {
+        activeKey,
         tabOrder
       }
     });

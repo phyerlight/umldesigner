@@ -19,6 +19,7 @@ import {FileState} from "../../../common/state/file.state";
 import {distinctUntilChanged, map} from "rxjs/operators";
 import {Observable} from "rxjs";
 import {ProjectState} from "../../state/project.state";
+import {CloseFile} from "../../state/app.actions";
 
 @Component({
   selector: 'app-editor',
@@ -45,6 +46,15 @@ export class EditorComponent implements OnInit {
   selectTab(file: File) {
     let project = this.store.selectSnapshot(ProjectState)[file.project_key];
     this.store.dispatch(new Navigate([project.name,file.name]));
+  }
+
+  closeTab(tab: EditorTabData) {
+    if (tab.dirty) {
+
+    }
+    let actions = [new CloseFile(tab.file._key)];
+    if (tab.active) {} //TODO navigate to next active tab
+    this.store.dispatch(actions);
   }
 
   ngOnInit() {

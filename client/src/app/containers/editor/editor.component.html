@@ -4,7 +4,7 @@
            (click)="selectTab(tab.file)"
            [active]="tab.active"
         >{{tab.file.name}}
-            <button mat-icon-button><mat-icon>close</mat-icon></button>
+            <button mat-icon-button (click)="closeTab(tab)"><mat-icon>close</mat-icon></button>
         </a>
     </div>
 </nav>

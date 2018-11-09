@@ -10,6 +10,11 @@ export class OpenFile {
   constructor(public fileKey: string) {}
 }
 
+export class CloseFile {
+  static readonly type = '[App] CloseFile';
+  constructor(public fileKey: string) {}
+}
+
 export class SetActiveFile {
   static readonly type = '[App] SetActiveFile';
 
