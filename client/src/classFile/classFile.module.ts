@@ -9,12 +9,14 @@ import {
 } from "@angular/material";
 import {HttpClientModule} from "@angular/common/http";
 
+import { ClassFormComponent } from './components/class-form/class-form.component';
 import {ClassCanvasComponent} from "./components/classCanvas/classCanvas.component";
 import './state/classFile.state';
 
 @NgModule({
     declarations: [
       ClassCanvasComponent,
+      ClassFormComponent
     ],
     exports: [
       ClassCanvasComponent

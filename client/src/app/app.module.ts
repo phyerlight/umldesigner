@@ -21,6 +21,11 @@ import {
 } from "@angular/material";
 import {PortalModule} from '@angular/cdk/portal'
 
+import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
+import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
+import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
+
+import {ClassFileModule} from "../classFile/classFile.module";
 import { AppComponent } from './containers/app/app.component';
 import { EditorComponent } from './containers/editor/editor.component';
 import { ProjectService } from "./services/project.service";
@@ -31,12 +36,7 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
-import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
-import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
-import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
-import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
-import {ClassFileModule} from "../classFile/classFile.module";
 import {ProjectState} from "./state/project.state";
 import {appProjectListInitializer} from "./services/appProjectList.Initializer";
 import {AppState} from "./state/app.state";
@@ -49,13 +49,11 @@ import {AppRouterPlugin} from "./services/appRouter.plugin";
     OutletWrapperComponent,
     DrawingListComponent,
     ConfirmDialogComponent,
-    NewDialogComponent,
-    ClassFormComponent,
+    NewDialogComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,
-    NewDialogComponent,
-    ClassFormComponent,
+    NewDialogComponent
   ],
   imports: [
     BrowserModule,
