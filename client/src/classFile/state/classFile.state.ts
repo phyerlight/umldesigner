@@ -13,6 +13,11 @@ import {FileStateLike} from "../../common/models/FileStateLike";
 export class ClassFileState extends FileStateLike {
 
   @Selector()
+  static fileByKey(files: FileStateModel) {
+    return FileStateLike.fileByKey(files);
+  }
+
+  @Selector()
   static classesByFileKey(files: FileStateModel) {
     return (fileKey: string) => {
       if (files[fileKey].type == CLASS_FILE_TYPE) {
