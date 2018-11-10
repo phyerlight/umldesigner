@@ -3,26 +3,15 @@ import {AddFile, LoadFile, SetFileList} from './file.actions';
 import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
 import {FileService} from "../../app/services/file.service";
 import {take, tap} from "rxjs/operators";
+import {filesByKey} from "../index";
+import {GlobalFileStateModel} from "../models/GlobalFileStateModel";
 
 export let AllFileStates = [];
 Object.keys(FileType).forEach(t => {
     AllFileStates.push(FileType[t].state);
 });
-
-export interface GlobalFileStateModel {
-    [fileType: string]: FileStateModel
-}
-
-export function filesByKey(files: GlobalFileStateModel, keys: string): File;
-export function filesByKey(files: GlobalFileStateModel, keys: string[]): File[];
-export function filesByKey(files: GlobalFileStateModel, keys: string|string[]): File|File[] {
-  let mergedDict = Object.keys(files).reduce((dict, type) => { return {...dict, ...files[type]}; }, {});
-
-  if (typeof keys == 'string') {
-    return mergedDict[keys];
-  } else {
-    return keys.map(k => mergedDict[k]);
-  }
+if (AllFileStates.length < 1) {
+  console.error("No file states have been added. This most likely means that a dependency has been added forcing the root file state to be loaded first");
 }
 
 @State<GlobalFileStateModel>({
@@ -47,23 +36,6 @@ export class FileState {
   }
 
   constructor(protected fileService: FileService) {}
-
-  rotateEntityId(nextEntityId: number[]): any[] {
-    let newEId: number;
-    let newIdSet: number[];
-
-    // If only one entry, take it and increment it by one.
-    // If there are more than one, take it remove as there must have been an entity (or more) removed
-    //  previously to have empty slots.
-    newEId = nextEntityId[0];
-    if (nextEntityId.length == 1) {
-      newIdSet = [newEId+1];
-    } else if (nextEntityId.length > 1) {
-      newIdSet = nextEntityId.slice(1);
-    }
-
-    return [newEId, newIdSet];
-  }
 
   @Action(LoadFile)
   loadFile(ctx: StateContext<GlobalFileStateModel>, action: LoadFile) {

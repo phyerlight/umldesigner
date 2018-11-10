@@ -9,10 +9,12 @@ import {
   SetSelection
 } from "./app.actions";
 import {User} from "../models/User";
-import {filesByKey, FileState, GlobalFileStateModel} from "../../common/state/file.state";
+import {FileState} from "../../common/state/file.state";
+import {filesByKey} from "../../common";
 import {File} from "../../common/models";
 import {Navigate} from "@ngxs/router-plugin";
 import {NavigateByKey} from "../services/appRouter.plugin";
+import {GlobalFileStateModel} from "../../common/models/GlobalFileStateModel";
 
 export type EditorTabData = {
   active: boolean,

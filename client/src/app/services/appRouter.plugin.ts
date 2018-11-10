@@ -1,5 +1,5 @@
 import {getActionTypeFromInstance, NgxsPlugin, Store} from "@ngxs/store";
-import {filesByKey} from "../../common/state/file.state";
+import {filesByKey} from "../../common";
 import {Navigate} from "@ngxs/router-plugin";
 import {Project} from "../models/Project";
 import {Injector} from "@angular/core";

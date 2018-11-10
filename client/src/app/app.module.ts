@@ -20,6 +20,7 @@ import {
   ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 import {PortalModule} from '@angular/cdk/portal'
+import {HttpClientModule} from "@angular/common/http";
 
 import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
@@ -34,7 +35,6 @@ import { OutletWrapperComponent } from './containers/outlet-wrapper/outlet-wrapp
 import { DrawingListComponent } from './components/drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
-import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
 import {AllFileStates, FileState} from "../common/state/file.state";
 import {ProjectState} from "./state/project.state";
@@ -60,9 +60,10 @@ import {AppRouterPlugin} from "./services/appRouter.plugin";
     BrowserAnimationsModule,
     // NoopAnimationsModule,
     FormsModule,
-    AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
+    ClassFileModule,
+    AppRoutingModule,
     NgxsModule.forRoot([
       AppState,
       ProjectState,
@@ -71,7 +72,6 @@ import {AppRouterPlugin} from "./services/appRouter.plugin";
     ]),
     NgxsRouterPluginModule.forRoot(),
     NgxsReduxDevtoolsPluginModule.forRoot({name: 'URLDesigner'}),
-    ClassFileModule,
     //Angular Material
     MatDialogModule,
     MatSidenavModule,

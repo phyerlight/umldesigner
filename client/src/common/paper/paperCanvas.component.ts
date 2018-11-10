@@ -1,18 +1,22 @@
-import {OnInit, OnDestroy, ViewChild, ElementRef, Input, AfterViewInit, InjectionToken, Inject} from '@angular/core';
+import {OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, InjectionToken} from '@angular/core';
+
+import {Store} from "@ngxs/store";
+
+import {concat, from, Subscription} from "rxjs";
+import {ignoreElements, map, tap} from "rxjs/operators";
+
 import {PaperService} from "./paper.service";
 import {File} from "../models";
-import {Store} from "@ngxs/store";
 import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
-import {concat, from, Subscription} from "rxjs";
-import {FileState} from "../state/file.state";
-import {ignoreElements, map, take, tap} from "rxjs/operators";
+import {FileStateLike} from "../models/FileStateLike";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
 export type EDITOR_DATA_TYPE = {
-  file_key: string
+  file_key: string,
+  fileState: typeof FileStateLike
 }
 
 // @Component({
@@ -40,7 +44,7 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
       from(this.paperService.hasInitialized).pipe(tap(() => {
         this.tools = this.toolService.getTools();
       }),ignoreElements()),
-      this.store.select(FileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
+      this.store.select(this.editorData.fileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
     ).subscribe((file: File) => {
       this.file = file;
       this.draw(file);
@@ -71,6 +75,6 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
   }
 
   activateTool(tool: DrawingTool) {
-    tool.activate();
+    this.paperService.scope.tool = tool;
   }
 }

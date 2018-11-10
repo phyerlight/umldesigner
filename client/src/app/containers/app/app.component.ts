@@ -1,21 +1,20 @@
-import {AfterViewInit, ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {trigger, state, style, animate, transition } from '@angular/animations';
 import {ProjectService} from "../../services/project.service";
 import {createProject, Project} from "../../models/Project";
 import {FileService} from "../../services/file.service";
 import {createFile, File} from "../../../common/models";
-import {RouteParams} from "../../app-routing.module";
 import {MatDialog, MatSidenav} from "@angular/material";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "../../components/new-dialog/new-dialog.component";
 import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Actions, ofActionSuccessful, ofAction, Select, Store} from "@ngxs/store";
+import {Select, Store} from "@ngxs/store";
 import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
-import {combineLatest, Observable, concat} from "rxjs";
-import {take, delay, filter, mergeMap, map, ignoreElements} from "rxjs/operators";
+import {Observable} from "rxjs";
+import {take, delay, filter, mergeMap} from "rxjs/operators";
 import {LoadProjectList} from "../../state/project.actions";
-import {Navigate, RouterNavigation} from "@ngxs/router-plugin";
+import {Navigate} from "@ngxs/router-plugin";
 
 export type Selection = {
   project: Project,

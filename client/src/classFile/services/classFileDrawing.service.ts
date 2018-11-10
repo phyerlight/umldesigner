@@ -4,8 +4,7 @@ import { Store } from '@ngxs/store';
 
 import { PatchClassMetaData } from '../state/classFile.actions';
 
-import { AppState} from '../../app/state/app.state';
-import { FileState} from '../../common/state/file.state';
+// import { AppState} from '../../app/state/app.state';
 
 import { PointText, Point } from 'paper';
 // @ts-ignore
@@ -33,9 +32,9 @@ export class ClassFileDrawingService implements DrawingService {
   constructor(protected paperService: PaperService,
               protected store: Store) {
 
-    store.select(AppState.isEntitySelected).subscribe((fn) => {
-      this.isEntitySelected = fn;
-    });
+    // store.select(AppState.isEntitySelected).subscribe((fn) => {
+    //   this.isEntitySelected = fn;
+    // });
 
     paperService.hasInitialized.then(() => {
       paperService.scope.activate();

@@ -64,7 +64,11 @@ export class EditorComponent implements OnInit {
         let fileType: FileTypeOptions = this.store.selectSnapshot(FileState.fileType)(file_key);
         let injector = Injector.create({providers: [
           {provide: EDITOR_DATA,
-            useValue: {file_key}}
+            useValue: {
+              file_key,
+              fileState: fileType.state
+            }
+          }
         ]});
         console.log(`making a new editor portal with key ${file_key}`);
         this.canvasPortal = new ComponentPortal(fileType.editor as unknown as ComponentType<any>, null, injector);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
     ErrorStateMatcher,
@@ -8,10 +8,13 @@ import {
     MatToolbarModule, MatTooltipModule, ShowOnDirtyErrorStateMatcher
 } from "@angular/material";
 import {HttpClientModule} from "@angular/common/http";
+import './state/classFile.state';
+// import {registerFileType} from "../common/models";
+// import {CLASS_FILE_TYPE} from "./models";
+// import {ClassFileState} from "./state/classFile.state";
 
 import { ClassFormComponent } from './components/class-form/class-form.component';
 import {ClassCanvasComponent} from "./components/classCanvas/classCanvas.component";
-import './state/classFile.state';
 
 @NgModule({
     declarations: [

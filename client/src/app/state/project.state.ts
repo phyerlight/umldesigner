@@ -1,9 +1,10 @@
 import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {Project} from "../models/Project";
 import {SetProjectList} from "./project.actions";
-import {filesByKey, FileState} from "../../common/state/file.state";
+import {FileState} from "../../common/state/file.state";
 import {File} from "../../common/models";
-import {GlobalFileStateModel} from "../../common/state/file.state"
+import {GlobalFileStateModel} from "../../common/models/GlobalFileStateModel"
+import {filesByKey} from "../../common";
 
 export interface ProjectStateModel {
   [projectKey: string]: Project

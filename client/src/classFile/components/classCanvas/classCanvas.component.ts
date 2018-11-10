@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, Inject} from '@angular/core';
+import {Component, OnInit, AfterViewInit, Inject} from '@angular/core';
 import {PaperService} from "../../../common/paper/paper.service";
 import {EDITOR_DATA, EDITOR_DATA_TYPE, PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
 import {ToolService} from "../../../common/services/tools.service";
