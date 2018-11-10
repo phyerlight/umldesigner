@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule, NoopAnimationsModule } from "@angular/platform-browser/animations";
-import {APP_INITIALIZER, NgModule} from '@angular/core';
+import {APP_INITIALIZER, Injector, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
   ErrorStateMatcher,
@@ -32,7 +32,7 @@ import { NewDialogComponent } from './components/new-dialog/new-dialog.component
 import {HttpClientModule} from "@angular/common/http";
 import {FileService} from "./services/file.service";
 import { ClassFormComponent } from '../classFile/components/class-form/class-form.component';
-import {NgxsModule, Store} from "@ngxs/store";
+import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 import {AllFileStates, FileState} from "../common/state/file.state";
@@ -40,6 +40,7 @@ import {ClassFileModule} from "../classFile/classFile.module";
 import {ProjectState} from "./state/project.state";
 import {appProjectListInitializer} from "./services/appProjectList.Initializer";
 import {AppState} from "./state/app.state";
+import {AppRouterPlugin} from "./services/appRouter.plugin";
 
 @NgModule({
   declarations: [
@@ -97,6 +98,12 @@ import {AppState} from "./state/app.state";
       multi: true,
       useFactory: appProjectListInitializer,
       deps: [Store, ProjectService]
+    },
+    {
+      provide: NGXS_PLUGINS,
+      multi: true,
+      useClass: AppRouterPlugin,
+      deps: [Injector]
     },
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher},
   ],

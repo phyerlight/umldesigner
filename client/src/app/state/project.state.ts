@@ -1,13 +1,9 @@
-import {Action, Selector, State, StateContext, NgxsOnInit} from "@ngxs/store";
+import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {Project} from "../models/Project";
-import {LoadProjectList, SetProjectList} from "./project.actions";
-import {ProjectService} from "../services/project.service";
-import {map, mergeMap, tap} from "rxjs/operators";
+import {SetProjectList} from "./project.actions";
 import {filesByKey, FileState} from "../../common/state/file.state";
-import {File, FileMetadata} from "../../common/models";
+import {File} from "../../common/models";
 import {GlobalFileStateModel} from "../../common/state/file.state"
-import {ProjectWithMeta} from "../../common/models/ProjectWithMeta";
-import {AddFile} from "../../common/state/file.actions";
 
 export interface ProjectStateModel {
   [projectKey: string]: Project
@@ -17,13 +13,7 @@ export interface ProjectStateModel {
   name: "projects",
   defaults: {}
 })
-export class ProjectState implements NgxsOnInit {
-
-  constructor(protected projectService: ProjectService) {}
-
-  ngxsOnInit(ctx: StateContext<ProjectStateModel>) {
-    // ctx.dispatch(new LoadProjectList());
-  }
+export class ProjectState {
 
   @Selector()
   static projectByKey(projects: ProjectStateModel) {

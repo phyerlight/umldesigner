@@ -1,4 +1,4 @@
-import {Action, Selector, State, StateContext} from '@ngxs/store';
+import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
 import {
   CancelEditClass,
   CloseFile,
@@ -11,6 +11,8 @@ import {
 import {User} from "../models/User";
 import {filesByKey, FileState, GlobalFileStateModel} from "../../common/state/file.state";
 import {File} from "../../common/models";
+import {Navigate} from "@ngxs/router-plugin";
+import {NavigateByKey} from "../services/appRouter.plugin";
 
 export type EditorTabData = {
   active: boolean,
@@ -100,6 +102,8 @@ export class AppState {
     }
   }
 
+  constructor(protected store: Store) {}
+
   @Action(SetSelection)
   setSelection(ctx: StateContext<AppStateModel>, action: SetSelection) {
     const app = ctx.getState();
@@ -135,13 +139,15 @@ export class AppState {
 
     let editorTabs = app.editorTabs;
 
+    let file = this.store.selectSnapshot(FileState.fileByKey)(action.fileKey);
+
     if (!editorTabs[action.fileKey]) {
       editorTabs = {
         ...editorTabs,
         [action.fileKey]: {
           activeTool: null,
           selection: [],
-          undo: []
+          undo: [file]
         }
       };
     }
@@ -171,6 +177,8 @@ export class AppState {
     delete editorTabs[fileKey];
 
     let activeKey = app.editor.activeKey;
+    // let activeKey = null;
+    let action = null;
     if (app.editor.activeKey == fileKey){
       if (app.editor.tabOrder.length > 1) {
         // set new active tab to the one before it in the list of editors.
@@ -178,8 +186,10 @@ export class AppState {
         if (i < 0) {
           i = 1;
         }
-        activeKey = app.editor.tabOrder[i];
+        action = new NavigateByKey(app.editor.tabOrder[i]);
+        // activeKey = app.editor.tabOrder[i];
       } else {
+        action = new Navigate(['']);
         activeKey = null;
       }
     }
@@ -194,6 +204,10 @@ export class AppState {
         tabOrder
       }
     });
+
+    if (action) {
+      return ctx.dispatch(action);
+    }
   }
 
   @Action(EditClass)
