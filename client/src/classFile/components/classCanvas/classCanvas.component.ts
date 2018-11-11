@@ -7,7 +7,7 @@ import {NewClassTool} from "../../tools/newClass.tool";
 import {AssocRelationTool} from "../../tools/assocRelation.tool";
 import {InheritRelationTool} from "../../tools/inheritRelation.tool";
 import {ClassFileDrawingService} from "../../services/classFileDrawing.service";
-import {Store} from "@ngxs/store";
+import {Actions, Store} from "@ngxs/store";
 
 @Component({
   styles: ['canvas {width: 100%; height: 100%}'],
@@ -30,8 +30,9 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
               protected toolService: ToolService,
               protected drawingService: ClassFileDrawingService,
               @Inject(EDITOR_DATA) protected editorData: EDITOR_DATA_TYPE,
-              protected store: Store) {
-    super(paperService, toolService, drawingService, editorData, store);
+              protected store: Store,
+              protected actions$: Actions) {
+    super(paperService, toolService, drawingService, editorData, store, actions$);
 
     toolService.registerTool(SelectionTool);
     toolService.registerTool(NewClassTool);

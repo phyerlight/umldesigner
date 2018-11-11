@@ -1,9 +1,9 @@
 import {OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, InjectionToken} from '@angular/core';
 
-import {Store} from "@ngxs/store";
+import {Actions, ofActionSuccessful, Store} from "@ngxs/store";
 
-import {concat, from, Subscription} from "rxjs";
-import {ignoreElements, map, tap} from "rxjs/operators";
+import {combineLatest, concat, from, Subscription} from "rxjs";
+import {ignoreElements, map, startWith, tap} from "rxjs/operators";
 
 import {PaperService} from "./paper.service";
 import {File} from "../models";
@@ -11,6 +11,8 @@ import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
 import {FileStateLike} from "../models/FileStateLike";
+import {SetActiveFile, SetSelection} from "../../app/state/app.actions";
+import {AddClass, PatchClass, PatchClassMetaData} from "../../classFile/state/classFile.actions";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
@@ -37,14 +39,18 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
               protected toolService: ToolService,
               protected drawingService: DrawingService,
               protected editorData: EDITOR_DATA_TYPE,
-              protected store: Store) { }
+              protected store: Store,
+              protected actions$: Actions) { }
 
   ngOnInit() {
     this.fileSubscription = concat(
       from(this.paperService.hasInitialized).pipe(tap(() => {
         this.tools = this.toolService.getTools();
       }),ignoreElements()),
-      this.store.select(this.editorData.fileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
+      combineLatest(
+        this.actions$.pipe(ofActionSuccessful(SetActiveFile, SetSelection, PatchClass, PatchClassMetaData, AddClass), startWith(true)),
+        this.store.select(this.editorData.fileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
+      ).pipe(map(([action, file]) => file))
     ).subscribe((file: File) => {
       this.file = file;
       this.draw(file);
@@ -75,6 +81,7 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
   }
 
   activateTool(tool: DrawingTool) {
+    console.log(tool.activate());
     this.paperService.scope.tool = tool;
   }
 }
