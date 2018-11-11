@@ -36,7 +36,8 @@ import { DrawingListComponent } from './components/drawing-list/drawing-list.com
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
 import {FileService} from "./services/file.service";
-import {AllFileStates, FileState} from "../common/state/file.state";
+import {FileState} from "../common/state/file.state";
+import {AllFileStates} from "../common";
 import {ProjectState} from "./state/project.state";
 import {appProjectListInitializer} from "./services/appProjectList.Initializer";
 import {AppState} from "./state/app.state";

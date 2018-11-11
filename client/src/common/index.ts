@@ -12,7 +12,7 @@ export function rotateEntityId(nextEntityId: number[]): any[] {
   // If only one entry, take it and increment it by one.
   // If there are more than one, take it remove as there must have been an entity (or more) removed
   //  previously to have empty slots.
-  newEId = nextEntityId[0];
+  newEId = nextEntityId[0] || 1;
   if (nextEntityId.length == 1) {
     newIdSet = [newEId+1];
   } else if (nextEntityId.length > 1) {
@@ -32,4 +32,9 @@ export function filesByKey(files: GlobalFileStateModel, keys: string|string[]): 
   } else {
     return keys.map(k => mergedDict[k]);
   }
+}
+
+export let AllFileStates = [];
+export function FileStateDecorator(constructor: Function) {
+  AllFileStates.push(constructor);
 }
