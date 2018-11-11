@@ -68,7 +68,7 @@ router.post(function (req, res) {
 
 router.get(':key', function (req, res) {
   const key = req.pathParams.key;
-  let file
+  let file;
   try {
     file = files.document(key);
   } catch (e) {

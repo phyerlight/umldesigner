@@ -7,30 +7,25 @@ const Point = joi.object().keys({
   y: joi.number().required()
 });
 
-const Class = joi.object().keys({
-  id: joi.string().required(),
-  position: Point.required(),
-  name: joi.string().required(),
-  attrs: joi.array().items(joi.string())
-});
+const FileEntity = joi.object({
+    id: joi.number(),
+    type: joi.string()
+}).unknown(true);
 
-const Relation = joi.object().keys({
-  type: joi.string().required(),
-  fromId: joi.number().required(),
-  toId: joi.number().required()
-});
 
 module.exports = {
   schema: {
     // Describe the attributes with joi here
     _key: joi.string(),
     project_key: joi.string(),
-    name: joi.string().required(),
     type: joi.string().required(),
-    data: joi.object().keys({
-      classes: joi.array().items(Class),
-      relations: joi.array().items(Relation)
-    })
+    name: joi.string().required(),
+    createdBy_key: joi.string().required(),
+    createOn: joi.string().required(),
+    modifiedBy_key: joi.string().required(),
+    modifiedOn: joi.string().required(),
+    nextEntityId: joi.array().items(joi.number()),
+    entities: joi.object().pattern(/.*/, FileEntity)
   },
   forClient(obj) {
     // Implement outgoing transformations here
