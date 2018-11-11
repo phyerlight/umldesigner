@@ -2,21 +2,17 @@ import { Injectable } from '@angular/core';
 
 import { Store } from '@ngxs/store';
 
-import { PatchClassMetaData } from '../state/classFile.actions';
-
-// import { AppState} from '../../app/state/app.state';
-
 import { PointText, Point } from 'paper';
 // @ts-ignore
 import paper from 'paper';
 
+import { AppState} from '../../app/state/app.state';
+
 import { PaperService } from '../../common/paper/paper.service';
-
 import {File, filterByEntityType} from "../../common/models";
-import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models";
-import {SetSelection} from "../../app/state/app.actions";
-
 import {DrawingService} from '../../common/services/drawing.service'
+
+import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models";
 
 let brk = (fid, cid) => {
   return `${fid},${cid}`;
@@ -32,43 +28,12 @@ export class ClassFileDrawingService implements DrawingService {
   constructor(protected paperService: PaperService,
               protected store: Store) {
 
-    // store.select(AppState.isEntitySelected).subscribe((fn) => {
-    //   this.isEntitySelected = fn;
-    // });
+    store.select(AppState.isEntitySelected).subscribe((fn) => {
+      this.isEntitySelected = fn;
+    });
 
     paperService.hasInitialized.then(() => {
       paperService.scope.activate();
-      // this.tool = new paper.Tool();
-      //
-      // this.tool.onMouseDown = (event: paper.ToolEvent) => {
-      //   let action;
-      //   if (event.item) {
-      //     if (event.item.data.type == ClassFileEntityType.Class) {
-      //       action = new SetSelection(paperService.fileId, [event.item.data.id]);
-      //     } else if (event.item.data.type == ClassFileEntityType.Relation) {
-      //       action = new SetSelection(paperService.fileId, [event.item.data.id]);
-      //     } else {
-      //       action = new SetSelection(paperService.fileId, []);
-      //     }
-      //   } else {
-      //     action = new SetSelection(paperService.fileId, []);
-      //   }
-      //   this.store.dispatch(action);
-      // };
-      //
-      // this.tool.onMouseDrag = (event: paper.ToolEvent) => {
-      //   let selEntity = this.store.selectSnapshot(FileState.selectedEntity) as ClassEntity;
-      //   if (selEntity == null) {
-      //     return;
-      //   } else if (selEntity.type == ClassFileEntityType.Class) {
-      //     let loc = new paper.Point(selEntity.metadata.location || this.paperService.project.view.bounds.center).add(event.delta);
-      //
-      //     let action = new PatchClassMetaData(paperService.fileId, selEntity.id, {
-      //       location: {x: loc.x, y: loc.y},
-      //     });
-      //     this.store.dispatch(action);
-      //   }
-      // }
     });
   }
 
@@ -77,14 +42,6 @@ export class ClassFileDrawingService implements DrawingService {
 
     //if we have data
     if (data) {
-      // Object.values(data.entities).forEach((e: FileEntity) => {
-      //   if (e.type == FileEntityType.Class) {
-      //     this.drawClass(e as ClassEntity);
-      //   } else if (e.type == FileEntityType.Relation) {
-      //     this.drawRelation(e as RelationEntity);
-      //   }
-      // })
-
 
       //draw the classes
       filterByEntityType(ClassFileEntityType.Class, data).forEach((clas: ClassEntity) => {

@@ -13,6 +13,8 @@ export abstract class DrawingTool extends paper.Tool {
     super();
     paperService.hasInitialized.then(() => {
       paperService.scope.tools.push(this);
+      // @ts-ignore
+      this._scope = paperService.scope;
     });
   }
 

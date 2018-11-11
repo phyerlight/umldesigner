@@ -32,23 +32,22 @@ export class OutletWrapperComponent implements OnInit {
       filter((p: RouteParams) => exists(p.project, p.file)),
       flatMap((params: RouteParams) => {
         return this.store.selectOnce(ProjectState.projectFileByName).pipe(
-          map(fn => fn(params.project, params.file)),
-          filter(f => f != null)
+          map(fn => fn(params.project, params.file))
+          // filter(f => f != null)
         );
       }),
       distinctUntilKeyChanged("_key")
     ).subscribe((file: File) => {
       if (!exists(file)) {
         this.store.dispatch(new Navigate(['']));
+      } else {
+        this.store.dispatch(new SetActiveFile(file._key));
+        if (!this.store.selectSnapshot(AppState.isFileOpen)(file._key)) {
+          this.store.dispatch(new LoadFile(file._key)).subscribe(() => {
+            this.store.dispatch(new OpenFile(file._key));
+          });
+        }
       }
-
-      this.store.dispatch(new SetActiveFile(file._key));
-      if (!this.store.selectSnapshot(AppState.isFileOpen)(file._key)) {
-        this.store.dispatch(new LoadFile(file._key)).subscribe(() => {
-          this.store.dispatch(new OpenFile(file._key));
-        });
-      }
-
     });
   }
 

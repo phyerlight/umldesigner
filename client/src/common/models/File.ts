@@ -1,3 +1,5 @@
+import {FileEntity} from "./FileEntity";
+
 export interface File {
   _key: string,
   project_key: string,
@@ -8,7 +10,7 @@ export interface File {
   modifiedBy_key: string,
   modifiedOn: string,
   nextEntityId: Array<number>,
-  entities: { [id: number]: any }
+  entities: { [id: number]: FileEntity }
 }
 
 export function createFile(options: Partial<File>={}): File {
@@ -21,7 +23,7 @@ export function createFile(options: Partial<File>={}): File {
     createdOn: new Date().toISOString(),
     modifiedBy_key: null,
     modifiedOn: new Date().toISOString(),
-    nextEntityId: [],
+    nextEntityId: [1],
     entities: {},
     ...options
   }
