@@ -12,6 +12,14 @@ import {HttpClientModule} from "@angular/common/http";
 import './state/classFile.state';
 import { ClassFormComponent } from './components/class-form/class-form.component';
 import {ClassCanvasComponent} from "./components/classCanvas/classCanvas.component";
+import {registerFileType} from "../common/models";
+import {CLASS_FILE_TYPE} from "./models";
+import {ClassFileState} from "./state/classFile.state";
+
+registerFileType(CLASS_FILE_TYPE, {
+  state: ClassFileState,
+  editor: ClassCanvasComponent
+});
 
 @NgModule({
     declarations: [

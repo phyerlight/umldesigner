@@ -1,11 +1,11 @@
 import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType} from "../models";
-import {FileStateModel, filterByEntityType, registerFileType} from "../../common/models";
+import {FileStateModel, filterByEntityType} from "../../common/models";
 import {AddClass, PatchClass, PatchClassMetaData} from "./classFile.actions";
-import {ClassCanvasComponent} from "../components/classCanvas/classCanvas.component";
-import {rotateEntityId} from "../../common";
+import {FileStateDecorator, rotateEntityId} from "../../common";
 import {FileStateLike} from "../../common/models/FileStateLike";
 
+@FileStateDecorator
 @State<FileStateModel>({
   name: CLASS_FILE_TYPE,
   defaults: {}
@@ -103,8 +103,3 @@ export class ClassFileState extends FileStateLike {
     } as FileStateModel);
   }
 }
-
-registerFileType(CLASS_FILE_TYPE, {
-  state: ClassFileState,
-  editor: ClassCanvasComponent
-});
