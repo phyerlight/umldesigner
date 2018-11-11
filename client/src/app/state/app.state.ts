@@ -81,7 +81,7 @@ export class AppState {
     }
 
     let f: File = filesByKey(files, appState.editor.activeKey);
-    let i = appState.editor[appState.editor.activeKey].selection[0];
+    let i = appState.editorTabs[appState.editor.activeKey].selection[0];
     return f.entities[i];
   }
 
