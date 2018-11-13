@@ -1,7 +1,7 @@
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType} from "../models";
+import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType, RelationEntity} from "../models";
 import {FileStateModel, filterByEntityType} from "../../common/models";
-import {AddClass, PatchClass, PatchClassMetaData} from "./classFile.actions";
+import {AddClass, AddRelation, PatchClass, PatchClassMetaData} from "./classFile.actions";
 import {FileStateDecorator, rotateEntityId} from "../../common";
 import {FileStateLike} from "../../common/models/FileStateLike";
 
@@ -101,5 +101,28 @@ export class ClassFileState extends FileStateLike {
         }
       }
     } as FileStateModel);
+  }
+
+  @Action(AddRelation)
+  addRelation(ctx: StateContext<FileStateModel>, action: AddRelation) {
+    const files = ctx.getState();
+
+    let [eId, nextEntityId] = rotateEntityId(files[action.fileKey].nextEntityId);
+
+    ctx.setState({
+      ...files,
+      [action.fileKey]: {
+        ...files[action.fileKey],
+        nextEntityId,
+        entities: {
+          ...files[action.fileKey].entities,
+          [eId]: {
+            ...action.relation,
+            id: eId,
+          } as RelationEntity
+        }
+      }
+    })
+
   }
 }
