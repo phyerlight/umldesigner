@@ -1,0 +1,23 @@
+<table>
+  <tr>
+    <th class="header" colspan="2">Properties</th>
+  </tr>
+  <tr *ngFor="let prop of properties">
+    <td><label [for]="prop.key" >{{prop.name}}</label></td>
+    <td [ngSwitch]="prop.type">
+      <ng-template ngSwitchCase="text">
+        <input appInput
+               [id]="prop.key"
+               [name]="prop.key"
+               value="{{getValue(prop.key)}}">
+      </ng-template>
+      <ng-template ngSwitchCase="textarea">
+        <textarea appInput
+                  [id]="prop.key"
+                  [name]="prop.key">
+          {{getValue(prop.key)}}
+        </textarea>
+      </ng-template>
+    </td>
+  </tr>
+</table>

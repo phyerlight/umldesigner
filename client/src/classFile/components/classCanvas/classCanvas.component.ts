@@ -7,7 +7,11 @@ import {NewClassTool} from "../../tools/newClass.tool";
 import {AssocRelationTool} from "../../tools/assocRelation.tool";
 import {InheritRelationTool} from "../../tools/inheritRelation.tool";
 import {ClassFileDrawingService} from "../../services/classFileDrawing.service";
-import {Actions, Store} from "@ngxs/store";
+import {Actions, Select, Store} from "@ngxs/store";
+import {PropertyItem} from "../../../common/components/property-editor/PropertyItem";
+import {AppState} from "../../../app/state/app.state";
+import {FileEntity} from "../../../common/models";
+import {PatchClass} from "../../state/classFile.actions";
 
 @Component({
   styles: ['canvas {width: 100%; height: 100%}'],
@@ -26,6 +30,13 @@ import {Actions, Store} from "@ngxs/store";
 })
 export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit, AfterViewInit {
 
+  properties: PropertyItem[] = [
+    {key:"name", name: "Name", type: "text"},
+    {key:"attrs", name: "Attributes", type: "textarea"}
+  ];
+
+  selectedEntities: FileEntity[];
+
   constructor(protected paperService: PaperService,
               protected toolService: ToolService,
               protected drawingService: ClassFileDrawingService,
@@ -38,5 +49,18 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
     toolService.registerTool(NewClassTool);
     toolService.registerTool(AssocRelationTool);
     toolService.registerTool(InheritRelationTool);
+  }
+
+  ngOnInit() {
+    super.ngOnInit();
+
+    this.store.select(AppState.selectedEntities).subscribe(entities => {
+      this.selectedEntities = entities;
+    });
+  }
+
+  onPropertyChanged({key, value}) {
+    let ids = this.selectedEntities.map(e => e.id);
+    this.store.dispatch(new PatchClass(this.paperService.fileId, {[key]: value}, ids));
   }
 }

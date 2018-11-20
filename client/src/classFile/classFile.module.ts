@@ -15,6 +15,7 @@ import {ClassCanvasComponent} from "./components/classCanvas/classCanvas.compone
 import {registerFileType} from "../common/models";
 import {CLASS_FILE_TYPE} from "./models";
 import {ClassFileState} from "./state/classFile.state";
+import {CommonModule as MyCommonModule} from "../common";
 
 registerFileType(CLASS_FILE_TYPE, {
   state: ClassFileState,
@@ -37,6 +38,7 @@ registerFileType(CLASS_FILE_TYPE, {
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
+        MyCommonModule,
         //Angular Material
         MatDialogModule,
         MatSidenavModule,

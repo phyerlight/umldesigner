@@ -16,6 +16,9 @@
         <canvas #canvasElement resize></canvas>
     </div>
     <div class="properties flex-shrink">
-
+        <property-editor
+                [objects]="selectedEntities"
+                [properties]="properties"
+                (valueChanged)="onPropertyChanged($event)"></property-editor>
     </div>
 </div>

@@ -75,14 +75,19 @@ export class AppState {
 
   @Selector([FileState])
   static selectedEntity(appState: AppStateModel, files: GlobalFileStateModel) {
+    return AppState.selectedEntities(appState, files)[0];
+  }
+
+  @Selector([FileState])
+  static selectedEntities(appState: AppStateModel, files: GlobalFileStateModel) {
     if (appState.editor.activeKey == null ||
       appState.editorTabs[appState.editor.activeKey].selection.length < 1) {
       return null;
     }
 
     let f: File = filesByKey(files, appState.editor.activeKey);
-    let i = appState.editorTabs[appState.editor.activeKey].selection[0];
-    return f.entities[i];
+    let ids = appState.editorTabs[appState.editor.activeKey].selection;
+    return ids.map(id => f.entities[id]);
   }
 
   @Selector([FileState])

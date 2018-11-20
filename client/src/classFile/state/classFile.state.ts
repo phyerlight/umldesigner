@@ -59,22 +59,37 @@ export class ClassFileState extends FileStateLike {
   @Action(PatchClass)
   patchClass(ctx: StateContext<FileStateModel>, action: PatchClass) {
     const state = ctx.getState();
-    // let activeFile = this.store.selectSnapshot(state => state.app.editor.activeFile);
-    const {fileKey, cls} = action;
+    const {fileKey, cls, ids} = action;
 
-    const oldcls = state[fileKey].entities[cls.id];
+    const oldEntities = state[fileKey].entities;
+    let newEntities =  oldEntities;
+
+    if (ids) {
+      newEntities = {
+        ...oldEntities,
+        ...ids.reduce((acc, id) => {
+          acc[id] = {
+            ...oldEntities[id],
+            ...cls
+          };
+          return acc;
+        }, {})
+      }
+    } else {
+      newEntities = {
+        ...oldEntities,
+        [cls.id]: {
+          ...oldEntities[cls.id],
+          ...cls
+        }
+      }
+    }
 
     ctx.setState({
       ...state,
       [fileKey]: {
         ...state[fileKey],
-        entities: {
-          ...state[fileKey].entities,
-          [cls.id]: {
-            ...oldcls,
-            ...cls
-          }
-        }
+        entities: newEntities
       }
     } as FileStateModel);
   }

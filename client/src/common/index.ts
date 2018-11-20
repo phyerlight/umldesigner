@@ -1,6 +1,8 @@
 import {File} from "./models";
 import {GlobalFileStateModel} from "./models/GlobalFileStateModel";
 
+export * from './common.module';
+
 export function exists(...v) {
   return v.every(v => v != null && v != undefined);
 }

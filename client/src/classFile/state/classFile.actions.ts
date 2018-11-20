@@ -11,7 +11,7 @@ export class PatchClassMetaData {
 export class PatchClass {
     static readonly type = '[ClassFile] PatchClass';
 
-    constructor(public fileKey: string, public cls: Partial<ClassEntity>) {
+    constructor(public fileKey: string, public cls: Partial<ClassEntity>, public ids: number[]=null) {
     }
 }
 
