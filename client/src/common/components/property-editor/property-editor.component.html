@@ -9,14 +9,13 @@
         <input appInput
                [id]="prop.key"
                [name]="prop.key"
-               value="{{getValue(prop.key)}}">
+               [disabled]="!objects">
       </ng-template>
       <ng-template ngSwitchCase="textarea">
         <textarea appInput
                   [id]="prop.key"
-                  [name]="prop.key">
-          {{getValue(prop.key)}}
-        </textarea>
+                  [name]="prop.key"
+                  [disabled]="!objects"></textarea>
       </ng-template>
     </td>
   </tr>

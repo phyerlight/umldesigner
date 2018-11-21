@@ -82,7 +82,7 @@ export class ClassFileState extends FileStateLike {
           ...oldEntities[cls.id],
           ...cls
         }
-      }
+      } as {[id: number]: ClassEntity}
     }
 
     ctx.setState({

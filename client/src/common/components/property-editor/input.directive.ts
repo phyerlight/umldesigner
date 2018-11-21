@@ -11,10 +11,14 @@ export class InputDirective {
   @Input()
   name: string;
 
-  constructor(public el: ElementRef) { }
+  constructor(protected el: ElementRef) { }
 
   @HostListener('input', ['$event']) onInput(event) {
     this.inputChanged.emit(event);
+  }
+
+  setValue(v) {
+    this.el.nativeElement.value = v;
   }
 
 }

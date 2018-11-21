@@ -24,8 +24,15 @@ export class PropertyEditorComponent implements AfterViewInit {
   @Input()
   properties: PropertyItem[];
 
+  private _objects: any[];
   @Input()
-  objects: any[];
+  set objects(o: any[]) {
+    this._objects = o;
+    this.setInputs();
+  }
+  get objects() {
+    return this._objects;
+  }
 
   @Output()
   valueChanged = new EventEmitter();
@@ -37,14 +44,21 @@ export class PropertyEditorComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.inputs.forEach(propInput => {
-      propInput.inputChanged.pipe(debounceTime(500)).subscribe(evt => {
-        this.setValue(propInput.name, evt.target.value);
+      propInput.inputChanged.pipe(debounceTime(500)).subscribe((evt: MouseEvent) => {
+        this.setValue(propInput.name, (evt.target as HTMLInputElement).value);
       });
     })
   }
 
-  getValue(key: string) {
-    if (!this.objects) return;
+  setInputs() {
+    if (!this.inputs) return;
+    this.inputs.forEach(propInput => {
+      propInput.setValue(this.getValue(propInput.name));
+    })
+  }
+
+  getValue(key: string): string {
+    if (!this.objects) return "";
     console.log(this.objects);
     return this.objects.map(v => v[key]).reduce((acc, curr) => {
       if (acc === curr) {
