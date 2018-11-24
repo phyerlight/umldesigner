@@ -112,6 +112,7 @@ export class ClassFileState extends FileStateLike {
           [eId]: createClassEntity({
             id: eId,
             name: `New Class ${this.classEntityCount++}`,
+            ...action.cls
           })
         }
       }
