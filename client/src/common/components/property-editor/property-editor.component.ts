@@ -43,18 +43,21 @@ export class PropertyEditorComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit() {
-    this.inputs.forEach(propInput => {
-      propInput.inputChanged.pipe(debounceTime(500)).subscribe((evt: MouseEvent) => {
-        this.setValue(propInput.name, (evt.target as HTMLInputElement).value);
+    this.inputs.changes.subscribe(() => {
+      this.inputs.forEach(propInput => {
+        propInput.inputChanged.pipe(debounceTime(500)).subscribe((evt: MouseEvent) => {
+          this.setValue(propInput.name, (evt.target as HTMLInputElement).value);
+        });
+        propInput.setValue(this.getValue(propInput.name));
       });
-    })
+    });
   }
 
   setInputs() {
     if (!this.inputs) return;
     this.inputs.forEach(propInput => {
       propInput.setValue(this.getValue(propInput.name));
-    })
+    });
   }
 
   getValue(key: string): string {

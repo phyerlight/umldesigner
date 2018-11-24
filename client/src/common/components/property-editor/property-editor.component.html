@@ -8,14 +8,19 @@
       <ng-template ngSwitchCase="text">
         <input appInput
                [id]="prop.key"
-               [name]="prop.key"
-               [disabled]="!objects">
+               [name]="prop.key">
       </ng-template>
       <ng-template ngSwitchCase="textarea">
         <textarea appInput
                   [id]="prop.key"
-                  [name]="prop.key"
-                  [disabled]="!objects"></textarea>
+                  [name]="prop.key"></textarea>
+      </ng-template>
+      <ng-template ngSwitchCase="list">
+        <select appInput
+                [id]="prop.key"
+                [name]="prop.key">
+          <option *ngFor="let opt of prop.options" [value]="opt.key">{{opt.name}}</option>
+        </select>
       </ng-template>
     </td>
   </tr>

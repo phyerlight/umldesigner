@@ -12,6 +12,7 @@ import {PropertyItem} from "../../../common/components/property-editor/PropertyI
 import {AppState} from "../../../app/state/app.state";
 import {FileEntity} from "../../../common/models";
 import {PatchClass} from "../../state/classFile.actions";
+import {RelationType} from "../../models";
 
 @Component({
   styles: ['canvas {width: 100%; height: 100%}'],
@@ -30,10 +31,14 @@ import {PatchClass} from "../../state/classFile.actions";
 })
 export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit, AfterViewInit {
 
-  properties: PropertyItem[] = [
+  allProperties: PropertyItem[] = [
     {key:"name", name: "Name", type: "text"},
-    {key:"attrs", name: "Attributes", type: "textarea"}
+    {key:"attrs", name: "Attributes", type: "textarea"},
+    {key:"reltype", name: "Relation Type", type: "list",
+      options: [{key: RelationType.Assoc, name: 'Association'}, {key: RelationType.Inherit, name: 'Inherited'}]}
   ];
+
+  properties: PropertyItem[];
 
   selectedEntities: FileEntity[];
 
@@ -56,6 +61,16 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
 
     this.store.select(AppState.selectedEntities).subscribe(entities => {
       this.selectedEntities = entities;
+      this.properties = [];
+      if (entities) {
+        let selectedKeys = entities.reduce((keys: any, ent: FileEntity) => {
+          return {
+            ...keys,
+            ...ent
+          };
+        }, {});
+        this.properties = this.allProperties.filter((prop)=> selectedKeys.hasOwnProperty(prop.key));
+      }
     });
   }
 

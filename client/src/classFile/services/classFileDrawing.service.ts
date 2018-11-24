@@ -268,6 +268,7 @@ export class ClassFileDrawingService implements DrawingService {
     if (this.isEntitySelected(this.paperService.fileId, rel.id)) {
       assoc.selected = true;
     }
+    // assoc.selected = true;
 
     this.paperService.project.activeLayer.addChild(assoc);
 

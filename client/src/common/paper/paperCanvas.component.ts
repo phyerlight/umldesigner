@@ -69,7 +69,7 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngAfterViewInit() {
-    this.paperService.initialize(this.canvasElement.nativeElement, this.editorData.file_key, {hitTolerance:1});
+    this.paperService.initialize(this.canvasElement.nativeElement, this.editorData.file_key, {hitTolerance:2});
   }
 
   public clearCanvas() {
