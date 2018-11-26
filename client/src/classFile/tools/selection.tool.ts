@@ -25,12 +25,16 @@ export class SelectionTool extends DrawingTool {
     this.registerIcon();
   }
 
-  private activeItem = null;
+  protected rubberBand = null;
+  protected activeItem = null;
   onMouseDown = (event: paper.ToolEvent) => {
     let action;
     let itemType: string = null;
     if (event.item) {
       itemType = event.item.data.type;
+    } else {
+      this.rubberBand = this.createRubberBand(event);
+      this.paperService.project.activeLayer.addChild(this.rubberBand);
     }
 
     switch (itemType) {
@@ -47,13 +51,15 @@ export class SelectionTool extends DrawingTool {
 
   onMouseUp = (event: paper.ToolEvent) => {
     this.activeItem = null;
+    if (this.rubberBand) {
+      this.rubberBand.remove();
+      this.rubberBand = null;
+    }
   };
 
   onMouseDrag = (event: paper.ToolEvent) => {
     let selEntity = this.store.selectSnapshot(AppState.selectedEntity) as ClassEntity;
-    if (selEntity == null) {
-      return;
-    } else if (selEntity.type == ClassFileEntityType.Class) {
+    if (selEntity && selEntity.type == ClassFileEntityType.Class) {
       let loc = new paper.Point(selEntity.metadata.location || this.paperService.project.view.bounds.center).add(event.delta);
 
       let action = new PatchClassMetaData(this.paperService.fileId, selEntity.id, {
@@ -61,6 +67,20 @@ export class SelectionTool extends DrawingTool {
       });
       this.store.dispatch(action);
     }
-  }
 
+    if (this.rubberBand) {
+      this.rubberBand.remove();
+      this.rubberBand = this.createRubberBand(event);
+      this.paperService.project.activeLayer.addChild(this.rubberBand);
+    }
+  };
+
+  protected createRubberBand(event: paper.ToolEvent) {
+    return new paper.Path.Rectangle({
+      from: event.downPoint,
+      to: event.point,
+      strokeColor: 'blue',
+      strokeWidth: '2'
+    });
+  }
 }
