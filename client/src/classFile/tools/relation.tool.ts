@@ -37,9 +37,14 @@ export abstract class RelationTool extends DrawingTool implements OnDestroy {
           fromId: this.startItem.id,
           toId: event.item.data.id
         }));
+        this.startItem = null;
       } else {
         this.startItem = event.item.data;
       }
     }
+  };
+
+  onDeactivate = () => {
+    this.startItem = null;
   }
 }
