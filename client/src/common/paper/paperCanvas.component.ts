@@ -11,7 +11,7 @@ import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
 import {FileStateLike} from "../models/FileStateLike";
-import {SetActiveFile, SetSelection} from "../../app/state/app.actions";
+import {AddToSelection, RemoveFromSelection, SetActiveFile, SetSelection} from "../../app/state/app.actions";
 import {AddClass, PatchClass, PatchClassMetaData} from "../../classFile/state/classFile.actions";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
@@ -48,7 +48,8 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
         this.tools = this.toolService.getTools();
       }),ignoreElements()),
       combineLatest(
-        this.actions$.pipe(ofActionSuccessful(SetActiveFile, SetSelection, PatchClass, PatchClassMetaData, AddClass), startWith(true)),
+        this.actions$.pipe(ofActionSuccessful(SetActiveFile, SetSelection, AddToSelection, RemoveFromSelection,
+          PatchClass, PatchClassMetaData, AddClass), startWith(true)),
         this.store.select(this.editorData.fileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
       ).pipe(map(([action, file]) => file))
     ).subscribe((file: File) => {

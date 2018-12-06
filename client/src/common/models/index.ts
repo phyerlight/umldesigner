@@ -5,6 +5,7 @@ export * from "./File";
 export * from "./FileEntity";
 export * from "./FileEntityType";
 export * from "./FileMetadata";
+export * from "./FileEntityWithMeta";
 export * from "./FileType";
 export * from "./Point";
 export * from "./FileStateModel.state";

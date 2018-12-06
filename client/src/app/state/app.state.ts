@@ -1,9 +1,10 @@
 import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
 import {
+  AddToSelection,
   CancelEditClass,
   CloseFile,
   EditClass,
-  OpenFile,
+  OpenFile, RemoveFromSelection,
   SaveEditClass,
   SetActiveFile,
   SetSelection
@@ -82,12 +83,20 @@ export class AppState {
   static selectedEntities(appState: AppStateModel, files: GlobalFileStateModel) {
     if (appState.editor.activeKey == null ||
       appState.editorTabs[appState.editor.activeKey].selection.length < 1) {
-      return null;
+      return [];
     }
 
     let f: File = filesByKey(files, appState.editor.activeKey);
     let ids = appState.editorTabs[appState.editor.activeKey].selection;
     return ids.map(id => f.entities[id]);
+  }
+
+  @Selector()
+  static activeSelection(appState: AppStateModel): number[] {
+    if (appState.editor.activeKey == null) {
+      return [];
+    }
+    return appState.editorTabs[appState.editor.activeKey].selection;
   }
 
   @Selector([FileState])
@@ -111,20 +120,43 @@ export class AppState {
 
   constructor(protected store: Store) {}
 
+  _setSelection(app: AppStateModel, fileKey, entityIds) {
+    return {
+      ...app,
+      editorTabs:{
+        ...app.editorTabs,
+        [fileKey]: {
+          ...app.editorTabs[fileKey],
+          selection: entityIds
+        }
+      }
+    }
+  }
+
   @Action(SetSelection)
   setSelection(ctx: StateContext<AppStateModel>, action: SetSelection) {
     const app = ctx.getState();
 
-    ctx.setState({
-      ...app,
-      editorTabs:{
-        ...app.editorTabs,
-        [app.editor.activeKey]: {
-          ...app.editorTabs[app.editor.activeKey],
-          selection: action.entityIds
-        }
-      }
-    });
+    ctx.setState(this._setSelection(app, action.fileKey, action.entityIds));
+  }
+
+  @Action(AddToSelection)
+  addToSelection(ctx: StateContext<AppStateModel>, action: AddToSelection) {
+    const app = ctx.getState();
+
+    const selection = app.editorTabs[action.fileKey].selection.concat(action.entityIds);
+
+    ctx.setState(this._setSelection(app, action.fileKey, selection));
+  }
+
+  @Action(RemoveFromSelection)
+  removeFromSelection(ctx: StateContext<AppStateModel>, action: AddToSelection) {
+    const app = ctx.getState();
+
+    const rmIdsInv = action.entityIds.reduce((acc, id) => {acc[id] = id; return acc}, {});
+    const selection = app.editorTabs[action.fileKey].selection.filter(id => rmIdsInv[id] == undefined);
+
+    ctx.setState(this._setSelection(app, action.fileKey, selection));
   }
 
   @Action(SetActiveFile)

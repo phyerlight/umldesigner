@@ -5,6 +5,16 @@ export class SetSelection {
   }
 }
 
+export class AddToSelection {
+  static readonly type = '[App] AddToSelection';
+  constructor(public fileKey: string, public entityIds: number[]) {}
+}
+
+export class RemoveFromSelection {
+  static readonly type = '[App] RemoveFromSelection';
+  constructor(public fileKey: string, public entityIds: number[]) {}
+}
+
 export class OpenFile {
   static readonly type = '[App] OpenFile';
   constructor(public fileKey: string) {}

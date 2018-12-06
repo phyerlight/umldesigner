@@ -60,7 +60,6 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
     super.ngOnInit();
 
     this.store.select(AppState.selectedEntities).subscribe(entities => {
-      this.selectedEntities = entities;
       this.properties = [];
       if (entities) {
         let selectedKeys = entities.reduce((keys: any, ent: FileEntity) => {
@@ -70,12 +69,13 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
           };
         }, {});
         this.properties = this.allProperties.filter((prop)=> selectedKeys.hasOwnProperty(prop.key));
+        this.selectedEntities = entities;
       }
     });
   }
 
   onPropertyChanged({key, value}) {
-    let ids = this.selectedEntities.map(e => e.id);
+    let ids = this.selectedEntities.filter(e => e.hasOwnProperty(key)).map(e => e.id);
     this.store.dispatch(new PatchClass(this.paperService.fileId, {[key]: value}, ids));
   }
 }

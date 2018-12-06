@@ -61,7 +61,7 @@ export class PropertyEditorComponent implements AfterViewInit {
   }
 
   getValue(key: string): string {
-    if (!this.objects) return "";
+    if (this.objects.length < 1) return "";
     console.log(this.objects);
     return this.objects.map(v => v[key]).reduce((acc, curr) => {
       if (acc === curr) {
@@ -76,7 +76,7 @@ export class PropertyEditorComponent implements AfterViewInit {
     this.valueChanged.emit({
       key,
       value
-    })
+    });
   }
 
 }

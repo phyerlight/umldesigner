@@ -1,13 +1,9 @@
 import {FileEntity, Point} from "../../common/models";
 import {ClassFileEntityType} from "./ClassFileEntityType";
+import {FileEntityWithMeta} from "../../common/models/FileEntityWithMeta";
 
-export interface ClassEntity extends FileEntity {
+export interface ClassEntity extends FileEntityWithMeta {
     type: ClassFileEntityType.Class,
-    metadata: {
-        location: Point,
-        width: number,
-        height: number
-    },
     name: string,
     attrs: string
 }
@@ -16,9 +12,9 @@ export function createClassEntity(cls) {
     return {
         type: ClassFileEntityType.Class,
         metadata: {
-            location: null,
-            width: null,
-            height: null
+            location: {x: 0, y: 0},
+            width: 0,
+            height: 0
         },
         name: '',
         attrs: '',
