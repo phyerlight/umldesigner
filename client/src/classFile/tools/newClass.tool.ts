@@ -2,13 +2,10 @@ import {Injectable, NgZone} from "@angular/core";
 import {MatDialog, MatDialogRef, MatIconRegistry} from "@angular/material";
 import {DomSanitizer} from "@angular/platform-browser";
 import {DrawingTool} from "../../common/paper/drawingTool.tool";
-// import {ClassFormComponent} from "../components/class-form/class-form.component";
-// import {take, filter} from "rxjs/operators";
-// import {PaperCanvasComponent} from "../../common/paper/paperCanvas.component";
 import {PaperService} from "../../common/paper/paper.service";
 import {Store} from "@ngxs/store";
-import {AddClass} from "../state/classFile.actions";
-import {AppState} from "../../app/state/app.state";
+import {AddEntity} from "../../common/state/file.actions";
+import {ClassEntity, createClassEntity} from "../models";
 
 @Injectable()
 export class NewClassTool extends DrawingTool {
@@ -28,12 +25,13 @@ export class NewClassTool extends DrawingTool {
 
   onMouseUp = (event: paper.ToolEvent) => {
     let currentFileKey = this.paperService.fileId;
-    this.store.dispatch(new AddClass(currentFileKey, {
+    this.store.dispatch(new AddEntity<ClassEntity>(currentFileKey, createClassEntity({
       metadata : {
         location: {x: event.point.x , y: event.point.y},
         width: null,
         height: null
-      }
-    }));
+      },
+      name: null
+    })));
   }
 }

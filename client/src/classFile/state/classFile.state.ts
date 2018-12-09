@@ -1,16 +1,16 @@
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {ClassEntity, createClassEntity, CLASS_FILE_TYPE, ClassFileEntityType, RelationEntity} from "../models";
-import {FileStateModel, filterByEntityType} from "../../common/models";
-import {AddClass, AddRelation, PatchClass, PatchClassMetaData} from "./classFile.actions";
-import {FileStateDecorator, rotateEntityId} from "../../common";
-import {FileStateLike} from "../../common/models/FileStateLike";
+import {ClassFileEntities, ClassEntity, CLASS_FILE_TYPE, ClassFileEntityType, isAClassEntity} from "../models";
+import {FileStateLike, FileStateModel, filterByEntityType} from "../../common/models";
+import {PatchClassMetaData} from "./classFile.actions";
+import {FileStateDecorator} from "../../common";
+import {AddEntity} from "../../common/state/file.actions";
 
 @FileStateDecorator
 @State<FileStateModel>({
   name: CLASS_FILE_TYPE,
   defaults: {}
 })
-export class ClassFileState extends FileStateLike {
+export class ClassFileState extends FileStateLike<ClassFileEntities> {
 
   @Selector()
   static fileByKey(files: FileStateModel) {
@@ -56,89 +56,60 @@ export class ClassFileState extends FileStateLike {
     } as FileStateModel);
   }
 
-  @Action(PatchClass)
-  patchClass(ctx: StateContext<FileStateModel>, action: PatchClass) {
-    const state = ctx.getState();
-    const {fileKey, cls, ids} = action;
-
-    const oldEntities = state[fileKey].entities;
-    let newEntities =  oldEntities;
-
-    if (ids) {
-      newEntities = {
-        ...oldEntities,
-        ...ids.reduce((acc, id) => {
-          acc[id] = {
-            ...oldEntities[id],
-            ...cls
-          };
-          return acc;
-        }, {})
-      }
-    } else {
-      newEntities = {
-        ...oldEntities,
-        [cls.id]: {
-          ...oldEntities[cls.id],
-          ...cls
-        }
-      } as {[id: number]: ClassEntity}
-    }
-
-    ctx.setState({
-      ...state,
-      [fileKey]: {
-        ...state[fileKey],
-        entities: newEntities
-      }
-    } as FileStateModel);
-  }
+  // @Action(PatchClass)
+  // patchClass(ctx: StateContext<FileStateModel>, action: PatchClass) {
+  //   const state = ctx.getState();
+  //   const {fileKey, cls, ids} = action;
+  //
+  //   const oldEntities = state[fileKey].entities;
+  //   let newEntities =  oldEntities;
+  //
+  //   if (ids) {
+  //     newEntities = {
+  //       ...oldEntities,
+  //       ...ids.reduce((acc, id) => {
+  //         acc[id] = {
+  //           ...oldEntities[id],
+  //           ...cls
+  //         };
+  //         return acc;
+  //       }, {})
+  //     }
+  //   } else {
+  //     newEntities = {
+  //       ...oldEntities,
+  //       [cls.id]: {
+  //         ...oldEntities[cls.id],
+  //         ...cls
+  //       }
+  //     } as {[id: number]: ClassEntity}
+  //   }
+  //
+  //   ctx.setState({
+  //     ...state,
+  //     [fileKey]: {
+  //       ...state[fileKey],
+  //       entities: newEntities
+  //     }
+  //   } as FileStateModel);
+  // }
 
   classEntityCount = 1;
 
-  @Action(AddClass)
-  addClass(ctx: StateContext<FileStateModel>, action: AddClass) {
-    const files = ctx.getState();
+  @Action(AddEntity)
+  addEntity(ctx: StateContext<FileStateModel>, action: AddEntity<ClassFileEntities>) {
 
-    let [eId, nextEntityId] = rotateEntityId(files[action.fileKey].nextEntityId);
+    let {entity, fileKey}: {entity: ClassFileEntities, fileKey: string} = action;
 
-    ctx.setState({
-      ...files,
-      [action.fileKey]: {
-        ...files[action.fileKey],
-        nextEntityId,
-        entities: {
-          ...files[action.fileKey].entities,
-          [eId]: createClassEntity({
-            id: eId,
-            name: `New Class ${this.classEntityCount++}`,
-            ...action.cls
-          })
-        }
-      }
-    } as FileStateModel);
-  }
+    if (isAClassEntity(entity) && !entity.name) {
+      entity = {
+        ...entity,
+        name: `New Class ${this.classEntityCount++}`
+      } as ClassEntity
+    }
 
-  @Action(AddRelation)
-  addRelation(ctx: StateContext<FileStateModel>, action: AddRelation) {
-    const files = ctx.getState();
+    let newAction = new AddEntity<ClassFileEntities>(fileKey, entity);
 
-    let [eId, nextEntityId] = rotateEntityId(files[action.fileKey].nextEntityId);
-
-    ctx.setState({
-      ...files,
-      [action.fileKey]: {
-        ...files[action.fileKey],
-        nextEntityId,
-        entities: {
-          ...files[action.fileKey].entities,
-          [eId]: {
-            ...action.relation,
-            id: eId,
-          } as RelationEntity
-        }
-      }
-    })
-
+    super.addEntity(ctx, newAction);
   }
 }

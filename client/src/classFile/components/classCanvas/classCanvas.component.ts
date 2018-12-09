@@ -11,8 +11,8 @@ import {Actions, Select, Store} from "@ngxs/store";
 import {PropertyItem} from "../../../common/components/property-editor/PropertyItem";
 import {AppState} from "../../../app/state/app.state";
 import {FileEntity} from "../../../common/models";
-import {PatchClass} from "../../state/classFile.actions";
 import {RelationType} from "../../models";
+import {PatchEntity} from "../../../common/state/file.actions";
 
 @Component({
   styles: ['canvas {width: 100%; height: 100%}'],
@@ -76,6 +76,6 @@ export class ClassCanvasComponent extends PaperCanvasComponent implements OnInit
 
   onPropertyChanged({key, value}) {
     let ids = this.selectedEntities.filter(e => e.hasOwnProperty(key)).map(e => e.id);
-    this.store.dispatch(new PatchClass(this.paperService.fileId, {[key]: value}, ids));
+    this.store.dispatch(new PatchEntity(this.paperService.fileId, {[key]: value}, ids));
   }
 }

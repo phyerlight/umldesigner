@@ -6,13 +6,13 @@ import {combineLatest, concat, from, Subscription} from "rxjs";
 import {ignoreElements, map, startWith, tap} from "rxjs/operators";
 
 import {PaperService} from "./paper.service";
-import {File} from "../models";
+import {File, FileStateLike} from "../models";
 import {DrawingTool} from "./drawingTool.tool";
 import {ToolService} from "../services/tools.service";
 import {DrawingService} from "../services/drawing.service";
-import {FileStateLike} from "../models/FileStateLike";
 import {AddToSelection, RemoveFromSelection, SetActiveFile, SetSelection} from "../../app/state/app.actions";
-import {AddClass, PatchClass, PatchClassMetaData} from "../../classFile/state/classFile.actions";
+import {PatchClassMetaData} from "../../classFile/state/classFile.actions";
+import {AddEntity, PatchEntity} from "../state/file.actions";
 
 export const EDITOR_DATA = new InjectionToken<any>('EDITOR_DATA');
 
@@ -29,7 +29,7 @@ export type EDITOR_DATA_TYPE = {
 //   ]
 // })
 export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnDestroy {
-  private fileSubscription: Subscription = null;
+  private subscriptions: Subscription[] = [];
   @ViewChild('canvasElement') canvasElement: ElementRef;
 
   protected file: File;
@@ -43,23 +43,27 @@ export abstract class PaperCanvasComponent implements OnInit, AfterViewInit, OnD
               protected actions$: Actions) { }
 
   ngOnInit() {
-    this.fileSubscription = concat(
+    this.subscriptions.push(concat(
       from(this.paperService.hasInitialized).pipe(tap(() => {
         this.tools = this.toolService.getTools();
       }),ignoreElements()),
       combineLatest(
         this.actions$.pipe(ofActionSuccessful(SetActiveFile, SetSelection, AddToSelection, RemoveFromSelection,
-          PatchClass, PatchClassMetaData, AddClass), startWith(true)),
+          PatchEntity, PatchClassMetaData, AddEntity), startWith(true)),
         this.store.select(this.editorData.fileState.fileByKey).pipe(map(fn => fn(this.editorData.file_key)))
       ).pipe(map(([action, file]) => file))
     ).subscribe((file: File) => {
       this.file = file;
       this.draw(file);
-    });
+    }));
+
+    this.actions$.pipe(ofActionSuccessful(PatchEntity, PatchClassMetaData)).subscribe()
   }
 
   ngOnDestroy() {
-    this.fileSubscription.unsubscribe();
+    this.subscriptions.forEach((sub) => {
+      sub.unsubscribe();
+    });
   }
 
   draw(file) {

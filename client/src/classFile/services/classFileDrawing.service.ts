@@ -9,19 +9,13 @@ import paper from 'paper';
 import { AppState} from '../../app/state/app.state';
 
 import { PaperService } from '../../common/paper/paper.service';
-import {File, filterByEntityType} from "../../common/models";
+import {filterByEntityType} from "../../common/models";
 import {DrawingService} from '../../common/services/drawing.service'
 
-import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType} from "../models";
-
-let brk = (fid, cid) => {
-  return `${fid},${cid}`;
-};
+import {RelationEntity, RelationType, ClassEntity, ClassFileEntityType, ClassFile} from "../models";
 
 @Injectable()
 export class ClassFileDrawingService implements DrawingService {
-
-  // protected tool: paper.Tool;
 
   protected isEntitySelected: (fId, cId) => boolean;
 
@@ -37,7 +31,7 @@ export class ClassFileDrawingService implements DrawingService {
     });
   }
 
-  public draw(data: File) {
+  public draw(data: ClassFile) {
     this.paperService.project.clear();
 
     //if we have data
@@ -251,17 +245,17 @@ export class ClassFileDrawingService implements DrawingService {
     if (toDir == ORIENT.HOR) {
       if (lineDir == DIR.LEFT) {
         marker.rotate(30);
-        marker.translate([arrowRad, 0]);
+        marker.translate(new Point([arrowRad, 0]));
       } else {
         marker.rotate(-30);
-        marker.translate([-arrowRad, 0]);
+        marker.translate(new Point([-arrowRad, 0]));
       }
     } else {
       if (lineDir == DIR.DOWN) {
         marker.rotate(180);
-        marker.translate([0, -arrowRad]);
+        marker.translate(new Point([0, -arrowRad]));
       } else {
-        marker.translate([0, arrowRad]);
+        marker.translate(new Point([0, arrowRad]));
       }
     }
 

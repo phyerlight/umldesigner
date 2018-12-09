@@ -1,29 +1,10 @@
 import {Point} from "../../common/models";
-import {ClassEntity, RelationEntity} from "../models";
 
 export class PatchClassMetaData {
     static readonly type = '[ClassFile] PatchClassMetaData';
 
     constructor(public fileKey: string, public clsId: number, public clsMeta) {
     }
-}
-
-export class PatchClass {
-    static readonly type = '[ClassFile] PatchClass';
-
-    constructor(public fileKey: string, public cls: Partial<ClassEntity>, public ids: number[]=null) {
-    }
-}
-
-export class AddClass {
-    static readonly type = '[ClassFile] AddClass';
-
-    constructor(public fileKey: string, public cls: Partial<ClassEntity>={}) {}
-}
-
-export class AddRelation {
-    static readonly type = '[ClassFile] AddRelation';
-    constructor(public fileKey: string, public relation: Partial<RelationEntity>) {}
 }
 
 export class MoveClass {

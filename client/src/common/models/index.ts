@@ -6,17 +6,19 @@ export * from "./FileEntity";
 export * from "./FileEntityType";
 export * from "./FileMetadata";
 export * from "./FileEntityWithMeta";
+export * from "./FileStateLike";
 export * from "./FileType";
 export * from "./Point";
 export * from "./FileStateModel.state";
+export * from "./Identity";
 
 export function filterByEntityType(t: string, file: File): FileEntity[] {
-    return Object.keys(file.entities).filter(eid => {
-        let entity: FileEntity = file.entities[eid];
-        return entity.type == t;
-    }).map(eid => {
-        return file.entities[eid];
-    });
+  return Object.keys(file.entities).filter(eid => {
+    let entity: FileEntity = file.entities[eid];
+    return entity.type == t;
+  }).map(eid => {
+    return file.entities[eid];
+  });
 }
 
 export {FileTypeOptions} from "./FileTypeOptions";

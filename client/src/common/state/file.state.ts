@@ -7,9 +7,6 @@ import {filesByKey} from "../index";
 import {GlobalFileStateModel} from "../models/GlobalFileStateModel";
 import {AllFileStates} from "../index";
 
-// Object.keys(FileType).forEach(t => {
-//     AllFileStates.push(FileType[t].state);
-// });
 if (AllFileStates.length < 1) {
   console.error("No file states have been added. This most likely means that a dependency has been added forcing the root file state to be loaded first");
 }
