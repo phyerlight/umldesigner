@@ -1,25 +1,17 @@
-import {ChangeDetectionStrategy, Component, Injector, Input, OnInit, ViewChild} from '@angular/core';
-import {File, FileType, FileTypeOptions} from "../../../common/models";
-import {EDITOR_DATA, PaperCanvasComponent} from "../../../common/paper/paperCanvas.component";
-import {combineLatest} from "rxjs/internal/observable/combineLatest";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import 'rxjs/add/operator/combineLatest';
-import {MatDialog} from "@angular/material";
-import {DrawingTool} from "../../../common/paper/drawingTool.tool";
-import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
-import {ClassFormComponent} from "../../../classFile/components/class-form/class-form.component";
-import {NgZone} from '@angular/core';
-import {PaperService} from "../../../common/paper/paper.service";
-import {CdkPortal, ComponentPortal, ComponentType} from "@angular/cdk/portal";
-import {ClassCanvasComponent} from "../../../classFile/components/classCanvas/classCanvas.component";
-import {AppState, EditorTabData} from "../../state/app.state";
+import {ChangeDetectionStrategy, Component, Injector, OnInit} from '@angular/core';
+import {ComponentPortal, ComponentType} from "@angular/cdk/portal";
 import {Select, Store} from "@ngxs/store";
 import {Navigate} from "@ngxs/router-plugin";
-import {FileState} from "../../../common/state/file.state";
-import {distinctUntilChanged, map} from "rxjs/operators";
 import {Observable} from "rxjs";
+import {distinctUntilChanged} from "rxjs/operators";
+
+import {AppState, EditorTabData} from "../../state/app.state";
 import {ProjectState} from "../../state/project.state";
 import {CloseFile} from "../../state/app.actions";
+
+import {File, FileTypeOptions} from "../../../common/models";
+import {EDITOR_DATA} from "../../../common/paper/paperCanvas.component";
+import {FileState} from "../../../common/state/file.state";
 
 @Component({
   selector: 'app-editor',

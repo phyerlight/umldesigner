@@ -1,5 +1,5 @@
 import {File} from "./File";
-import {FileStateModel} from "./FileStateModel.state";
+import {FileStateModel} from "./FileStateModel";
 import {Action, StateContext} from "@ngxs/store";
 import {rotateEntityId} from "../index";
 import {AddEntity, PatchEntity} from "../state/file.actions";

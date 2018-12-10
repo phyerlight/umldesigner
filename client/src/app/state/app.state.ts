@@ -1,21 +1,18 @@
 import {Action, Selector, State, StateContext, Store} from '@ngxs/store';
+import {Navigate} from "@ngxs/router-plugin";
+
 import {
-  AddToSelection,
-  CancelEditClass,
-  CloseFile,
-  EditClass,
-  OpenFile, RemoveFromSelection,
-  SaveEditClass,
-  SetActiveFile,
-  SetSelection
+  SetSelection, AddToSelection, RemoveFromSelection,
+  OpenFile, CloseFile,
+  SetActiveFile
+  // CancelEditClass, EditClass, SaveEditClass,
 } from "./app.actions";
 import {User} from "../models/User";
+import {NavigateByKey} from "../services/appRouter.plugin";
+
 import {FileState} from "../../common/state/file.state";
 import {filesByKey} from "../../common";
-import {File} from "../../common/models";
-import {Navigate} from "@ngxs/router-plugin";
-import {NavigateByKey} from "../services/appRouter.plugin";
-import {GlobalFileStateModel} from "../../common/models/GlobalFileStateModel";
+import {GlobalFileStateModel, File} from "../../common/models";
 
 export type EditorTabData = {
   active: boolean,
@@ -35,10 +32,10 @@ export interface AppStateModel {
     activeKey: string,
     tabOrder: string[]
   },
-  clsEditor: {
-    fileKey: string,
-    cls: any
-  },
+  // clsEditor: {
+  //   fileKey: string,
+  //   cls: any
+  // },
   user: User
 }
 
@@ -50,17 +47,17 @@ export interface AppStateModel {
       activeKey: null,
       tabOrder: []
     },
-    clsEditor: null,
+    // clsEditor: null,
     user: null
   }
 })
 export class AppState {
 
-  @Selector()
-  static clsEditor(state: AppStateModel) {
-    return state.clsEditor;
-  }
-
+  // @Selector()
+  // static clsEditor(state: AppStateModel) {
+  //   return state.clsEditor;
+  // }
+  //
   @Selector()
   static isEntitySelected(app: AppStateModel){
     return (fileKey:string, entityId: number): boolean => {
@@ -102,7 +99,7 @@ export class AppState {
   @Selector([FileState])
   static editorTabData(app: AppStateModel, files: GlobalFileStateModel): EditorTabData[] {
     let tabFiles = filesByKey(files, app.editor.tabOrder);
-    return tabFiles.map((file, index) => {
+    return tabFiles.map((file) => {
       return {
         active: app.editor.activeKey == file._key,
         file,
@@ -249,39 +246,39 @@ export class AppState {
     }
   }
 
-  @Action(EditClass)
-  startEditClass(ctx: StateContext<AppStateModel>, action: EditClass) {
-    const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      clsEditor: {...action}
-    });
-  }
-
-  @Action(CancelEditClass)
-  cancelEditClass(ctx: StateContext<AppStateModel>) {
-    const state = ctx.getState();
-    ctx.setState({
-      ...state,
-      clsEditor: null
-    })
-  }
-
-  @Action(SaveEditClass)
-  saveEditClass(ctx: StateContext<AppStateModel>, action: SaveEditClass) {
-    const state = ctx.getState();
-
-    const {fileKey} = state.clsEditor;
-
-    const cls = {
-      ...action.cls,
-      id: state.clsEditor.cls.id
-    };
-
-    ctx.setState({
-      ...state,
-      clsEditor: null
-    });
-  }
+  // @Action(EditClass)
+  // startEditClass(ctx: StateContext<AppStateModel>, action: EditClass) {
+  //   const state = ctx.getState();
+  //   ctx.setState({
+  //     ...state,
+  //     clsEditor: {...action}
+  //   });
+  // }
+  //
+  // @Action(CancelEditClass)
+  // cancelEditClass(ctx: StateContext<AppStateModel>) {
+  //   const state = ctx.getState();
+  //   ctx.setState({
+  //     ...state,
+  //     clsEditor: null
+  //   })
+  // }
+  //
+  // @Action(SaveEditClass)
+  // saveEditClass(ctx: StateContext<AppStateModel>, action: SaveEditClass) {
+  //   const state = ctx.getState();
+  //
+  //   const {fileKey} = state.clsEditor;
+  //
+  //   const cls = {
+  //     ...action.cls,
+  //     id: state.clsEditor.cls.id
+  //   };
+  //
+  //   ctx.setState({
+  //     ...state,
+  //     clsEditor: null
+  //   });
+  // }
 
 }

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import { filter, map } from 'rxjs/operators';
 import {HttpClient} from "@angular/common/http";
-import {environment} from "../../environments/environment";
+import {Observable} from "rxjs/Observable";
+
 import {Project} from "../models/Project";
-import {ProjectWithMeta} from "../../common/models/ProjectWithMeta";
+import {ProjectWithMeta} from "../models/ProjectWithMeta";
+
+import {environment} from "../../environments/environment";
 
 export class NameError extends Error {
   name = 'NameError';

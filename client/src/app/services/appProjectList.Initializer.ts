@@ -1,10 +1,13 @@
 import {Store} from "@ngxs/store";
-import {SetProjectList} from "../state/project.actions";
-import {FileMetadata} from "../../common/models";
 import {flatMap} from "rxjs/operators";
-import {ProjectWithMeta} from "../../common/models/ProjectWithMeta";
+
 import {ProjectService} from "./project.service";
+
+import {SetProjectList} from "../state/project.actions";
 import {Project} from "../models/Project";
+import {ProjectWithMeta} from "../models/ProjectWithMeta";
+
+import {FileMetadata} from "../../common/models";
 import {SetFileList} from "../../common/state/file.actions";
 
 export function appProjectListInitializer(store: Store, projectService: ProjectService) {
