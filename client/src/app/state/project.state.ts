@@ -3,7 +3,7 @@ import {Project} from "../models/Project";
 import {SetProjectList} from "./project.actions";
 import {FileState} from "../../common/state/file.state";
 import {File} from "../../common/models";
-import {GlobalFileStateModel} from "../../common/models/GlobalFileStateModel"
+import {GlobalFileStateModel} from "../../common/models"
 import {filesByKey} from "../../common";
 
 export interface ProjectStateModel {

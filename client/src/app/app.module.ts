@@ -26,22 +26,25 @@ import {NGXS_PLUGINS, NgxsModule, Store} from "@ngxs/store";
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsRouterPluginModule} from "@ngxs/router-plugin";
 
+//All the sub file states need to be imported before AppComponent to keep FileState from being loaded before them.
 import {ClassFileModule} from "../classFile/classFile.module";
+
 import { AppComponent } from './containers/app/app.component';
 import { EditorComponent } from './containers/editor/editor.component';
-import { ProjectService } from "./services/project.service";
-import { AppRoutingModule } from './app-routing.module';
 import { OutletWrapperComponent } from './containers/outlet-wrapper/outlet-wrapper.component';
 import { DrawingListComponent } from './components/drawing-list/drawing-list.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { NewDialogComponent } from './components/new-dialog/new-dialog.component';
-import {FileService} from "./services/file.service";
+import { ProjectService } from "./services/project.service";
+import {appProjectListInitializer} from "./services/appProjectList.Initializer";
+import {AppRouterPlugin} from "./services/appRouter.plugin";
+import { AppRoutingModule } from './app-routing.module';
+import {ProjectState} from "./state/project.state";
+import {AppState} from "./state/app.state";
+
+import {FileService} from "../common/services/file.service";
 import {FileState} from "../common/state/file.state";
 import {AllFileStates} from "../common";
-import {ProjectState} from "./state/project.state";
-import {appProjectListInitializer} from "./services/appProjectList.Initializer";
-import {AppState} from "./state/app.state";
-import {AppRouterPlugin} from "./services/appRouter.plugin";
 
 @NgModule({
   declarations: [

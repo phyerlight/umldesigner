@@ -8,7 +8,7 @@ import {ProjectState} from "../../state/project.state";
 import {combineLatest, concat} from "rxjs";
 import {File} from "../../../common/models";
 import {exists} from "../../../common";
-import {Selection} from "../app/app.component";
+import {DrawingListSelection} from "../../models/DrawingListSelection";
 import {OpenFile, SetActiveFile} from "../../state/app.actions";
 import {AppState} from "../../state/app.state";
 import {LoadFile} from "../../../common/state/file.actions";

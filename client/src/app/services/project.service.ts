@@ -19,9 +19,6 @@ export class ProjectService {
 
   private url = environment.host+environment.database+'/projects';
 
-  // private _projects: BehaviorSubject<Project[]> = new BehaviorSubject<Project[]>(null);
-  // public projects$: Observable<Project[]> = this._projects.asObservable().pipe(filter(v => v != null));
-
   constructor(private http: HttpClient) {
     //TODO: Remove this for production
     window['projectService'] = this;
@@ -32,28 +29,11 @@ export class ProjectService {
       withCredentials: true,
       responseType: 'json'
     }) as Observable<ProjectWithMeta[]>;
-      // .pipe(
-      // map((res: Project[]) => {
-      //   // this._projects.next(res);
-      //   return res;
-      // })
-    // )
   }
 
   public getProjectByKey(key: string): Observable<Project> {
     return this.http.get(this.url+'/'+key) as Observable<Project>;
-    //   .pipe(
-    //   map((p: Project) => p)
-    // );
   };
-
-  // public getProjectByName(name: string): Observable<Project> {
-  //   return this.projects$.pipe(
-  //     map((projects: Project[]) => {
-  //       return projects.find(p => p.name == name);
-  //     })
-  //   );
-  // };
 
   public save(project: Project): Observable<Project> {
     let method = 'post';

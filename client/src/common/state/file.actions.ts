@@ -10,6 +10,11 @@ export class SetFileList {
   constructor (public files: FileMetadata[]) {}
 }
 
+export class SaveFile {
+  static readonly type = '[File] SaveFile';
+  constructor(public file: File) {}
+}
+
 export class AddFile {
   static readonly type = '[File] AddFile';
   constructor(public file: File) {}

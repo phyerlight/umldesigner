@@ -1,25 +1,23 @@
 import {AfterViewInit, ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {trigger, state, style, animate, transition } from '@angular/animations';
-import {ProjectService} from "../../services/project.service";
-import {createProject, Project} from "../../models/Project";
-import {FileService} from "../../services/file.service";
-import {createFile, File} from "../../../common/models";
+import {animate, state, style, transition, trigger} from '@angular/animations';
 import {MatDialog, MatSidenav} from "@angular/material";
+import {Select, Store} from "@ngxs/store";
+import {Navigate} from "@ngxs/router-plugin";
+import {Observable} from "rxjs";
+import {BehaviorSubject} from "rxjs/BehaviorSubject";
+import {delay, filter, mergeMap, take} from "rxjs/operators";
+
+import {ProjectService} from "../../services/project.service";
+import {FileService} from "../../../common/services/file.service";
+import {createProject, Project} from "../../models/Project";
+import {DrawingListSelection} from "../../models/DrawingListSelection";
 import {ConfirmDialogComponent} from "../../components/confirm-dialog/confirm-dialog.component";
 import {NewDialogComponent} from "../../components/new-dialog/new-dialog.component";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
-import {Select, Store} from "@ngxs/store";
-import {FileState} from "../../../common/state/file.state";
 import {ProjectState} from "../../state/project.state";
-import {Observable} from "rxjs";
-import {take, delay, filter, mergeMap} from "rxjs/operators";
 import {LoadProjectList} from "../../state/project.actions";
-import {Navigate} from "@ngxs/router-plugin";
 
-export type Selection = {
-  project: Project,
-  file: File
-}
+import {createFile, File} from "../../../common/models";
+import {FileState} from "../../../common/state/file.state";
 
 @Component({
   selector: 'app-root',
@@ -42,7 +40,7 @@ export type Selection = {
 export class AppComponent implements OnInit, AfterViewInit {
   title = 'UML Designer 4';
 
-  protected selection: Selection;
+  protected selection: DrawingListSelection;
   protected file: File;
   protected fabState$ = new BehaviorSubject('out');
   protected projects$: Observable<Project[]>;
@@ -64,7 +62,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.fabState$.pipe(
       delay(200),
       take(1)
-    ).subscribe((v)=> {
+    ).subscribe(()=> {
       this.fabState$.next('in');
     });
   }
@@ -73,7 +71,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     return this.store.dispatch(new LoadProjectList());
   }
 
-  handleSelection(selection: Selection) {
+  handleSelection(selection: DrawingListSelection) {
     if (selection != null) {
       this.store.dispatch(new Navigate([selection.project.name, selection.file.name]));
     }
@@ -96,7 +94,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     dialogRef.afterClosed().pipe(
       filter(name => name != null && name != ""),
       mergeMap(name => this.projectService.save(createProject({name})))
-    ).subscribe(p=>{
+    ).subscribe(()=>{
       this.loadData();
     }, (e)=>{
       if (e.status == 409) {
@@ -151,7 +149,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     });
   }
 
-  handleRemoveFile(sel: Selection) {
+  handleRemoveFile(sel: DrawingListSelection) {
     let dialogRef = this.dialog.open(ConfirmDialogComponent , {
       data:{
         message: "Are you sure you want to remove the file "+sel.file.name+"?"
@@ -173,7 +171,7 @@ export class AppComponent implements OnInit, AfterViewInit {
     if (sideNav.opened) {
       this.fabState$.next('out');
     } else {
-      sideNav.open().then(value => {
+      sideNav.open().then(() => {
         this.fabState$.next('in');
       });
     }

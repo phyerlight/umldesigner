@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
-import {Project} from "../../models/Project";
-import {FileService} from "../../services/file.service";
-import {File} from "../../../common/models/index";
-import {Selection} from "../../containers/app/app.component";
-import {Observable} from "rxjs/Observable";
-import 'rxjs/add/operator/mergeMap';
 import {Store} from "@ngxs/store";
+
+import {Project} from "../../models/Project";
+import {DrawingListSelection} from "../../models/DrawingListSelection";
 import {ProjectState} from "../../state/project.state";
+
+import {File} from "../../../common/models";
 
 @Component({
   selector: 'app-drawing-list',
@@ -21,12 +20,12 @@ export class DrawingListComponent implements OnInit {
   // private projects: Project[];
 
   private _firstSelection: boolean = true;
-  private _selection: Selection;
-  get selection(): Selection {
+  private _selection: DrawingListSelection;
+  get selection(): DrawingListSelection {
     return this._selection;
   }
   @Input('selection')
-  set selection(sel: Selection) {
+  set selection(sel: DrawingListSelection) {
     //Do this hocus pocus to ensure the same objects are used to allow for ngModel to register the equality of the
     // selected file in the list box
     if (sel != null && this.projects) {
@@ -42,11 +41,11 @@ export class DrawingListComponent implements OnInit {
     }
   }
 
-  @Output() onSelection = new EventEmitter<Selection>();
+  @Output() onSelection = new EventEmitter<DrawingListSelection>();
   @Output() onProjectAdded = new EventEmitter();
   @Output() onProjectRemoved = new EventEmitter<Project>();
   @Output() onFileAdded = new EventEmitter<Project>();
-  @Output() onFileRemoved = new EventEmitter<Selection>();
+  @Output() onFileRemoved = new EventEmitter<DrawingListSelection>();
 
   activeProject: Project;
   // get activeProjectFiles(): File[] {
@@ -69,7 +68,7 @@ export class DrawingListComponent implements OnInit {
     // });
   }
 
-  private genFileList(project: Project): Selection[] {
+  private genFileList(project: Project): DrawingListSelection[] {
     // return this.projectFiles.getProjectsByKey(project._key).mergeMap((pfs: ProjectFile[]) => {
     //   return this.files.getFilesByKey(pfs.map(pf => pf._to.replace(/^.*\//, '')));
     // }).map(fs => {
@@ -83,7 +82,7 @@ export class DrawingListComponent implements OnInit {
     return list;
   }
 
-  handleSelection(selection: Selection) {
+  handleSelection(selection: DrawingListSelection) {
     this.onSelection.emit(selection);
   }
 
@@ -108,7 +107,7 @@ export class DrawingListComponent implements OnInit {
     this.onFileAdded.emit(this.activeProject);
   }
 
-  handleRemoveFile($event, sel: Selection) {
+  handleRemoveFile($event, sel: DrawingListSelection) {
     $event.cancelBubble = true;
     this.onFileRemoved.emit(sel);
   }

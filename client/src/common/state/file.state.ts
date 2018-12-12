@@ -1,11 +1,11 @@
 import {Action, Selector, State, StateContext} from '@ngxs/store';
-import {AddFile, LoadFile, SetFileList} from './file.actions';
-import {File, FileStateModel, FileType, FileTypeOptions} from "../models";
-import {FileService} from "../../app/services/file.service";
 import {take, tap} from "rxjs/operators";
-import {filesByKey} from "../index";
-import {GlobalFileStateModel} from "../models/GlobalFileStateModel";
-import {AllFileStates} from "../index";
+
+import {AddFile, LoadFile, SaveFile, SetFileList} from './file.actions';
+
+import {AllFileStates, filesByKey} from "../index";
+import {GlobalFileStateModel, File, FileType, FileTypeOptions} from "../models";
+import {FileService} from "../services/file.service";
 
 if (AllFileStates.length < 1) {
   console.error("No file states have been added. This most likely means that a dependency has been added forcing the root file state to be loaded first");
@@ -34,6 +34,11 @@ export class FileState {
 
   constructor(protected fileService: FileService) {}
 
+  /**
+   * Load a file from database.
+   * @param ctx
+   * @param action
+   */
   @Action(LoadFile)
   loadFile(ctx: StateContext<GlobalFileStateModel>, action: LoadFile) {
     return this.fileService.fetchFile(action.file_key).pipe(take(1),tap(file => {
@@ -49,6 +54,16 @@ export class FileState {
     }));
   }
 
+  @Action(SaveFile)
+  saveFile(ctx: StateContext<GlobalFileStateModel>, action: SaveFile) {
+
+  }
+
+  /**
+   * Sets the list of files that are available locally.
+   * @param ctx
+   * @param files
+   */
   @Action(SetFileList)
   setFileList(ctx: StateContext<GlobalFileStateModel>, {files}: SetFileList) {
     ctx.setState(files.reduce((acc, f) => {
@@ -58,8 +73,13 @@ export class FileState {
     }, {}));
   }
 
+  /**
+   * Adds a file to the local cache of files.
+   * @param ctx
+   * @param action
+   */
   @Action(AddFile)
-  addFile(ctx: StateContext<FileStateModel>, action: AddFile) {
+  addFile(ctx: StateContext<GlobalFileStateModel>, action: AddFile) {
     const state = ctx.getState();
     ctx.setState({
       ...state,

@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs/Observable";
-import {BehaviorSubject} from "rxjs/BehaviorSubject";
 import {HttpClient} from "@angular/common/http";
-import {distinctUntilChanged, filter, map, mergeAll, publishReplay, refCount, share, tap} from 'rxjs/operators';
-import {of} from 'rxjs';
-import {Project} from "../models/Project";
+import {Observable} from "rxjs/Observable";
+
+import { File } from "../models";
 import { environment } from "../../environments/environment";
-import * as _ from "lodash";
-import { Map, List, Record } from 'immutable';
-import { File } from "../../common/models";
 
 @Injectable()
 export class FileService {
@@ -26,9 +21,6 @@ export class FileService {
    */
   protected _fetchFile(key: string): Observable<File> {
     return this.http.get(this.url+'/'+key) as Observable<File>;
-    //     .pipe(
-    //   map(f => f as File)
-    // );
   }
 
   /**
